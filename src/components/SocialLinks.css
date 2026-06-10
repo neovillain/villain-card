@@ -1,0 +1,89 @@
+.contacts {
+  padding-block: 5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+}
+
+.contacts__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+  gap: 1rem;
+}
+
+.link-card {
+  display: flex;
+  align-items: center;
+  gap: 1.1rem;
+  padding: 1.25rem 1.4rem;
+  min-height: 84px;
+  text-align: left;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  cursor: pointer;
+  transition: border-color 0.25s var(--ease-out), box-shadow 0.25s var(--ease-out),
+    background 0.25s var(--ease-out);
+}
+
+.link-card:hover {
+  border-color: color-mix(in srgb, var(--glow, var(--accent)) 45%, transparent);
+  background: rgba(255, 255, 255, 0.06);
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--glow, var(--accent)) 20%, transparent),
+    0 8px 40px -8px color-mix(in srgb, var(--glow, var(--accent)) 35%, transparent);
+}
+
+.link-card__icon {
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--border);
+  transition: transform 0.25s var(--ease-out);
+}
+
+.link-card:hover .link-card__icon {
+  transform: rotate(-6deg) scale(1.06);
+}
+
+.link-card__text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  min-width: 0;
+}
+
+.link-card__label {
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--fg-muted);
+}
+
+.link-card__handle {
+  font-size: 1.05rem;
+  font-weight: 500;
+  color: var(--fg);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.link-card__action {
+  margin-left: auto;
+  font-size: 1.1rem;
+  color: var(--fg-muted);
+  transition: color 0.25s var(--ease-out), transform 0.25s var(--ease-out);
+}
+
+.link-card:hover .link-card__action {
+  color: var(--glow, var(--accent));
+  transform: translate(2px, -2px);
+}

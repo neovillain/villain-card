@@ -1,0 +1,128 @@
+.hero {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  gap: 1.5rem;
+  padding-block: 4rem;
+}
+
+.hero__meta {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: var(--fg-muted);
+}
+
+.hero__alias {
+  color: var(--accent);
+  border: 1px solid var(--accent-soft);
+  border-radius: 999px;
+  padding: 0.35em 1em 0.3em 1.3em;
+  background: var(--accent-soft);
+}
+
+.hero__title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(5rem, 21vw, 17rem);
+  line-height: 0.88;
+  letter-spacing: 0.01em;
+  display: flex;
+  user-select: none;
+}
+
+.hero__letter-mask {
+  display: inline-block;
+  overflow: hidden;
+  padding-top: 0.06em;
+}
+
+.hero__letter {
+  display: inline-block;
+  will-change: transform;
+  color: var(--fg);
+  transition: color 0.25s var(--ease-out), text-shadow 0.25s var(--ease-out),
+    transform 0.25s var(--ease-out);
+}
+
+/* После entrance-анимации маски перестают обрезать свечение —
+   иначе glow превращается в прямоугольник */
+.hero__title--revealed .hero__letter-mask {
+  overflow: visible;
+}
+
+.hero__title--revealed .hero__letter-mask:hover .hero__letter {
+  color: var(--accent);
+  text-shadow:
+    0 0 18px rgba(225, 29, 72, 0.55),
+    0 0 80px rgba(225, 29, 72, 0.35);
+  transform: translateY(-4px);
+}
+
+.hero__sub {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  width: min(640px, 100%);
+}
+
+.hero__line {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--border));
+}
+
+.hero__line:last-child {
+  background: linear-gradient(90deg, var(--border), transparent);
+}
+
+.hero__tagline {
+  margin: 0;
+  font-size: clamp(1rem, 2.2vw, 1.2rem);
+  font-weight: 300;
+  font-style: italic;
+  color: var(--fg-muted);
+  white-space: nowrap;
+}
+
+.hero__scroll {
+  margin-top: 2.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: var(--fg-muted);
+  transition: color 0.2s var(--ease-out);
+  min-height: 44px;
+  cursor: pointer;
+}
+
+.hero__scroll:hover {
+  color: var(--accent);
+}
+
+.hero__scroll-arrow {
+  font-size: 1.1rem;
+  color: var(--accent);
+}
+
+@media (max-width: 600px) {
+  .hero__tagline {
+    white-space: normal;
+  }
+  .hero__sub {
+    gap: 0.9rem;
+  }
+}

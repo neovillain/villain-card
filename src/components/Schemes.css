@@ -1,0 +1,127 @@
+.schemes {
+  padding-block: 5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+}
+
+.schemes__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+  gap: 1rem;
+}
+
+.scheme-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1.75rem 1.6rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  transition: border-color 0.25s var(--ease-out), box-shadow 0.25s var(--ease-out);
+}
+
+.scheme-card:hover {
+  border-color: rgba(225, 29, 72, 0.4);
+  box-shadow: 0 12px 48px -12px rgba(225, 29, 72, 0.25);
+}
+
+.scheme-card__head {
+  display: flex;
+  align-items: baseline;
+  gap: 0.9rem;
+}
+
+.scheme-card__num {
+  font-family: var(--font-display);
+  font-size: 2.4rem;
+  line-height: 1;
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(225, 29, 72, 0.55);
+  user-select: none;
+}
+
+.scheme-card__codename {
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.scheme-card__title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: 2.1rem;
+  letter-spacing: 0.03em;
+  line-height: 0.95;
+  color: var(--fg);
+}
+
+.scheme-card__points {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+
+.scheme-card__points li {
+  position: relative;
+  padding-left: 1.1rem;
+  font-size: 0.92rem;
+  line-height: 1.45;
+  color: var(--fg-muted);
+}
+
+.scheme-card__points li::before {
+  content: '▸';
+  position: absolute;
+  left: 0;
+  color: var(--accent);
+}
+
+.scheme-card__status {
+  margin-top: auto;
+  align-self: flex-start;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--fg-muted);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 0.45em 1.1em 0.4em 1.2em;
+}
+
+.scheme-card__status--active {
+  color: var(--accent);
+  border-color: var(--accent-soft);
+  background: var(--accent-soft);
+}
+
+.scheme-card__pulse {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--accent);
+  animation: scheme-pulse 1.6s ease-in-out infinite;
+}
+
+@keyframes scheme-pulse {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(225, 29, 72, 0.5);
+  }
+  50% {
+    box-shadow: 0 0 0 5px rgba(225, 29, 72, 0);
+  }
+}
