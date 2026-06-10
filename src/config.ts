@@ -68,7 +68,7 @@ export const links: SocialLink[] = [
     id: 'discord',
     icon: 'discord',
     label: 'Discord',
-    handle: '.holyvillain',
+    handle: '.neovillain',
     // url отсутствует — кнопка копирует ник в буфер обмена
     glow: '#5865F2',
   },
