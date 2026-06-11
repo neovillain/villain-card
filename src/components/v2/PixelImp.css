@@ -6,6 +6,18 @@
 }
 
 .pixel-imp svg {
+  position: relative;
   display: block;
   image-rendering: pixelated;
+}
+
+/* Контактная тень — «он реально сидит на поверхности» */
+.pixel-imp__shadow {
+  position: absolute;
+  left: 14px;
+  top: calc(13 * 4px - 2px);
+  width: 44px;
+  height: 9px;
+  border-radius: 50%;
+  background: radial-gradient(ellipse, rgba(0, 0, 0, 0.55), transparent 70%);
 }

@@ -1,5 +1,6 @@
 import { motion, useReducedMotion } from 'framer-motion'
 import { dossier } from '../config'
+import { SectionFX } from './v2/SectionFX'
 import './Dossier.css'
 
 const EASE = [0.16, 1, 0.3, 1] as const
@@ -16,6 +17,7 @@ export function Dossier() {
 
   return (
     <section className="dossier container" id="dossier">
+      <SectionFX variant="rain" />
       <h2 className="section-label">
         <span className="num">02</span> the dossier
       </h2>

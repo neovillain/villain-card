@@ -1,0 +1,80 @@
+.fx {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── угольки ── */
+.fx--embers span {
+  position: absolute;
+  left: var(--x);
+  bottom: -6px;
+  width: var(--s);
+  height: var(--s);
+  background: var(--accent);
+  border-radius: 1px;
+  box-shadow: 0 0 6px rgba(225, 29, 72, 0.8);
+  opacity: 0;
+  animation: fx-rise var(--d) linear var(--delay) infinite;
+}
+
+@keyframes fx-rise {
+  0% {
+    transform: translate(0, 0);
+    opacity: 0;
+  }
+  8% {
+    opacity: 0.75;
+  }
+  50% {
+    transform: translate(10px, -45vh);
+  }
+  100% {
+    transform: translate(-6px, -92vh);
+    opacity: 0;
+  }
+}
+
+/* ── цифровой дождь ── */
+.fx--rain span {
+  position: absolute;
+  left: var(--x);
+  top: -120px;
+  width: 1px;
+  height: 110px;
+  background: linear-gradient(180deg, transparent, rgba(225, 29, 72, 0.4));
+  animation: fx-fall var(--d) linear var(--delay) infinite;
+}
+
+@keyframes fx-fall {
+  to {
+    transform: translateY(130vh);
+  }
+}
+
+/* ── сигнальные кольца ── */
+.fx--rings span {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 12px;
+  height: 12px;
+  margin: -6px 0 0 -6px;
+  border: 1px solid rgba(225, 29, 72, 0.4);
+  border-radius: 50%;
+  opacity: 0;
+  animation: fx-ping 6s ease-out calc(var(--i) * 2s) infinite;
+}
+
+@keyframes fx-ping {
+  0% {
+    transform: scale(0.5);
+    opacity: 0.55;
+  }
+  100% {
+    transform: scale(70);
+    opacity: 0;
+  }
+}
