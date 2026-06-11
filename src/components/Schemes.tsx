@@ -43,7 +43,7 @@ export function Schemes() {
   return (
     <section className="schemes container" id="schemes">
       <h2 className="section-label">
-        <span className="num">02</span> evil schemes
+        <span className="num">01</span> evil schemes
       </h2>
       <div className="schemes__grid">
         {schemes.map((scheme, i) => (

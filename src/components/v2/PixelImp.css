@@ -1,0 +1,11 @@
+.pixel-imp {
+  position: absolute;
+  z-index: 5;
+  pointer-events: none;
+  filter: drop-shadow(0 6px 14px rgba(225, 29, 72, 0.35));
+}
+
+.pixel-imp svg {
+  display: block;
+  image-rendering: pixelated;
+}

@@ -1,0 +1,105 @@
+.hero2 {
+  position: relative;
+  min-height: 100dvh;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+}
+
+.hero2__inner {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 1.4rem;
+  padding-block: 4rem;
+}
+
+.hero2__meta {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: var(--fg-muted);
+}
+
+.hero2__alias {
+  color: var(--accent);
+  border: 1px solid var(--accent-soft);
+  border-radius: 999px;
+  padding: 0.35em 1em 0.3em 1.3em;
+  background: var(--accent-soft);
+}
+
+.hero2__title {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(5rem, 21vw, 17rem);
+  line-height: 0.88;
+  display: flex;
+  user-select: none;
+}
+
+.hero2__letter-mask {
+  display: inline-block;
+  overflow: hidden;
+  padding-top: 0.06em;
+}
+
+.hero2__letter {
+  display: inline-block;
+  will-change: transform;
+  color: var(--fg);
+  transition: color 0.25s var(--ease-out), text-shadow 0.25s var(--ease-out),
+    transform 0.25s var(--ease-out);
+}
+
+.hero2__title--revealed .hero2__letter-mask {
+  overflow: visible;
+}
+
+.hero2__title--revealed .hero2__letter-mask:hover .hero2__letter {
+  color: var(--accent);
+  text-shadow:
+    0 0 18px rgba(225, 29, 72, 0.55),
+    0 0 80px rgba(225, 29, 72, 0.35);
+  transform: translateY(-4px);
+}
+
+.hero2__tagline {
+  margin: 0;
+  margin-top: clamp(1rem, 3vw, 2.4rem);
+  font-size: clamp(1rem, 2.2vw, 1.2rem);
+  font-weight: 300;
+  font-style: italic;
+  color: var(--fg-muted);
+}
+
+.hero2__scroll {
+  margin-top: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: var(--fg-muted);
+  transition: color 0.2s var(--ease-out);
+  min-height: 44px;
+}
+
+.hero2__scroll:hover {
+  color: var(--accent);
+}
+
+.hero2__scroll span {
+  color: var(--accent);
+  font-size: 1.1rem;
+}

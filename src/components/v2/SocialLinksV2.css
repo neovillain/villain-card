@@ -1,0 +1,116 @@
+.contacts2 {
+  padding-block: 5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+}
+
+.contacts2__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+  gap: 1.1rem;
+  perspective: 900px;
+}
+
+.tilt-card__wrap {
+  perspective: 900px;
+}
+
+.tilt-card {
+  position: relative;
+  transform-style: preserve-3d;
+  border-radius: var(--radius);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  overflow: hidden;
+  transition: border-color 0.25s var(--ease-out), box-shadow 0.25s var(--ease-out);
+}
+
+.tilt-card:hover {
+  border-color: color-mix(in srgb, var(--glow, var(--accent)) 50%, transparent);
+  box-shadow:
+    0 0 0 1px color-mix(in srgb, var(--glow, var(--accent)) 22%, transparent),
+    0 14px 50px -10px color-mix(in srgb, var(--glow, var(--accent)) 40%, transparent);
+}
+
+.tilt-card__hit {
+  display: flex;
+  align-items: center;
+  gap: 1.1rem;
+  width: 100%;
+  padding: 1.3rem 1.4rem;
+  min-height: 88px;
+  text-align: left;
+}
+
+.tilt-card__icon {
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid var(--border);
+  transform: translateZ(30px);
+}
+
+.tilt-card__icon img {
+  display: block;
+}
+
+.tilt-card__text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  min-width: 0;
+  transform: translateZ(20px);
+}
+
+.tilt-card__label {
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: var(--fg-muted);
+}
+
+.tilt-card__handle {
+  font-size: 1.08rem;
+  font-weight: 500;
+  color: var(--fg);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tilt-card__action {
+  margin-left: auto;
+  font-size: 1.1rem;
+  color: var(--fg-muted);
+  transform: translateZ(25px);
+  transition: color 0.25s var(--ease-out);
+}
+
+.tilt-card:hover .tilt-card__action {
+  color: var(--glow, var(--accent));
+}
+
+.tilt-card__glare {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0;
+  background: radial-gradient(
+    350px circle at var(--mx, 50%) var(--my, 50%),
+    rgba(255, 255, 255, 0.08),
+    transparent 60%
+  );
+  transition: opacity 0.25s var(--ease-out);
+}
+
+.tilt-card:hover .tilt-card__glare {
+  opacity: 1;
+}

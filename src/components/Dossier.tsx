@@ -17,7 +17,7 @@ export function Dossier() {
   return (
     <section className="dossier container" id="dossier">
       <h2 className="section-label">
-        <span className="num">03</span> the dossier
+        <span className="num">02</span> the dossier
       </h2>
 
       <div className="dossier__top">
