@@ -43,7 +43,7 @@ function SchemeCard({ scheme, index }: { scheme: Scheme; index: number }) {
 export function Schemes() {
   return (
     <section className="schemes container" id="schemes">
-      <SectionFX variant="embers" />
+      <SectionFX />
       <h2 className="section-label">
         <span className="num">01</span> evil schemes
       </h2>

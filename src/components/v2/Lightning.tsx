@@ -25,9 +25,15 @@ export function Lightning({
     const canvas = canvasRef.current
     if (!canvas) return
 
+    // Менять размер буфера только при реальном изменении —
+    // присваивание width/height каждый кадр пересоздаёт GL-буфер и убивает FPS
     const resizeCanvas = () => {
-      canvas.width = canvas.clientWidth
-      canvas.height = canvas.clientHeight
+      const w = canvas.clientWidth
+      const h = canvas.clientHeight
+      if (canvas.width !== w || canvas.height !== h) {
+        canvas.width = w
+        canvas.height = h
+      }
     }
     resizeCanvas()
     window.addEventListener('resize', resizeCanvas)

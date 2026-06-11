@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { motion, useReducedMotion } from 'framer-motion'
 import { profile } from '../../config'
+import { Lightning } from './Lightning'
 import './HeroV2.css'
 
 const EASE = [0.16, 1, 0.3, 1] as const
@@ -12,6 +13,11 @@ export function HeroV2() {
 
   return (
     <header className="hero2" id="hero">
+      {!reduce && (
+        <div className="hero2__lightning" aria-hidden="true">
+          <Lightning hue={352} speed={1.1} intensity={0.42} size={1.9} />
+        </div>
+      )}
       <div className="hero2__inner container">
         <motion.div
           className="hero2__meta"

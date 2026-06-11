@@ -4,33 +4,35 @@ import './PixelImp.css'
 
 /**
  * Пиксельный чертёнок — молчаливый житель «логова злодея».
- * В каждой секции занят своим делом: у схем работает на ноутбуке,
- * в досье читает своё дело, у контактов листает телефон.
- * Между делами — выразительный перекур.
+ * В каждой секции занят своим делом, между секциями телепортируется
+ * с дымовым «пуфом» — без визуализации пути.
  */
 
 const COLS = 18
+const ROWS = 17
 const PX = 4
 const SIT_ROW = 13
 
 const C = {
-  K: '#13070b', // контур
-  R: '#e11d48', // тело
-  D: '#b11237', // тень тела
-  W: '#f3ecee', // рога / белки
-  P: '#16060a', // зрачки / рот / руки
+  K: '#13070b',
+  R: '#e11d48',
+  D: '#b11237',
+  W: '#f3ecee',
+  P: '#16060a',
   CIG: '#d9d4d6',
   EMBER: '#ff9f1c',
   EMBER_HOT: '#ffd166',
   SMOKE: '#9a8f94',
   ASH: '#6f6468',
-  SCREEN: '#2a1d22',
+  SCREEN: '#1d1216',
+  SCREEN_EDGE: '#3a282e',
   GLOW: '#ff3d63',
+  GLOW_SOFT: '#ff7d98',
   PAPER: '#e9e2e4',
+  STAMP: '#c81e44',
   FACE_LIT: '#f0466f',
 }
 
-// Тело 18×17 ('.' — пусто)
 const BODY = [
   '....W.......W.....',
   '....WW.....WW.....',
@@ -75,18 +77,37 @@ const SIT_SELECTORS: Record<string, string> = {
 type Activity = 'smoke' | 'laptop' | 'read' | 'phone'
 const ACTIVITY_BY_IDX: Activity[] = ['laptop', 'read', 'phone']
 
-/* ─── покадровые слои ─── */
+/* ─── телепорт-«пуф»: облако дыма на месте чертёнка ─── */
 
-// Перекур: поднял руку → затяжка → большой выдох → стряхнул пепел
+const POOF_DENSE: Px[] = [
+  { x: 6, y: 4, c: C.SMOKE, o: 0.9 }, { x: 9, y: 3, c: C.SMOKE, o: 0.8 },
+  { x: 12, y: 5, c: C.SMOKE, o: 0.9 }, { x: 4, y: 7, c: C.SMOKE, o: 0.85 },
+  { x: 8, y: 6, c: C.SMOKE }, { x: 11, y: 8, c: C.SMOKE, o: 0.9 },
+  { x: 5, y: 10, c: C.SMOKE, o: 0.85 }, { x: 9, y: 10, c: C.SMOKE },
+  { x: 13, y: 11, c: C.SMOKE, o: 0.8 }, { x: 7, y: 12, c: C.SMOKE, o: 0.9 },
+  { x: 10, y: 13, c: C.SMOKE, o: 0.85 }, { x: 6, y: 8, c: C.SMOKE, o: 0.7 },
+  { x: 14, y: 7, c: C.SMOKE, o: 0.6 }, { x: 3, y: 12, c: C.SMOKE, o: 0.6 },
+]
+
+const POOF_SPARSE: Px[] = [
+  { x: 5, y: 5, c: C.SMOKE, o: 0.5 }, { x: 11, y: 4, c: C.SMOKE, o: 0.4 },
+  { x: 13, y: 9, c: C.SMOKE, o: 0.45 }, { x: 4, y: 11, c: C.SMOKE, o: 0.4 },
+  { x: 8, y: 14, c: C.SMOKE, o: 0.35 }, { x: 9, y: 7, c: C.SMOKE, o: 0.3 },
+]
+
+/* ─── занятия ─── */
+
+// Перекур: тлеет → подносит ко рту → яркая затяжка → большой выдох → пепел
 function smokeFrame(c: number): Px[] {
   const px: Px[] = []
-  const atMouth = c === 5 || c === 6
-  const mid = c === 3 || c === 4
+  const atMouth = c === 7 || c === 8
+  const mid = c === 5 || c === 6
 
   if (atMouth) {
     px.push({ x: 13, y: 9, c: C.P })
     px.push({ x: 12, y: 8, c: C.CIG })
     px.push({ x: 12, y: 7, c: C.EMBER_HOT })
+    px.push({ x: 11, y: 7, c: C.EMBER, o: 0.5 })
   } else if (mid) {
     px.push({ x: 14, y: 10, c: C.P })
     px.push({ x: 14, y: 9, c: C.CIG })
@@ -98,8 +119,7 @@ function smokeFrame(c: number): Px[] {
     px.push({ x: 17, y: 11, c: C.EMBER, o: c % 2 ? 1 : 0.5 })
   }
 
-  // выдох — облако растёт и уплывает вверх-вправо
-  const s = c - 7
+  const s = c - 9
   if (s >= 0 && s <= 4) {
     const cloud: Px[][] = [
       [{ x: 13, y: 6, c: C.SMOKE, o: 0.9 }],
@@ -126,58 +146,68 @@ function smokeFrame(c: number): Px[] {
     px.push(...cloud[s])
   }
 
-  // стряхивает пепел
-  if (c === 11) px.push({ x: 16, y: 12, c: C.ASH, o: 0.8 })
+  if (c === 14) px.push({ x: 16, y: 12, c: C.ASH, o: 0.8 })
 
   return px
 }
 
-// Работает над планом: пиксельный ноутбук, печатает, экран мигает
+// Работает над планом: большой ноутбук, экран с «бегущим кодом», печатает
 function laptopFrame(c: number): Px[] {
   const px: Px[] = []
-  // основание на коленях
-  for (let x = 5; x <= 10; x++) px.push({ x, y: 12, c: C.SCREEN })
-  // экран
-  for (let y = 9; y <= 11; y++)
-    for (let x = 5; x <= 9; x++) px.push({ x, y, c: C.SCREEN })
-  // верхняя кромка экрана ловит свет
-  for (let x = 5; x <= 9; x++) px.push({ x, y: 9, c: '#3a282e' })
-  // свечение экрана — «код» бежит
-  const glowRow = 10 + (c % 2)
-  px.push({ x: 6, y: glowRow, c: C.GLOW })
-  px.push({ x: 7, y: glowRow === 11 ? 10 : 11, c: C.GLOW, o: 0.7 })
-  px.push({ x: 8, y: 10, c: C.GLOW, o: c % 2 ? 0.9 : 0.4 })
-  px.push({ x: 5, y: 11, c: C.GLOW, o: 0.5 })
+  // экран (стоит раскрытый, лицом к зрителю)
+  for (let y = 7; y <= 11; y++)
+    for (let x = 4; x <= 11; x++) px.push({ x, y, c: C.SCREEN })
+  // рамка экрана
+  for (let x = 4; x <= 11; x++) {
+    px.push({ x, y: 7, c: C.SCREEN_EDGE })
+    px.push({ x, y: 11, c: C.SCREEN_EDGE })
+  }
+  // «код»: три строки разной длины, обновляются каждый кадр
+  const lines = [
+    { y: 8, len: 3 + (c % 4), color: C.GLOW },
+    { y: 9, len: 2 + ((c + 2) % 5), color: C.GLOW_SOFT },
+    { y: 10, len: 4 + ((c + 1) % 3), color: C.GLOW },
+  ]
+  for (const line of lines)
+    for (let i = 0; i < line.len; i++)
+      px.push({ x: 5 + i, y: line.y, c: line.color, o: 0.95 })
+  // мигающий курсор в конце последней строки
+  if (c % 2) px.push({ x: 5 + lines[2].len, y: 10, c: C.W })
+  // основание-клавиатура
+  for (let x = 4; x <= 11; x++) px.push({ x, y: 12, c: C.K })
   // руки печатают
   const tap = c % 2
-  px.push({ x: 5, y: tap ? 11 : 12, c: C.P })
-  px.push({ x: 9, y: tap ? 12 : 11, c: C.P })
-  // победный жест в конце цикла
-  if (c === 11) {
-    px.push({ x: 14, y: 7, c: C.P })
-    px.push({ x: 14, y: 6, c: C.P })
-  }
+  px.push({ x: 4, y: tap ? 11 : 12, c: C.P })
+  px.push({ x: 11, y: tap ? 12 : 11, c: C.P })
   return px
 }
 
-// Читает своё дело: лист с текстом, перелистывает, глаза вниз
+// Читает своё дело: папка с красной плашкой «секретно», листает страницы
 function readFrame(c: number): Px[] {
   const px: Px[] = []
-  const flip = c % 4 === 3
+  const flip = c % 5 === 4
   const ox = flip ? 1 : 0
-  // лист
-  for (let y = 8; y <= 11; y++)
-    for (let x = 5 + ox; x <= 8 + ox; x++) px.push({ x, y, c: C.PAPER })
+  // лист — крупный, в обеих руках
+  for (let y = 7; y <= 12; y++)
+    for (let x = 4 + ox; x <= 9 + ox; x++) px.push({ x, y, c: C.PAPER })
+  // красная плашка-гриф сверху
+  for (let x = 5 + ox; x <= 8 + ox; x++) px.push({ x, y: 8, c: C.STAMP })
   // строки «текста»
   if (!flip) {
-    px.push({ x: 6, y: 9, c: C.P, o: 0.8 })
-    px.push({ x: 7, y: 9, c: C.P, o: 0.8 })
-    px.push({ x: 6, y: 10, c: C.P, o: 0.6 })
+    px.push({ x: 5, y: 10, c: C.P, o: 0.85 })
+    px.push({ x: 6, y: 10, c: C.P, o: 0.85 })
+    px.push({ x: 7, y: 10, c: C.P, o: 0.85 })
+    px.push({ x: 5, y: 11, c: C.P, o: 0.6 })
+    px.push({ x: 6, y: 11, c: C.P, o: 0.6 })
+    px.push({ x: 8, y: 11, c: C.P, o: 0.6 })
+  } else {
+    // согнутый уголок при перелистывании
+    px.push({ x: 10, y: 7, c: C.SMOKE, o: 0.7 })
   }
   // руки держат лист
-  px.push({ x: 4 + ox, y: 10, c: C.P })
-  px.push({ x: 9 + ox, y: 10, c: C.P })
-  // взгляд вниз: прикрываем зрачки и рисуем ниже
+  px.push({ x: 3 + ox, y: 9, c: C.P })
+  px.push({ x: 10 + ox, y: 9, c: C.P })
+  // взгляд вниз
   px.push({ x: 6, y: 6, c: C.W })
   px.push({ x: 11, y: 6, c: C.W })
   px.push({ x: 6, y: 7, c: C.P })
@@ -185,23 +215,35 @@ function readFrame(c: number): Px[] {
   return px
 }
 
-// Залипает в телефон: экран подсвечивает лицо, большой палец листает
+// Залипает в телефон: крупный экран светится и «листается», подсветка лица
 function phoneFrame(c: number): Px[] {
   const px: Px[] = []
-  // корпус телефона
-  for (let y = 9; y <= 11; y++)
-    for (let x = 7; x <= 8; x++) px.push({ x, y, c: C.K })
-  // экран мигает (листает ленту)
-  px.push({ x: 7, y: 9, c: C.GLOW, o: c % 3 === 0 ? 0.9 : 0.45 })
-  px.push({ x: 8, y: 10, c: C.GLOW, o: c % 3 === 1 ? 0.9 : 0.45 })
-  px.push({ x: 7, y: 10, c: C.GLOW, o: 0.3 })
+  // ореол свечения вокруг телефона
+  const halo: Array<[number, number]> = [
+    [6, 8], [10, 8], [6, 12], [10, 12], [5, 10], [11, 10],
+  ]
+  for (const [hx, hy] of halo) px.push({ x: hx, y: hy, c: C.GLOW, o: 0.22 })
+  // корпус 3×5
+  for (let y = 8; y <= 12; y++)
+    for (let x = 7; x <= 9; x++) px.push({ x, y, c: C.K })
+  // яркий белый экран: «лента» скроллится — полосы съезжают вверх каждый кадр
+  const shift = c % 3
+  for (let row = 0; row < 4; row++) {
+    const y = 8 + row
+    const bright = (row + shift) % 3 === 0
+    for (let x = 7; x <= 9; x++)
+      px.push({ x, y, c: bright ? C.GLOW : '#ffe9ee', o: bright ? 1 : 0.9 })
+  }
+  // нижняя кромка корпуса
+  for (let x = 7; x <= 9; x++) px.push({ x, y: 12, c: C.K })
   // руки
-  px.push({ x: 6, y: 10, c: C.P })
+  px.push({ x: 6, y: 11, c: C.P })
   const thumb = c % 2
-  px.push({ x: 9, y: thumb ? 10 : 9, c: C.P })
-  // подсветка лица снизу
-  px.push({ x: 7, y: 7, c: C.FACE_LIT, o: 0.8 })
-  px.push({ x: 8, y: 7, c: C.FACE_LIT, o: 0.6 })
+  px.push({ x: 10, y: thumb ? 11 : 10, c: C.P })
+  // лицо подсвечено экраном
+  px.push({ x: 7, y: 7, c: C.FACE_LIT, o: 0.9 })
+  px.push({ x: 8, y: 7, c: C.FACE_LIT, o: 0.7 })
+  px.push({ x: 6, y: 7, c: C.FACE_LIT, o: 0.4 })
   // взгляд вниз
   px.push({ x: 6, y: 6, c: C.W })
   px.push({ x: 11, y: 6, c: C.W })
@@ -215,16 +257,20 @@ export function PixelImp() {
   const [tick, setTick] = useState(0)
   const [flip, setFlip] = useState(false)
   const [idx, setIdx] = useState(-1)
+  // 'idle' → 'out' (густой пуф на старом месте) → прыжок координат → 'in' (рассеивающийся пуф)
+  const [tp, setTp] = useState<'idle' | 'out' | 'in'>('idle')
   const idxRef = useRef(-1)
+  const tpBusy = useRef(false)
 
   const x = useMotionValue(-200)
   const y = useMotionValue(-200)
-  const sx = useSpring(x, { stiffness: 110, damping: 12 })
-  const sy = useSpring(y, { stiffness: 110, damping: 11 })
+  const sx = useSpring(x, { stiffness: 160, damping: 18 })
+  const sy = useSpring(y, { stiffness: 160, damping: 18 })
 
+  // 4 кадра в секунду — живее и не спорит с плавным фоном
   useEffect(() => {
     if (reduce) return
-    const t = setInterval(() => setTick((v) => v + 1), 480)
+    const t = setInterval(() => setTick((v) => v + 1), 250)
     return () => clearInterval(t)
   }, [reduce])
 
@@ -247,17 +293,43 @@ export function PixelImp() {
     }
   }
 
-  const moveTo = (i: number) => {
+  // Мгновенная коррекция позиции (resize, первичная посадка) — без пуфа
+  const reposition = (i: number) => {
     const pos = computePos(i)
     if (!pos) return
-    setFlip(pos.x < x.get())
-    x.set(pos.x)
-    y.set(pos.y)
+    x.jump(pos.x)
+    y.jump(pos.y)
+    setFlip(pos.x > window.innerWidth / 2 + window.scrollX - 200)
+  }
+
+  // Телепорт с пуфом: исчез здесь — появился там
+  const teleportTo = (i: number) => {
+    const pos = computePos(i)
+    if (!pos) return
+    if (reduce || tpBusy.current) {
+      x.jump(pos.x)
+      y.jump(pos.y)
+      return
+    }
+    tpBusy.current = true
+    setTp('out')
+    window.setTimeout(() => {
+      x.jump(pos.x)
+      y.jump(pos.y)
+      setFlip(true) // лицом внутрь страницы (сидит у правого края)
+      setTp('in')
+    }, 280)
+    window.setTimeout(() => {
+      setTp('idle')
+      tpBusy.current = false
+      // секция могла смениться, пока шёл пуф — догоняем
+      if (idxRef.current !== i) teleportTo(idxRef.current)
+    }, 600)
   }
 
   useEffect(() => {
-    const initial = setTimeout(() => moveTo(idxRef.current), 600)
-    const settle = setTimeout(() => moveTo(idxRef.current), 2800)
+    const initial = setTimeout(() => reposition(idxRef.current), 600)
+    const settle = setTimeout(() => reposition(idxRef.current), 2800)
 
     const observer = new IntersectionObserver(
       (entries) => {
@@ -268,7 +340,7 @@ export function PixelImp() {
           if (next !== idxRef.current) {
             idxRef.current = next
             setIdx(next)
-            moveTo(next)
+            teleportTo(next)
           }
         }
       },
@@ -281,7 +353,7 @@ export function PixelImp() {
       if (el) observer.observe(el)
     })
 
-    const onResize = () => moveTo(idxRef.current)
+    const onResize = () => reposition(idxRef.current)
     window.addEventListener('resize', onResize)
     return () => {
       clearTimeout(initial)
@@ -292,41 +364,53 @@ export function PixelImp() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  // В hero — всегда перекур; в секциях чередует дело и перекур
-  const activity: Activity =
-    idx < 0 ? 'smoke' : Math.floor(tick / 12) % 2 ? 'smoke' : ACTIVITY_BY_IDX[idx]
-  const c = tick % 12
-  const legSwing = tick % 2 === 1
-  const blink = c === 10 && activity !== 'read' && activity !== 'phone'
+  // В hero — перекур; в секциях чередуем дело (6с) и перекур (4с)
+  const phaseLen = 24 + 16
+  const inSmokeBreak = idx < 0 || tick % phaseLen >= 24
+  const activity: Activity = inSmokeBreak ? 'smoke' : ACTIVITY_BY_IDX[idx]
+  const c = activity === 'smoke' ? tick % 16 : tick % 12
+  const legSwing = Math.floor(tick / 2) % 2 === 1
+  const blink =
+    tick % 13 === 12 && activity !== 'read' && activity !== 'phone'
 
+  const hideBody = tp === 'out'
   const layer: Px[] =
-    activity === 'smoke'
-      ? smokeFrame(c)
-      : activity === 'laptop'
-        ? laptopFrame(c)
-        : activity === 'read'
-          ? readFrame(c)
-          : phoneFrame(c)
+    tp !== 'idle'
+      ? tp === 'out'
+        ? POOF_DENSE
+        : POOF_SPARSE
+      : activity === 'smoke'
+        ? smokeFrame(c)
+        : activity === 'laptop'
+          ? laptopFrame(c)
+          : activity === 'read'
+            ? readFrame(c)
+            : phoneFrame(c)
 
   return (
     <motion.div className="pixel-imp" style={{ left: sx, top: sy }} aria-hidden="true">
-      <div className="pixel-imp__shadow" />
+      {!hideBody && <div className="pixel-imp__shadow" />}
       <svg
-        viewBox={`0 0 ${COLS} 17`}
+        viewBox={`0 0 ${COLS} ${ROWS}`}
         width={COLS * PX}
-        height={17 * PX}
+        height={ROWS * PX}
         shapeRendering="crispEdges"
         style={{ transform: flip ? 'scaleX(-1)' : undefined }}
       >
-        {BODY_PIXELS.map((p, i) => (
-          <rect key={i} x={p.x} y={p.y} width="1" height="1" fill={p.c} />
-        ))}
+        {!hideBody &&
+          BODY_PIXELS.map((p, i) => (
+            <rect key={i} x={p.x} y={p.y} width="1" height="1" fill={p.c} />
+          ))}
 
-        {/* качающиеся ступни */}
-        <rect x="4" y={legSwing ? 16 : 15} width="2" height="1" fill={C.K} />
-        <rect x="10" y={legSwing ? 15 : 16} width="2" height="1" fill={C.K} />
+        {!hideBody && (
+          <>
+            <rect x="4" y={legSwing ? 16 : 15} width="2" height="1" fill={C.K} />
+            <rect x="10" y={legSwing ? 15 : 16} width="2" height="1" fill={C.K} />
+          </>
+        )}
 
-        {blink &&
+        {!hideBody &&
+          blink &&
           BLINK.map(([bx, by], i) => (
             <rect key={`b${i}`} x={bx} y={by} width="1" height="1" fill={C.R} />
           ))}
