@@ -1,0 +1,28 @@
+{
+	# Email для уведомлений Let's Encrypt (истечение сертификата и т.п.)
+	email parshinfm@gmail.com
+}
+
+neovillain.space {
+	root * /srv/villain
+	file_server
+	encode gzip zstd
+
+	# SPA: всё, что не файл — на index.html
+	try_files {path} /index.html
+
+	header {
+		Strict-Transport-Security "max-age=31536000"
+		X-Content-Type-Options "nosniff"
+		Referrer-Policy "strict-origin-when-cross-origin"
+	}
+
+	# Кэш для статики со «слепком» в имени файла
+	@assets path /assets/*
+	header @assets Cache-Control "public, max-age=31536000, immutable"
+}
+
+# www → главный домен
+www.neovillain.space {
+	redir https://neovillain.space{uri} permanent
+}

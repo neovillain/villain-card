@@ -1,0 +1,18 @@
+services:
+  caddy:
+    image: caddy:2-alpine
+    container_name: villain-caddy
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp" # HTTP/3
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - ./dist:/srv/villain:ro
+      - caddy_data:/data # здесь живут сертификаты Let's Encrypt
+      - caddy_config:/config
+
+volumes:
+  caddy_data:
+  caddy_config:
