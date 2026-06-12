@@ -1,6 +1,6 @@
 import { motion, useReducedMotion } from 'framer-motion'
 import { dossier } from '../config'
-import { RedactedBars } from './v2/SectionTransitions'
+import { RedactedText, RedactedLine } from './v2/SectionTransitions'
 import './Dossier.css'
 
 const EASE = [0.16, 1, 0.3, 1] as const
@@ -17,7 +17,6 @@ export function Dossier() {
 
   return (
     <section className="dossier container" id="dossier">
-      <RedactedBars />
       <h2 className="section-label">
         <span className="num">02</span> the dossier
       </h2>
@@ -25,12 +24,18 @@ export function Dossier() {
       <div className="dossier__top">
         <motion.div className="dossier-card dossier__profile" {...fadeUp(reduce)}>
           <span className="dossier-card__tag">subject profile</span>
-          <p className="dossier__about">{dossier.about}</p>
+          <p className="dossier__about">
+            <RedactedText>{dossier.about}</RedactedText>
+          </p>
           <dl className="dossier__facts">
-            {dossier.facts.map((fact) => (
+            {dossier.facts.map((fact, i) => (
               <div className="dossier__fact" key={fact.label}>
                 <dt>{fact.label}</dt>
-                <dd>{fact.value}</dd>
+                <dd>
+                  <RedactedLine delay={0.35 + i * 0.14}>
+                    {fact.value}
+                  </RedactedLine>
+                </dd>
               </div>
             ))}
           </dl>
@@ -42,9 +47,13 @@ export function Dossier() {
         >
           <span className="dossier-card__tag">known victories</span>
           <ul className="dossier__wins">
-            {dossier.achievements.map((win) => (
+            {dossier.achievements.map((win, i) => (
               <li key={win.title}>
-                <span className="dossier__win-title">{win.title}</span>
+                <span className="dossier__win-title">
+                  <RedactedLine delay={0.45 + i * 0.16}>
+                    {win.title}
+                  </RedactedLine>
+                </span>
                 <span className="dossier__win-detail">{win.detail}</span>
               </li>
             ))}

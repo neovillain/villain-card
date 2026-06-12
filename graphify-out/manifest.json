@@ -10,8 +10,8 @@
     "semantic_hash": "4fc637193b6de79735a7ebffae867d5d"
   },
   "src/App.tsx": {
-    "mtime": 1781255923.624467,
-    "ast_hash": "f993a70b51a29047a6c4da9b96d0fa63",
+    "mtime": 1781256722.3067987,
+    "ast_hash": "7ab8ad785ffdea2f3b72b4cf96e9839c",
     "semantic_hash": ""
   },
   "src/components/AmbientBackground.tsx": {
@@ -20,8 +20,8 @@
     "semantic_hash": "63542f7da40949e23e3b6ebb84cf09d0"
   },
   "src/components/Dossier.tsx": {
-    "mtime": 1781255947.9407864,
-    "ast_hash": "c254a3f409b64fde50887d81440fa2aa",
+    "mtime": 1781256712.6890514,
+    "ast_hash": "4f055eb7838323f960ba4c54de4ce758",
     "semantic_hash": ""
   },
   "src/components/Footer.tsx": {
@@ -130,8 +130,8 @@
     "semantic_hash": ""
   },
   "src/components/v2/SectionTransitions.tsx": {
-    "mtime": 1781255902.915336,
-    "ast_hash": "05a7e0ae91f99c1620d66190e15df741",
+    "mtime": 1781256679.2056036,
+    "ast_hash": "348a9e689753442fdd04489afc749051",
     "semantic_hash": ""
   }
 }

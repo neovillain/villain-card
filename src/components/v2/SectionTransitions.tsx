@@ -1,47 +1,57 @@
+import { useState } from 'react'
 import { motion, useReducedMotion } from 'framer-motion'
 import './SectionTransitions.css'
 
 /**
- * Тематические переходы секций.
- * RedactedBars — досье «рассекречивается»: цензурные плашки уезжают.
+ * Тематические переходы и эффекты секций.
+ * RedactedText — многострочный текст «под грифом»: чёрная заливка по
+ *   строкам (box-decoration-break) растворяется, текст проявляется.
+ * RedactedLine — цензурная плашка ровно по однострочному тексту,
+ *   уезжает в сторону при появлении секции.
  * ScanSweep — контакты «сканируются»: красный луч проходит сверху вниз.
- * Оба — оверлеи поверх секции (родителю нужен position: relative).
+ * CrimeTape — лента ограждения на стыке hero и schemes.
  */
 
 const EASE = [0.77, 0, 0.18, 1] as const
 
-const BARS = [
-  { top: '9%', left: '8%', width: '46%' },
-  { top: '21%', left: '32%', width: '54%' },
-  { top: '34%', left: '5%', width: '38%' },
-  { top: '47%', left: '42%', width: '50%' },
-  { top: '60%', left: '12%', width: '58%' },
-  { top: '73%', left: '28%', width: '44%' },
-  { top: '86%', left: '7%', width: '52%' },
-]
-
-export function RedactedBars() {
+export function RedactedText({ children }: { children: React.ReactNode }) {
   const reduce = useReducedMotion()
-  if (reduce) return null
+  const [open, setOpen] = useState(false)
+  if (reduce) return <>{children}</>
   return (
-    <div className="redacted" aria-hidden="true">
-      {BARS.map((bar, i) => (
+    <motion.span
+      className={`redact-text${open ? ' redact-text--open' : ''}`}
+      onViewportEnter={() => setOpen(true)}
+      viewport={{ once: true, margin: '-12%' }}
+    >
+      {children}
+    </motion.span>
+  )
+}
+
+export function RedactedLine({
+  children,
+  delay = 0,
+}: {
+  children: React.ReactNode
+  delay?: number
+}) {
+  const reduce = useReducedMotion()
+  return (
+    <span className="redact-line">
+      {children}
+      {!reduce && (
         <motion.span
-          key={i}
-          className="redacted__bar"
-          style={{
-            top: bar.top,
-            left: bar.left,
-            width: bar.width,
-            transformOrigin: i % 2 ? 'left center' : 'right center',
-          }}
+          className="redact-line__bar"
+          aria-hidden="true"
           initial={{ scaleX: 1 }}
           whileInView={{ scaleX: 0 }}
-          viewport={{ once: true, margin: '-15%' }}
-          transition={{ duration: 0.55, delay: 0.2 + i * 0.09, ease: EASE }}
+          viewport={{ once: true, margin: '-12%' }}
+          transition={{ duration: 0.6, delay, ease: EASE }}
+          style={{ transformOrigin: 'right center' }}
         />
-      ))}
-    </div>
+      )}
+    </span>
   )
 }
 
@@ -60,6 +70,22 @@ export function ScanSweep() {
         <span className="scan__trail" />
         <span className="scan__line" />
       </motion.div>
+    </div>
+  )
+}
+
+const TAPE_TEXT = 'crime scene · do not cross · villain territory · '
+
+export function CrimeTape() {
+  const phrase = TAPE_TEXT.repeat(4)
+  return (
+    <div className="tape" aria-hidden="true">
+      <div className="tape__band">
+        <div className="tape__track">
+          <span>{phrase}</span>
+          <span>{phrase}</span>
+        </div>
+      </div>
     </div>
   )
 }

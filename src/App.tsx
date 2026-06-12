@@ -7,6 +7,7 @@ import { HeroV2 } from './components/v2/HeroV2'
 import { SocialLinksV2 } from './components/v2/SocialLinksV2'
 import { PixelImp } from './components/v2/PixelImp'
 import { DeckSection } from './components/v2/DeckSection'
+import { CrimeTape } from './components/v2/SectionTransitions'
 
 function App() {
   return (
@@ -17,6 +18,7 @@ function App() {
         <DeckSection>
           <HeroV2 />
         </DeckSection>
+        <CrimeTape />
         <DeckSection>
           <Schemes />
         </DeckSection>
