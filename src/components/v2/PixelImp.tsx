@@ -270,7 +270,7 @@ export function PixelImp() {
     setHiddenState(v)
   }
   const idxRef = useRef(-1)
-  const tpBusy = useRef(false)
+  const tpTimer = useRef(0)
 
   const x = useMotionValue(-200)
   const y = useMotionValue(-200)
@@ -309,102 +309,79 @@ export function PixelImp() {
     setHidden(false)
   }
 
-  // Телепорт с пуфом: исчез здесь — появился там.
-  // В hero (i < 0) чертёнок не живёт: пуф — и пропал до следующей секции.
+  // Мгновенный телепорт: чертёнок сразу на новом месте, лёгкий
+  // «in»-пуф рассеивается уже там. Никаких очередей и ожиданий.
   const teleportTo = (i: number) => {
-    if (reduce || tpBusy.current) {
+    if (reduce) {
       reposition(i)
       return
     }
+    window.clearTimeout(tpTimer.current)
     if (i < 0) {
       if (hiddenRef.current) return
-      tpBusy.current = true
+      // уходит в hero: короткий пуф на месте — и пропал
       setTp('out')
-      window.setTimeout(() => {
+      tpTimer.current = window.setTimeout(() => {
         setHidden(true)
         setTp('idle')
-        tpBusy.current = false
-        if (idxRef.current !== i) teleportTo(idxRef.current)
-      }, 300)
+      }, 220)
       return
     }
     const pos = computePos(i)
     if (!pos) return
-    tpBusy.current = true
-    if (hiddenRef.current) {
-      // появляется из ниоткуда: сразу на месте, только «in»-пуф
-      x.jump(pos.x)
-      y.jump(pos.y)
-      setFlip(true)
-      setHidden(false)
-      setTp('in')
-      window.setTimeout(() => {
-        setTp('idle')
-        tpBusy.current = false
-        if (idxRef.current !== i) teleportTo(idxRef.current)
-      }, 320)
-      return
-    }
-    setTp('out')
-    window.setTimeout(() => {
-      x.jump(pos.x)
-      y.jump(pos.y)
-      setFlip(true) // лицом внутрь страницы (сидит у правого края)
-      setTp('in')
-    }, 280)
-    window.setTimeout(() => {
-      setTp('idle')
-      tpBusy.current = false
-      // секция могла смениться, пока шёл пуф — догоняем
-      if (idxRef.current !== i) teleportTo(idxRef.current)
-    }, 600)
+    x.jump(pos.x)
+    y.jump(pos.y)
+    setFlip(true) // лицом внутрь страницы (сидит у правого края)
+    setHidden(false)
+    setTp('in')
+    tpTimer.current = window.setTimeout(() => setTp('idle'), 300)
   }
 
   useEffect(() => {
     const initial = setTimeout(() => reposition(idxRef.current), 600)
     const settle = setTimeout(() => reposition(idxRef.current), 2800)
 
-    // Доля ВЬЮПОРТА (не секции!), занятая каждой секцией — высокие секции
-    // иначе почти никогда не добирают порог и чертёнок опаздывает.
-    const visible: Record<string, number> = {}
-    const observer = new IntersectionObserver(
-      (entries) => {
-        for (const entry of entries) {
-          visible[entry.target.id] = entry.isIntersecting
-            ? entry.intersectionRect.height / window.innerHeight
-            : 0
-        }
-        let best = ''
-        let bestShare = 0.12 // минимум, чтобы не дёргался на краях
-        for (const [id, share] of Object.entries(visible)) {
-          if (share > bestShare) {
-            best = id
-            bestShare = share
-          }
-        }
-        if (!best) return
-        const next = best === 'hero' ? -1 : SECTIONS.indexOf(best)
+    // Без IntersectionObserver: на каждый кадр скролла берём секцию,
+    // в которой сейчас центр экрана, — реакция мгновенная.
+    const sectionAtCenter = () => {
+      const mid = window.innerHeight * 0.5
+      const heroEl = document.getElementById('hero')
+      if (heroEl) {
+        const r = heroEl.getBoundingClientRect()
+        if (r.top <= mid && r.bottom >= mid) return -1
+      }
+      for (let i = 0; i < SECTIONS.length; i++) {
+        const el = document.getElementById(SECTIONS[i])
+        if (!el) continue
+        const r = el.getBoundingClientRect()
+        if (r.top <= mid && r.bottom >= mid) return i
+      }
+      return idxRef.current // центр в зазоре между секциями — не дёргаемся
+    }
+
+    let raf = 0
+    const onScroll = () => {
+      if (raf) return
+      raf = requestAnimationFrame(() => {
+        raf = 0
+        const next = sectionAtCenter()
         if (next !== idxRef.current) {
           idxRef.current = next
           setIdx(next)
           teleportTo(next)
         }
-      },
-      { threshold: [0, 0.1, 0.25, 0.5, 0.75, 1] }
-    )
-    const heroEl = document.getElementById('hero')
-    if (heroEl) observer.observe(heroEl)
-    SECTIONS.forEach((id) => {
-      const el = document.getElementById(id)
-      if (el) observer.observe(el)
-    })
+      })
+    }
+    window.addEventListener('scroll', onScroll, { passive: true })
+    onScroll()
 
     const onResize = () => reposition(idxRef.current)
     window.addEventListener('resize', onResize)
     return () => {
       clearTimeout(initial)
       clearTimeout(settle)
-      observer.disconnect()
+      cancelAnimationFrame(raf)
+      window.removeEventListener('scroll', onScroll)
       window.removeEventListener('resize', onResize)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

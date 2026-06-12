@@ -6,10 +6,12 @@
   background-color: #0a0407;
   box-shadow: 0 0 0 1px rgba(225, 29, 72, 0.22);
   color: transparent;
+  /* большой блок «рассекречивается» медленнее и позже мелких плашек —
+     иначе он распахивается первым и ломает ритм */
   transition:
-    background-color 0.9s ease 0.25s,
-    box-shadow 0.9s ease 0.25s,
-    color 0.9s ease 0.4s;
+    background-color 1.3s cubic-bezier(0.22, 0.61, 0.36, 1) 0.35s,
+    box-shadow 1.3s cubic-bezier(0.22, 0.61, 0.36, 1) 0.35s,
+    color 1.3s cubic-bezier(0.22, 0.61, 0.36, 1) 0.5s;
 }
 
 .redact-text--open {

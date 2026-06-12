@@ -47,7 +47,7 @@ export function RedactedLine({
           initial={{ scaleX: 1 }}
           whileInView={{ scaleX: 0 }}
           viewport={{ once: true, margin: '-12%' }}
-          transition={{ duration: 0.6, delay, ease: EASE }}
+          transition={{ duration: 0.55, delay, ease: EASE }}
           style={{ transformOrigin: 'right center' }}
         />
       )}
@@ -74,10 +74,10 @@ export function ScanSweep() {
   )
 }
 
-const TAPE_TEXT = 'crime scene · do not cross · villain territory · '
+const TAPE_TEXT = 'do not cross · villain residence · '
 
 export function CrimeTape() {
-  const phrase = TAPE_TEXT.repeat(4)
+  const phrase = TAPE_TEXT.repeat(6)
   return (
     <div className="tape" aria-hidden="true">
       <div className="tape__band">

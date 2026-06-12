@@ -32,7 +32,7 @@ export function Dossier() {
               <div className="dossier__fact" key={fact.label}>
                 <dt>{fact.label}</dt>
                 <dd>
-                  <RedactedLine delay={0.35 + i * 0.14}>
+                  <RedactedLine delay={0.2 + i * 0.1}>
                     {fact.value}
                   </RedactedLine>
                 </dd>
@@ -50,7 +50,7 @@ export function Dossier() {
             {dossier.achievements.map((win, i) => (
               <li key={win.title}>
                 <span className="dossier__win-title">
-                  <RedactedLine delay={0.45 + i * 0.16}>
+                  <RedactedLine delay={0.35 + i * 0.12}>
                     {win.title}
                   </RedactedLine>
                 </span>
