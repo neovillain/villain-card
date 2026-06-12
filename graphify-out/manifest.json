@@ -1,0 +1,117 @@
+{
+  "eslint.config.js": {
+    "mtime": 1781092887.3279772,
+    "ast_hash": "0355276bc79439afe3c53e3a2470ca1e",
+    "semantic_hash": "0355276bc79439afe3c53e3a2470ca1e"
+  },
+  "package.json": {
+    "mtime": 1781092919.3900177,
+    "ast_hash": "4fc637193b6de79735a7ebffae867d5d",
+    "semantic_hash": "4fc637193b6de79735a7ebffae867d5d"
+  },
+  "src/App.tsx": {
+    "mtime": 1781217949.567684,
+    "ast_hash": "138c74e5c4629f6b59f6b87f513e40c1",
+    "semantic_hash": "138c74e5c4629f6b59f6b87f513e40c1"
+  },
+  "src/components/AmbientBackground.tsx": {
+    "mtime": 1781093604.1396587,
+    "ast_hash": "63542f7da40949e23e3b6ebb84cf09d0",
+    "semantic_hash": "63542f7da40949e23e3b6ebb84cf09d0"
+  },
+  "src/components/Dossier.tsx": {
+    "mtime": 1781254774.029174,
+    "ast_hash": "d0c540338b5b5b9939942bcceb28b70f",
+    "semantic_hash": "d0c540338b5b5b9939942bcceb28b70f"
+  },
+  "src/components/Footer.tsx": {
+    "mtime": 1781093258.0561326,
+    "ast_hash": "17f597075662e1d9ec9c4ee2211725ac",
+    "semantic_hash": "17f597075662e1d9ec9c4ee2211725ac"
+  },
+  "src/components/Hero.tsx": {
+    "mtime": 1781095033.2523296,
+    "ast_hash": "8ef60e8b1b6892f9e7f2504a6c2ad632",
+    "semantic_hash": "8ef60e8b1b6892f9e7f2504a6c2ad632"
+  },
+  "src/components/Icon.tsx": {
+    "mtime": 1781093168.0774949,
+    "ast_hash": "5b8713cf3f914e33c3357a75aa358122",
+    "semantic_hash": "5b8713cf3f914e33c3357a75aa358122"
+  },
+  "src/components/Schemes.tsx": {
+    "mtime": 1781254774.0294158,
+    "ast_hash": "b444e83a1f76669d8eeb3ed07ebeafab",
+    "semantic_hash": "b444e83a1f76669d8eeb3ed07ebeafab"
+  },
+  "src/components/SocialLinks.tsx": {
+    "mtime": 1781093222.4666252,
+    "ast_hash": "1c85781f9c4d21434f16553b8625dedf",
+    "semantic_hash": "1c85781f9c4d21434f16553b8625dedf"
+  },
+  "src/components/v2/HeroV2.tsx": {
+    "mtime": 1781217965.124532,
+    "ast_hash": "be5627cf2706d5ea525bd7b463e8d647",
+    "semantic_hash": "be5627cf2706d5ea525bd7b463e8d647"
+  },
+  "src/components/v2/Lightning.tsx": {
+    "mtime": 1781217941.1310544,
+    "ast_hash": "6e41b3a2a0ec437ff3d479b4215de390",
+    "semantic_hash": "6e41b3a2a0ec437ff3d479b4215de390"
+  },
+  "src/components/v2/PixelImp.tsx": {
+    "mtime": 1781254784.0428574,
+    "ast_hash": "9521045d11b570029769479a2272d116",
+    "semantic_hash": "9521045d11b570029769479a2272d116"
+  },
+  "src/components/v2/Preloader.tsx": {
+    "mtime": 1781191565.6895134,
+    "ast_hash": "01b90a53435db975187a112714669ff6",
+    "semantic_hash": "01b90a53435db975187a112714669ff6"
+  },
+  "src/components/v2/SectionFX.tsx": {
+    "mtime": 1781217986.7385945,
+    "ast_hash": "26bc5aa00f33d0c31aa60feb0596090b",
+    "semantic_hash": "26bc5aa00f33d0c31aa60feb0596090b"
+  },
+  "src/components/v2/SectionSlash.tsx": {
+    "mtime": 1781254774.0405755,
+    "ast_hash": "3513dc07dbdebfbd6fda696a40897c73",
+    "semantic_hash": "3513dc07dbdebfbd6fda696a40897c73"
+  },
+  "src/components/v2/SocialLinksV2.tsx": {
+    "mtime": 1781254774.029904,
+    "ast_hash": "19391813128f1e5058dc9728b7bb3320",
+    "semantic_hash": "19391813128f1e5058dc9728b7bb3320"
+  },
+  "src/config.ts": {
+    "mtime": 1781254795.585887,
+    "ast_hash": "ab250c1396f27501b4978fb8cbf01d64",
+    "semantic_hash": "ab250c1396f27501b4978fb8cbf01d64"
+  },
+  "src/main.tsx": {
+    "mtime": 1781092887.3298516,
+    "ast_hash": "787e5a07efeb2bf6209d5937195f2f68",
+    "semantic_hash": "787e5a07efeb2bf6209d5937195f2f68"
+  },
+  "tsconfig.app.json": {
+    "mtime": 1781092887.3299446,
+    "ast_hash": "136630b5accce1ca50663df229534a26",
+    "semantic_hash": "136630b5accce1ca50663df229534a26"
+  },
+  "tsconfig.json": {
+    "mtime": 1781092887.3300385,
+    "ast_hash": "a3d39fa780ebff65444de257f291ce6c",
+    "semantic_hash": "a3d39fa780ebff65444de257f291ce6c"
+  },
+  "tsconfig.node.json": {
+    "mtime": 1781092887.3301306,
+    "ast_hash": "70bdd0a673bcfc0e828080b306e7c680",
+    "semantic_hash": "70bdd0a673bcfc0e828080b306e7c680"
+  },
+  "vite.config.ts": {
+    "mtime": 1781092887.33022,
+    "ast_hash": "88439104b3c207f17d33ef3160e3b080",
+    "semantic_hash": "88439104b3c207f17d33ef3160e3b080"
+  }
+}

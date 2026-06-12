@@ -1,0 +1,11 @@
+public/
+dist/
+src/assets/
+tools/
+node_modules/
+deploy/
+*.md
+*.yaml
+*.yml
+*.txt
+*.html
