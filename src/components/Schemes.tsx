@@ -1,6 +1,7 @@
 import { motion, useReducedMotion } from 'framer-motion'
 import { schemes, type Scheme } from '../config'
 import { SectionFX } from './v2/SectionFX'
+import { SectionSlash } from './v2/SectionSlash'
 import './Schemes.css'
 
 const EASE = [0.16, 1, 0.3, 1] as const
@@ -44,6 +45,7 @@ export function Schemes() {
   return (
     <section className="schemes container" id="schemes">
       <SectionFX />
+      <SectionSlash />
       <h2 className="section-label">
         <span className="num">01</span> evil schemes
       </h2>

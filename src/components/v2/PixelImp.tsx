@@ -215,40 +215,43 @@ function readFrame(c: number): Px[] {
   return px
 }
 
-// Залипает в телефон: крупный экран светится и «листается», подсветка лица
+// Залипает в телефон — вполоборота: телефон вытянут перед мордой,
+// взгляд вбок-вниз на экран, свет экрана бьёт в лицо
 function phoneFrame(c: number): Px[] {
   const px: Px[] = []
-  // ореол свечения вокруг телефона
-  const halo: Array<[number, number]> = [
-    [6, 8], [10, 8], [6, 12], [10, 12], [5, 10], [11, 10],
-  ]
-  for (const [hx, hy] of halo) px.push({ x: hx, y: hy, c: C.GLOW, o: 0.22 })
-  // корпус 3×5
-  for (let y = 8; y <= 12; y++)
-    for (let x = 7; x <= 9; x++) px.push({ x, y, c: C.K })
-  // яркий белый экран: «лента» скроллится — полосы съезжают вверх каждый кадр
-  const shift = c % 3
-  for (let row = 0; row < 4; row++) {
-    const y = 8 + row
-    const bright = (row + shift) % 3 === 0
-    for (let x = 7; x <= 9; x++)
-      px.push({ x, y, c: bright ? C.GLOW : '#ffe9ee', o: bright ? 1 : 0.9 })
-  }
-  // нижняя кромка корпуса
-  for (let x = 7; x <= 9; x++) px.push({ x, y: 12, c: C.K })
-  // руки
-  px.push({ x: 6, y: 11, c: C.P })
-  const thumb = c % 2
-  px.push({ x: 10, y: thumb ? 11 : 10, c: C.P })
-  // лицо подсвечено экраном
-  px.push({ x: 7, y: 7, c: C.FACE_LIT, o: 0.9 })
-  px.push({ x: 8, y: 7, c: C.FACE_LIT, o: 0.7 })
-  px.push({ x: 6, y: 7, c: C.FACE_LIT, o: 0.4 })
-  // взгляд вниз
-  px.push({ x: 6, y: 6, c: C.W })
+  // вполоборота: прячем дальний (левый) глаз и фронтальный рот
+  px.push({ x: 5, y: 5, c: C.R }, { x: 6, y: 5, c: C.R })
+  px.push({ x: 5, y: 6, c: C.R }, { x: 6, y: 6, c: C.R })
+  for (let x = 6; x <= 10; x++) px.push({ x, y: 8, c: C.R })
+  // приоткрытый рот сбоку (залип)
+  px.push({ x: 11, y: 8, c: C.P })
+  px.push({ x: 12, y: 8, c: C.P, o: 0.85 })
+  // ближний глаз смотрит вперёд-вниз
   px.push({ x: 11, y: 6, c: C.W })
-  px.push({ x: 6, y: 7, c: C.P })
   px.push({ x: 11, y: 7, c: C.P })
+  // рука вытянута вперёд к телефону
+  px.push({ x: 13, y: 9, c: C.P })
+  px.push({ x: 14, y: 10, c: C.P })
+  // телефон перед лицом
+  for (let y = 6; y <= 10; y++) {
+    px.push({ x: 14, y, c: C.K })
+    px.push({ x: 15, y, c: C.K })
+  }
+  // яркий экран, «лента» скроллится
+  const shift = c % 3
+  for (let row = 0; row < 3; row++) {
+    const y = 7 + row
+    const bright = (row + shift) % 3 === 0
+    px.push({ x: 14, y, c: bright ? C.GLOW : '#ffe9ee', o: bright ? 1 : 0.92 })
+    px.push({ x: 15, y, c: bright ? C.GLOW : '#ffe9ee', o: bright ? 1 : 0.92 })
+  }
+  // свет экрана на морде
+  px.push({ x: 12, y: 6, c: C.FACE_LIT, o: 0.85 })
+  px.push({ x: 12, y: 7, c: C.FACE_LIT, o: 0.5 })
+  // ореол свечения
+  px.push({ x: 16, y: 7, c: C.GLOW, o: 0.25 })
+  px.push({ x: 13, y: 6, c: C.GLOW, o: 0.2 })
+  px.push({ x: 16, y: 10, c: C.GLOW, o: 0.2 })
   return px
 }
 

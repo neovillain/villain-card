@@ -6,6 +6,7 @@ import {
   useReducedMotion,
 } from 'framer-motion'
 import { links, type SocialLink } from '../../config'
+import { SectionSlash } from './SectionSlash'
 import './SocialLinksV2.css'
 
 const EASE = [0.16, 1, 0.3, 1] as const
@@ -122,6 +123,7 @@ function TiltCard({ link, index }: { link: SocialLink; index: number }) {
 export function SocialLinksV2() {
   return (
     <section className="contacts2 container" id="contacts">
+      <SectionSlash />
       <h2 className="section-label">
         <span className="num">03</span> choose your poison
       </h2>
