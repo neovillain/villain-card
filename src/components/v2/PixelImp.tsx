@@ -364,20 +364,33 @@ export function PixelImp() {
     const initial = setTimeout(() => reposition(idxRef.current), 600)
     const settle = setTimeout(() => reposition(idxRef.current), 2800)
 
+    // Доля ВЬЮПОРТА (не секции!), занятая каждой секцией — высокие секции
+    // иначе почти никогда не добирают порог и чертёнок опаздывает.
+    const visible: Record<string, number> = {}
     const observer = new IntersectionObserver(
       (entries) => {
         for (const entry of entries) {
-          if (!entry.isIntersecting) continue
-          const id = entry.target.id
-          const next = id === 'hero' ? -1 : SECTIONS.indexOf(id)
-          if (next !== idxRef.current) {
-            idxRef.current = next
-            setIdx(next)
-            teleportTo(next)
+          visible[entry.target.id] = entry.isIntersecting
+            ? entry.intersectionRect.height / window.innerHeight
+            : 0
+        }
+        let best = ''
+        let bestShare = 0.12 // минимум, чтобы не дёргался на краях
+        for (const [id, share] of Object.entries(visible)) {
+          if (share > bestShare) {
+            best = id
+            bestShare = share
           }
         }
+        if (!best) return
+        const next = best === 'hero' ? -1 : SECTIONS.indexOf(best)
+        if (next !== idxRef.current) {
+          idxRef.current = next
+          setIdx(next)
+          teleportTo(next)
+        }
       },
-      { threshold: 0.35 }
+      { threshold: [0, 0.1, 0.25, 0.5, 0.75, 1] }
     )
     const heroEl = document.getElementById('hero')
     if (heroEl) observer.observe(heroEl)

@@ -60,8 +60,8 @@
     "semantic_hash": "6e41b3a2a0ec437ff3d479b4215de390"
   },
   "src/components/v2/PixelImp.tsx": {
-    "mtime": 1781257232.8768537,
-    "ast_hash": "867dcc91cd42fcb98ceef0bb4da949b9",
+    "mtime": 1781257580.5761852,
+    "ast_hash": "564963b88a1e7c2dcc7eb28862b1b01f",
     "semantic_hash": ""
   },
   "src/components/v2/Preloader.tsx": {
