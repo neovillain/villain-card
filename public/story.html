@@ -1,0 +1,346 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<title>VILLAIN — story</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Source+Sans+3:ital,wght@0,300;1,400&display=swap" rel="stylesheet" />
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { height: 100%; overflow: hidden; }
+  body {
+    background: #0d0609;
+    font-family: 'Source Sans 3', system-ui, sans-serif;
+    color: #ece7e9;
+  }
+
+  .stage {
+    position: relative;
+    width: 100vw;
+    height: 100dvh;
+    overflow: hidden;
+    container-type: size;
+    background:
+      radial-gradient(ellipse 120% 70% at 50% 38%, rgba(110, 20, 35, 0.22), transparent 70%),
+      #0d0609;
+  }
+
+  /* ?ar=916 — жёсткий кадр 9:16 по центру, поля сливаются с фоном */
+  body.ar916 { display: flex; align-items: center; justify-content: center; background: #080305; }
+  body.ar916 .stage {
+    width: min(100vw, calc(100dvh * 9 / 16));
+    height: min(100dvh, calc(100vw * 16 / 9));
+  }
+
+  canvas#bolt {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0.8;
+  }
+
+  /* виньетка */
+  .stage::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 95% 80% at 50% 50%, transparent 55%, rgba(0,0,0,0.65));
+    pointer-events: none;
+  }
+
+  .content {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4cqh;
+    z-index: 2;
+  }
+
+  .est {
+    font-size: 2.2cqh;
+    font-weight: 300;
+    letter-spacing: 0.55em;
+    text-transform: uppercase;
+    color: #9a8f94;
+    animation: est-fade 9s ease-in-out infinite;
+  }
+  @keyframes est-fade {
+    0%, 100% { opacity: 0.45; }
+    50% { opacity: 0.9; }
+  }
+
+  h1 {
+    font-family: 'Bebas Neue', 'Arial Narrow', sans-serif;
+    font-weight: 400;
+    font-size: 17cqw;
+    line-height: 0.9;
+    letter-spacing: 0.02em;
+    color: #f3ecee;
+    text-shadow: 0 0 60px rgba(225, 29, 72, 0.25);
+    animation: title-pulse 9s ease-in-out infinite;
+  }
+  @keyframes title-pulse {
+    0%, 100% { text-shadow: 0 0 60px rgba(225, 29, 72, 0.2); }
+    47% { text-shadow: 0 0 60px rgba(225, 29, 72, 0.2); }
+    50% {
+      color: #ff3d63;
+      text-shadow: 0 0 30px rgba(225, 29, 72, 0.95), 0 0 120px rgba(225, 29, 72, 0.5);
+    }
+    53% { text-shadow: 0 0 60px rgba(225, 29, 72, 0.2); }
+  }
+
+  .tagline {
+    font-style: italic;
+    font-weight: 400;
+    font-size: 2.4cqh;
+    color: #b9aeb3;
+    animation: tag-fade 9s ease-in-out infinite;
+  }
+  @keyframes tag-fade {
+    0%, 100% { opacity: 0.55; }
+    55% { opacity: 1; }
+  }
+
+  /* ─── лента ограждения ─── */
+  .tape {
+    position: absolute;
+    left: -4%;
+    right: -4%;
+    bottom: 16cqh;
+    transform: rotate(-2.2deg);
+    background: #a8123a;
+    border-block: 0.5cqh solid #13070b;
+    overflow: hidden;
+    z-index: 3;
+    box-shadow: 0 1.4cqh 5cqh rgba(0, 0, 0, 0.6), 0 0 4cqh rgba(225, 29, 72, 0.3);
+  }
+  .tape__track {
+    display: flex;
+    width: max-content;
+    white-space: nowrap;
+    animation: tape-scroll 26s linear infinite;
+  }
+  .tape__track span {
+    padding: 1.1cqh 0;
+    font-size: 1.7cqh;
+    font-weight: 800;
+    letter-spacing: 0.34em;
+    text-transform: uppercase;
+    color: #13070b;
+  }
+  @keyframes tape-scroll { to { transform: translateX(-50%); } }
+
+  /* ─── чертёнок ─── */
+  #imp {
+    position: absolute;
+    left: 62%;
+    bottom: calc(16cqh + 3.1cqh);
+    z-index: 4;
+    filter: drop-shadow(0 0.8cqh 2cqh rgba(225, 29, 72, 0.4));
+    transform: rotate(-2.2deg);
+    transform-origin: bottom center;
+  }
+  #imp svg { display: block; image-rendering: pixelated; width: 16cqh; height: auto; }
+
+  /* ─── угольки ─── */
+  .ember {
+    position: absolute;
+    bottom: -2cqh;
+    width: 0.55cqh;
+    height: 0.55cqh;
+    border-radius: 50%;
+    background: #ff9f1c;
+    box-shadow: 0 0 1.2cqh rgba(255, 159, 28, 0.8);
+    animation: ember-rise linear infinite;
+    z-index: 1;
+  }
+  @keyframes ember-rise {
+    0% { transform: translateY(0) translateX(0); opacity: 0; }
+    8% { opacity: 0.9; }
+    100% { transform: translateY(-105cqh) translateX(var(--drift)); opacity: 0; }
+  }
+</style>
+</head>
+<body>
+<div class="stage">
+  <canvas id="bolt"></canvas>
+
+  <div class="content">
+    <div class="est">est. mmxxvi</div>
+    <h1>VILLAIN</h1>
+    <p class="tagline">every story needs a good villain.</p>
+  </div>
+
+  <div class="tape" aria-hidden="true">
+    <div class="tape__track"><span id="tA"></span><span id="tB"></span></div>
+  </div>
+
+  <div id="imp" aria-hidden="true">
+    <svg id="impSvg" viewBox="0 0 18 17" shape-rendering="crispEdges"></svg>
+  </div>
+</div>
+
+<script>
+if (new URLSearchParams(location.search).get('ar') === '916') {
+  document.body.classList.add('ar916');
+  requestAnimationFrame(() => { fit && fit(); });
+}
+
+/* ── лента ── */
+const phrase = 'do not cross · villain residence · '.repeat(8);
+document.getElementById('tA').textContent = phrase;
+document.getElementById('tB').textContent = phrase;
+
+/* ── угольки ── */
+const stage = document.querySelector('.stage');
+for (let i = 0; i < 16; i++) {
+  const e = document.createElement('div');
+  e.className = 'ember';
+  e.style.left = (4 + Math.random() * 92) + '%';
+  e.style.setProperty('--drift', (Math.random() * 16 - 8) + 'cqh');
+  e.style.animationDuration = (7 + Math.random() * 9) + 's';
+  e.style.animationDelay = (-Math.random() * 14) + 's';
+  e.style.opacity = String(0.4 + Math.random() * 0.6);
+  stage.appendChild(e);
+}
+
+/* ── пиксельный чертёнок (спрайт с сайта, перекур) ── */
+const C = {
+  K:'#13070b', R:'#e11d48', D:'#b11237', W:'#f3ecee', P:'#16060a',
+  CIG:'#d9d4d6', EMBER:'#ff9f1c', EMBER_HOT:'#ffd166', SMOKE:'#9a8f94', ASH:'#6f6468',
+};
+const BODY = [
+  '....W.......W.....','....WW.....WW.....','.....KKKKKKK......','....KRRRRRRRK.....',
+  '...KRRRRRRRRRK....','...KRWWRRRWWRK....','...KRWPRRRWPRK....','...KRRRRRRRRRK....',
+  '...KRRPPPPPRRK....','...KRRRRRRRRRK....','..KKRRRRRRRRRKK...','..KRRRRRRRRRRRK...',
+  'R..KRRRRRRRRRRK...','RR.KKDDDDDDDKK....','....KDK...KDK.....','....KDK...KDK.....',
+  '....KK....KK......',
+];
+const BLINK = [[5,5],[6,5],[10,5],[11,5],[5,6],[6,6],[10,6],[11,6]];
+
+function smokeFrame(c) {
+  const px = [];
+  const atMouth = c === 7 || c === 8;
+  const mid = c === 5 || c === 6;
+  if (atMouth) {
+    px.push({x:13,y:9,c:C.P},{x:12,y:8,c:C.CIG},{x:12,y:7,c:C.EMBER_HOT},{x:11,y:7,c:C.EMBER,o:.5});
+  } else if (mid) {
+    px.push({x:14,y:10,c:C.P},{x:14,y:9,c:C.CIG},{x:14,y:8,c:C.EMBER});
+  } else {
+    px.push({x:14,y:11,c:C.P},{x:15,y:11,c:C.CIG},{x:16,y:11,c:C.CIG},{x:17,y:11,c:C.EMBER,o:c%2?1:.5});
+  }
+  const s = c - 9;
+  if (s >= 0 && s <= 4) {
+    const cloud = [
+      [{x:13,y:6,c:C.SMOKE,o:.9}],
+      [{x:13,y:5,c:C.SMOKE,o:.85},{x:14,y:6,c:C.SMOKE,o:.55}],
+      [{x:14,y:4,c:C.SMOKE,o:.75},{x:13,y:5,c:C.SMOKE,o:.4},{x:15,y:5,c:C.SMOKE,o:.55},{x:14,y:5,c:C.SMOKE,o:.3}],
+      [{x:15,y:3,c:C.SMOKE,o:.55},{x:16,y:4,c:C.SMOKE,o:.45},{x:14,y:3,c:C.SMOKE,o:.35}],
+      [{x:16,y:2,c:C.SMOKE,o:.35},{x:17,y:3,c:C.SMOKE,o:.25}],
+    ];
+    px.push(...cloud[s]);
+  }
+  if (c === 14) px.push({x:16,y:12,c:C.ASH,o:.8});
+  return px;
+}
+
+const svg = document.getElementById('impSvg');
+const NS = 'http://www.w3.org/2000/svg';
+let tick = 0;
+function renderImp() {
+  svg.textContent = '';
+  BODY.forEach((row, y) => {
+    for (let x = 0; x < row.length; x++) {
+      const ch = row[x];
+      if (ch === '.') continue;
+      const r = document.createElementNS(NS, 'rect');
+      r.setAttribute('x', x); r.setAttribute('y', y);
+      r.setAttribute('width', 1); r.setAttribute('height', 1);
+      r.setAttribute('fill', C[ch] || ch);
+      svg.appendChild(r);
+    }
+  });
+  // ножки болтаются
+  const swing = Math.floor(tick / 2) % 2 === 1;
+  [[4, swing ? 16 : 15], [10, swing ? 15 : 16]].forEach(([lx, ly]) => {
+    const r = document.createElementNS(NS, 'rect');
+    r.setAttribute('x', lx); r.setAttribute('y', ly);
+    r.setAttribute('width', 2); r.setAttribute('height', 1);
+    r.setAttribute('fill', C.K);
+    svg.appendChild(r);
+  });
+  // моргание
+  if (tick % 13 === 12) {
+    BLINK.forEach(([bx, by]) => {
+      const r = document.createElementNS(NS, 'rect');
+      r.setAttribute('x', bx); r.setAttribute('y', by);
+      r.setAttribute('width', 1); r.setAttribute('height', 1);
+      r.setAttribute('fill', C.R);
+      svg.appendChild(r);
+    });
+  }
+  // сигарета и дым
+  smokeFrame(tick % 16).forEach(p => {
+    const r = document.createElementNS(NS, 'rect');
+    r.setAttribute('x', p.x); r.setAttribute('y', p.y);
+    r.setAttribute('width', 1); r.setAttribute('height', 1);
+    r.setAttribute('fill', p.c);
+    if (p.o != null) r.setAttribute('opacity', p.o);
+    svg.appendChild(r);
+  });
+  tick++;
+}
+renderImp();
+setInterval(renderImp, 250);
+
+/* ── молния (canvas 2d) ── */
+const cv = document.getElementById('bolt');
+const ctx = cv.getContext('2d');
+function fit() { cv.width = stage.clientWidth; cv.height = stage.clientHeight; }
+fit();
+addEventListener('resize', fit);
+
+function drawBolt(x0, amp, segs, alpha, width) {
+  ctx.beginPath();
+  let x = x0;
+  ctx.moveTo(x, -10);
+  for (let i = 1; i <= segs; i++) {
+    const y = (cv.height + 20) * (i / segs);
+    x = x0 + (Math.random() - 0.5) * amp;
+    ctx.lineTo(x, y);
+  }
+  ctx.strokeStyle = 'rgba(255, 61, 99, ' + alpha + ')';
+  ctx.lineWidth = width;
+  ctx.shadowColor = 'rgba(225, 29, 72, 0.9)';
+  ctx.shadowBlur = 22;
+  ctx.stroke();
+}
+
+let flash = 0;
+function lightning() {
+  ctx.clearRect(0, 0, cv.width, cv.height);
+  // постоянная тонкая жила
+  const cx = cv.width * 0.5;
+  drawBolt(cx, cv.width * 0.18, 26, 0.5, 1.6);
+  drawBolt(cx, cv.width * 0.26, 22, 0.22, 1);
+  // редкая яркая вспышка
+  if (flash > 0) {
+    drawBolt(cx, cv.width * 0.22, 30, 0.95, 2.6);
+    ctx.fillStyle = 'rgba(225, 29, 72, ' + 0.05 * flash + ')';
+    ctx.fillRect(0, 0, cv.width, cv.height);
+    flash--;
+  } else if (Math.random() < 0.04) {
+    flash = 3;
+  }
+}
+setInterval(lightning, 110);
+lightning();
+</script>
+</body>
+</html>
