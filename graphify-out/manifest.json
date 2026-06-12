@@ -1,0 +1,137 @@
+{
+  "eslint.config.js": {
+    "mtime": 1781092887.3279772,
+    "ast_hash": "0355276bc79439afe3c53e3a2470ca1e",
+    "semantic_hash": "0355276bc79439afe3c53e3a2470ca1e"
+  },
+  "package.json": {
+    "mtime": 1781092919.3900177,
+    "ast_hash": "4fc637193b6de79735a7ebffae867d5d",
+    "semantic_hash": "4fc637193b6de79735a7ebffae867d5d"
+  },
+  "src/App.tsx": {
+    "mtime": 1781256722.3067987,
+    "ast_hash": "7ab8ad785ffdea2f3b72b4cf96e9839c",
+    "semantic_hash": ""
+  },
+  "src/components/AmbientBackground.tsx": {
+    "mtime": 1781093604.1396587,
+    "ast_hash": "63542f7da40949e23e3b6ebb84cf09d0",
+    "semantic_hash": "63542f7da40949e23e3b6ebb84cf09d0"
+  },
+  "src/components/Dossier.tsx": {
+    "mtime": 1781256712.6890514,
+    "ast_hash": "4f055eb7838323f960ba4c54de4ce758",
+    "semantic_hash": ""
+  },
+  "src/components/Footer.tsx": {
+    "mtime": 1781093258.0561326,
+    "ast_hash": "17f597075662e1d9ec9c4ee2211725ac",
+    "semantic_hash": "17f597075662e1d9ec9c4ee2211725ac"
+  },
+  "src/components/Hero.tsx": {
+    "mtime": 1781095033.2523296,
+    "ast_hash": "8ef60e8b1b6892f9e7f2504a6c2ad632",
+    "semantic_hash": "8ef60e8b1b6892f9e7f2504a6c2ad632"
+  },
+  "src/components/Icon.tsx": {
+    "mtime": 1781093168.0774949,
+    "ast_hash": "5b8713cf3f914e33c3357a75aa358122",
+    "semantic_hash": "5b8713cf3f914e33c3357a75aa358122"
+  },
+  "src/components/Schemes.tsx": {
+    "mtime": 1781255737.2949648,
+    "ast_hash": "b444e83a1f76669d8eeb3ed07ebeafab",
+    "semantic_hash": "b444e83a1f76669d8eeb3ed07ebeafab"
+  },
+  "src/components/SocialLinks.tsx": {
+    "mtime": 1781093222.4666252,
+    "ast_hash": "1c85781f9c4d21434f16553b8625dedf",
+    "semantic_hash": "1c85781f9c4d21434f16553b8625dedf"
+  },
+  "src/components/v2/HeroV2.tsx": {
+    "mtime": 1781255110.1813424,
+    "ast_hash": "be5627cf2706d5ea525bd7b463e8d647",
+    "semantic_hash": "be5627cf2706d5ea525bd7b463e8d647"
+  },
+  "src/components/v2/Lightning.tsx": {
+    "mtime": 1781255110.1815913,
+    "ast_hash": "6e41b3a2a0ec437ff3d479b4215de390",
+    "semantic_hash": "6e41b3a2a0ec437ff3d479b4215de390"
+  },
+  "src/components/v2/PixelImp.tsx": {
+    "mtime": 1781257580.5761852,
+    "ast_hash": "564963b88a1e7c2dcc7eb28862b1b01f",
+    "semantic_hash": ""
+  },
+  "src/components/v2/Preloader.tsx": {
+    "mtime": 1781255110.1822088,
+    "ast_hash": "01b90a53435db975187a112714669ff6",
+    "semantic_hash": "01b90a53435db975187a112714669ff6"
+  },
+  "src/components/v2/SectionFX.tsx": {
+    "mtime": 1781255110.1824257,
+    "ast_hash": "26bc5aa00f33d0c31aa60feb0596090b",
+    "semantic_hash": "26bc5aa00f33d0c31aa60feb0596090b"
+  },
+  "src/components/v2/SectionSlash.tsx": {
+    "mtime": 1781255737.2959123,
+    "ast_hash": "3513dc07dbdebfbd6fda696a40897c73",
+    "semantic_hash": "3513dc07dbdebfbd6fda696a40897c73"
+  },
+  "src/components/v2/SocialLinksV2.tsx": {
+    "mtime": 1781255964.432867,
+    "ast_hash": "c7796da2858c4229743269f84361d7fc",
+    "semantic_hash": ""
+  },
+  "src/config.ts": {
+    "mtime": 1781255110.1829207,
+    "ast_hash": "ab250c1396f27501b4978fb8cbf01d64",
+    "semantic_hash": "ab250c1396f27501b4978fb8cbf01d64"
+  },
+  "src/main.tsx": {
+    "mtime": 1781092887.3298516,
+    "ast_hash": "787e5a07efeb2bf6209d5937195f2f68",
+    "semantic_hash": "787e5a07efeb2bf6209d5937195f2f68"
+  },
+  "tsconfig.app.json": {
+    "mtime": 1781092887.3299446,
+    "ast_hash": "136630b5accce1ca50663df229534a26",
+    "semantic_hash": "136630b5accce1ca50663df229534a26"
+  },
+  "tsconfig.json": {
+    "mtime": 1781092887.3300385,
+    "ast_hash": "a3d39fa780ebff65444de257f291ce6c",
+    "semantic_hash": "a3d39fa780ebff65444de257f291ce6c"
+  },
+  "tsconfig.node.json": {
+    "mtime": 1781092887.3301306,
+    "ast_hash": "70bdd0a673bcfc0e828080b306e7c680",
+    "semantic_hash": "70bdd0a673bcfc0e828080b306e7c680"
+  },
+  "vite.config.ts": {
+    "mtime": 1781092887.33022,
+    "ast_hash": "88439104b3c207f17d33ef3160e3b080",
+    "semantic_hash": "88439104b3c207f17d33ef3160e3b080"
+  },
+  ".claude/launch.json": {
+    "mtime": 1781255533.3888776,
+    "ast_hash": "50c353232b2bdc6a2a2923070664cb2a",
+    "semantic_hash": ""
+  },
+  ".claude/settings.json": {
+    "mtime": 1781255737.292392,
+    "ast_hash": "e1073342e958ac9f00716938c8f165e3",
+    "semantic_hash": ""
+  },
+  "src/components/v2/DeckSection.tsx": {
+    "mtime": 1781255886.6810381,
+    "ast_hash": "bea122834d08d4a3ca0db21ac075ecd7",
+    "semantic_hash": ""
+  },
+  "src/components/v2/SectionTransitions.tsx": {
+    "mtime": 1781256679.2056036,
+    "ast_hash": "348a9e689753442fdd04489afc749051",
+    "semantic_hash": ""
+  }
+}

@@ -6,6 +6,8 @@ import { Preloader } from './components/v2/Preloader'
 import { HeroV2 } from './components/v2/HeroV2'
 import { SocialLinksV2 } from './components/v2/SocialLinksV2'
 import { PixelImp } from './components/v2/PixelImp'
+import { DeckSection } from './components/v2/DeckSection'
+import { CrimeTape } from './components/v2/SectionTransitions'
 
 function App() {
   return (
@@ -13,9 +15,16 @@ function App() {
       <Preloader />
       <AmbientBackground />
       <main style={{ position: 'relative', zIndex: 1 }}>
-        <HeroV2 />
-        <Schemes />
-        <Dossier />
+        <DeckSection>
+          <HeroV2 />
+        </DeckSection>
+        <CrimeTape />
+        <DeckSection>
+          <Schemes />
+        </DeckSection>
+        <DeckSection>
+          <Dossier />
+        </DeckSection>
         <SocialLinksV2 />
         <Footer />
         <PixelImp />

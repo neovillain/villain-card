@@ -10,8 +10,18 @@
   position: absolute;
   inset: 0;
   opacity: 0.65;
-  mask-image: radial-gradient(ellipse at 50% 45%, #000 30%, transparent 78%);
-  -webkit-mask-image: radial-gradient(ellipse at 50% 45%, #000 30%, transparent 78%);
+  /* радиальная маска + вертикальный фейд снизу, чтобы канвас
+     не обрезался жёсткой кромкой на стыке со schemes */
+  mask-image: radial-gradient(ellipse at 50% 45%, #000 30%, transparent 78%),
+    linear-gradient(180deg, #000 72%, transparent 98%);
+  mask-composite: intersect;
+  -webkit-mask-image: radial-gradient(
+      ellipse at 50% 45%,
+      #000 30%,
+      transparent 78%
+    ),
+    linear-gradient(180deg, #000 72%, transparent 98%);
+  -webkit-mask-composite: source-in;
 }
 
 .hero2__inner {

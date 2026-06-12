@@ -1,0 +1,119 @@
+/* ─── многострочный текст под грифом ─── */
+.redact-text {
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+  padding: 0 0.18em;
+  background-color: #0a0407;
+  box-shadow: 0 0 0 1px rgba(225, 29, 72, 0.22);
+  color: transparent;
+  transition:
+    background-color 0.9s ease 0.25s,
+    box-shadow 0.9s ease 0.25s,
+    color 0.9s ease 0.4s;
+}
+
+.redact-text--open {
+  background-color: transparent;
+  box-shadow: 0 0 0 1px transparent;
+  color: inherit;
+}
+
+/* ─── плашка ровно по строке ─── */
+.redact-line {
+  position: relative;
+  display: inline-block;
+}
+
+.redact-line__bar {
+  position: absolute;
+  inset: -2px -5px;
+  background: #0a0407;
+  border: 1px solid rgba(225, 29, 72, 0.3);
+  will-change: transform;
+}
+
+/* ─── сканирующий луч в контактах ─── */
+.scan {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.scan__beam {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 64px;
+}
+
+.scan__trail {
+  position: absolute;
+  inset: 0 0 2px;
+  background: linear-gradient(
+    180deg,
+    transparent,
+    rgba(225, 29, 72, 0.06) 55%,
+    rgba(225, 29, 72, 0.18)
+  );
+}
+
+.scan__line {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 2px;
+  background: #ff3d63;
+  box-shadow:
+    0 0 12px rgba(225, 29, 72, 0.9),
+    0 0 44px rgba(225, 29, 72, 0.5);
+}
+
+/* ─── лента ограждения на стыке hero / schemes ─── */
+.tape {
+  position: relative;
+  z-index: 3;
+  margin: -34px 0 -10px;
+  pointer-events: none;
+}
+
+.tape__band {
+  transform: rotate(-1.4deg);
+  margin: 0 -2%;
+  background: #a8123a;
+  border-block: 3px solid #13070b;
+  box-shadow:
+    0 10px 34px rgba(0, 0, 0, 0.55),
+    0 0 28px rgba(225, 29, 72, 0.25);
+  overflow: hidden;
+}
+
+.tape__track {
+  display: flex;
+  white-space: nowrap;
+  width: max-content;
+  animation: tape-scroll 30s linear infinite;
+}
+
+.tape__track span {
+  padding: 0.42em 0;
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.34em;
+  text-transform: uppercase;
+  color: #13070b;
+}
+
+@keyframes tape-scroll {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tape__track {
+    animation: none;
+  }
+}

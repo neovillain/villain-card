@@ -1,0 +1,1897 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>villain-card — Complete Call Flow &amp; Architecture Documentation</title>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<style>
+:root {
+  --bg: #0f172a; --surface: #1e293b; --border: #334155;
+  --text: #e2e8f0; --muted: #94a3b8; --accent: #38bdf8;
+  --warn: #fbbf24; --err: #f87171; --ok: #34d399;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background: var(--bg); color: var(--text); line-height: 1.7; }
+.container { max-width: 1200px; margin: 0 auto; padding: 40px 24px; }
+h1 { font-size: 2.4rem; margin-bottom: 8px; background: linear-gradient(135deg, var(--accent), #a78bfa); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+h2 { font-size: 1.7rem; margin: 48px 0 16px; padding-bottom: 8px; border-bottom: 2px solid var(--accent); }
+h3 { font-size: 1.25rem; margin: 32px 0 12px; color: var(--accent); }
+h4 { font-size: 1.05rem; margin: 20px 0 8px; color: var(--warn); }
+p { margin: 8px 0; color: var(--muted); }
+.subtitle { color: var(--muted); font-size: 1.1rem; margin-bottom: 32px; }
+.mermaid { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 24px; margin: 20px 0; overflow-x: auto; position: relative; }
+.mermaid.is-enhanced { padding: 0; overflow: hidden; min-height: 260px; }
+.mermaid-viewport { padding: 54px 24px 24px; overflow: hidden; cursor: grab; touch-action: none; min-height: 260px; }
+.mermaid-viewport.is-dragging { cursor: grabbing; }
+.mermaid-viewport svg { max-width: none !important; height: auto; transform-origin: 0 0; transition: transform 120ms ease; }
+.mermaid-toolbar { position: absolute; top: 10px; right: 10px; z-index: 3; display: flex; align-items: center; gap: 6px; padding: 6px; background: rgba(15,23,42,0.92); border: 1px solid var(--border); border-radius: 8px; box-shadow: 0 8px 24px rgba(0,0,0,0.28); }
+.mermaid-toolbar button, .mermaid-toolbar .zoom-level { height: 28px; min-width: 32px; border: 1px solid var(--border); border-radius: 6px; background: #1e293b; color: var(--text); font: 600 0.78rem system-ui, sans-serif; display: inline-flex; align-items: center; justify-content: center; }
+.mermaid-toolbar button { cursor: pointer; }
+.mermaid-toolbar button:hover { border-color: var(--accent); color: var(--accent); }
+.mermaid-toolbar .zoom-level { min-width: 52px; color: var(--muted); background: transparent; }
+.call-table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 0.92rem; }
+.call-table th { background: #1a2744; color: var(--accent); text-align: left; padding: 10px 14px; border: 1px solid var(--border); }
+.call-table td { padding: 8px 14px; border: 1px solid var(--border); vertical-align: top; }
+.call-table tr:nth-child(even) { background: rgba(255,255,255,0.02); }
+.tag { display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 0.8rem; font-weight: 600; }
+.tag-async { background: #7c3aed33; color: #a78bfa; }
+.tag-class { background: #05966933; color: var(--ok); }
+.tag-func { background: #2563eb33; color: var(--accent); }
+.tag-cmd { background: #d9770633; color: var(--warn); }
+.tag-endpoint { background: #dc262633; color: var(--err); }
+.tag-hook { background: #db277733; color: #f472b6; }
+.card { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 20px; margin: 16px 0; }
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 16px; margin: 16px 0; }
+.arrow-chain { font-family: 'Fira Code', monospace; font-size: 0.85rem; color: var(--accent); padding: 10px; background: rgba(56,189,248,0.06); border-radius: 6px; }
+code { font-family: 'Fira Code', 'Cascadia Code', monospace; background: rgba(255,255,255,0.06); padding: 1px 6px; border-radius: 3px; font-size: 0.88em; }
+ul, ol { margin: 8px 0 8px 24px; color: var(--muted); }
+li { margin: 4px 0; }
+a { color: var(--accent); }
+hr { border: none; border-top: 1px solid var(--border); margin: 40px 0; }
+.nav { position: sticky; top: 0; background: var(--bg); z-index: 10; padding: 12px 0; border-bottom: 1px solid var(--border); display: flex; gap: 20px; flex-wrap: wrap; font-size: 0.9rem; }
+.nav a { text-decoration: none; }
+.nav a:hover { text-decoration: underline; }
+@media (max-width: 768px) { .container { padding: 16px; } h1 { font-size: 1.8rem; } }
+
+</style>
+</head>
+<body>
+<div class="container">
+
+<h1>villain-card — Complete Call Flow &amp; Architecture Documentation</h1>
+<p class="subtitle">Generated from graphify knowledge graph: 148 nodes, 185 edges, 12 communities. Commit: c406704</p>
+
+<div class="nav">
+    <a href="#overview">Architecture Overview</a>
+    <a href="#build-graph">Graph Build</a>
+    <a href="#cli-skills">CLI &amp; Skill Installers</a>
+    <a href="#community-3">Community 3</a>
+    <a href="#community-4">Community 4</a>
+    <a href="#community-5">Community 5</a>
+    <a href="#community-11">Community 11</a>
+    <a href="#community-10">Community 10</a>
+    <a href="#community-9">Community 9</a>
+</div>
+
+<!-- ====== Architecture Overview ====== -->
+<h2 id="overview">1. Architecture Overview</h2>
+
+<div class="mermaid">
+
+%%{init: {"theme": "dark", "themeVariables": {"fontSize": "15.0px", "fontFamily": "Segoe UI, system-ui, sans-serif", "primaryColor": "#1e293b", "primaryTextColor": "#e2e8f0", "primaryBorderColor": "#38bdf8", "secondaryColor": "#0f172a", "tertiaryColor": "#334155", "lineColor": "#64748b", "textColor": "#e2e8f0"}, "flowchart": {"htmlLabels": true, "curve": "basis", "nodeSpacing": 48, "rankSpacing": 64, "padding": 14, "diagramPadding": 10, "useMaxWidth": true}}}%%
+flowchart LR
+    BUILD_GRAPH_321CBB04("Graph Build<br/><small>67 nodes</small>")
+    class BUILD_GRAPH_321CBB04 module;
+    CLI_SKILLS_9964CBB8("CLI &amp; Skill Installers<br/><small>19 nodes</small>")
+    class CLI_SKILLS_9964CBB8 module;
+    COMMUNITY_3_D8DFCEA7("Community 3<br/><small>18 nodes</small>")
+    class COMMUNITY_3_D8DFCEA7 module;
+    COMMUNITY_4_AC2DC2A9("Community 4<br/><small>17 nodes</small>")
+    class COMMUNITY_4_AC2DC2A9 module;
+    COMMUNITY_5_2966028D("Community 5<br/><small>17 nodes</small>")
+    class COMMUNITY_5_2966028D module;
+    COMMUNITY_11_DE018FC2("Community 11<br/><small>8 nodes</small>")
+    class COMMUNITY_11_DE018FC2 module;
+    COMMUNITY_10_48432F59("Community 10<br/><small>1 nodes</small>")
+    class COMMUNITY_10_48432F59 module;
+    COMMUNITY_9_1D55D1EE("Community 9<br/><small>1 nodes</small>")
+    class COMMUNITY_9_1D55D1EE module;
+    CLI_SKILLS_9964CBB8 -->|imports x6| COMMUNITY_3_D8DFCEA7
+    COMMUNITY_3_D8DFCEA7 -->|imports x4| COMMUNITY_5_2966028D
+    CLI_SKILLS_9964CBB8 -->|imports x2| COMMUNITY_11_DE018FC2
+    CLI_SKILLS_9964CBB8 -->|imports x2| COMMUNITY_4_AC2DC2A9
+    CLI_SKILLS_9964CBB8 -->|imports x2| COMMUNITY_5_2966028D
+    COMMUNITY_5_2966028D -->|imports x2| CLI_SKILLS_9964CBB8
+    COMMUNITY_11_DE018FC2 -->|imports x2| COMMUNITY_3_D8DFCEA7
+    COMMUNITY_5_2966028D -->|contains x2| COMMUNITY_11_DE018FC2
+    COMMUNITY_11_DE018FC2 -->|imports| COMMUNITY_5_2966028D
+    COMMUNITY_5_2966028D -->|contains| COMMUNITY_3_D8DFCEA7
+    classDef entry fill:#422006,stroke:#fbbf24,color:#fde68a,stroke-width:1px;
+    classDef api fill:#450a0a,stroke:#f87171,color:#fee2e2,stroke-width:1px;
+    classDef async fill:#2e1065,stroke:#a78bfa,color:#ede9fe,stroke-width:1px;
+    classDef klass fill:#064e3b,stroke:#34d399,color:#d1fae5,stroke-width:1px;
+    classDef ui fill:#831843,stroke:#f472b6,color:#fce7f3,stroke-width:1px;
+    classDef module fill:#172554,stroke:#60a5fa,color:#dbeafe,stroke-width:1px;
+    classDef test fill:#3f3f46,stroke:#a1a1aa,color:#f4f4f5,stroke-width:1px;
+    classDef concept fill:#292524,stroke:#a8a29e,color:#fafaf9,stroke-dasharray:4 3;
+    classDef function fill:#0f172a,stroke:#38bdf8,color:#e0f2fe,stroke-width:1px;
+</div>
+
+<div class="grid">
+  <div class="card">
+    <h4>Architecture Layers</h4>
+    <table style="width:100%;font-size:0.85rem;">
+      <tr><th>Layer</th><th>Nodes</th><th>Communities</th></tr>
+      <tr><td>Graph Build</td><td>67</td><td><code>1, 2, 6, 7, 8</code></td></tr><tr><td>CLI &amp; Skill Installers</td><td>19</td><td><code>0</code></td></tr><tr><td>Community 3</td><td>18</td><td><code>3</code></td></tr><tr><td>Community 4</td><td>17</td><td><code>4</code></td></tr><tr><td>Community 5</td><td>17</td><td><code>5</code></td></tr><tr><td>Community 11</td><td>8</td><td><code>11</code></td></tr><tr><td>Community 10</td><td>1</td><td><code>10</code></td></tr><tr><td>Community 9</td><td>1</td><td><code>9</code></td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <h4>Core Flow</h4>
+    <div class="arrow-chain">Graph Build -&gt; CLI &amp; Skill Installers -&gt; Community 3 -&gt; Community 5 -&gt; Community 11 -&gt; Community 4 -&gt; Community 10</div>
+  </div>
+</div>
+<div class="grid">
+  <div class="card">
+    <h4>Graph Report Highlights</h4>
+    <ul>
+      <li>148 nodes · 185 edges · 12 communities (11 shown, 1 thin omitted)</li>
+      <li>Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS</li>
+      <li>Token cost: 0 input · 0 output</li>
+      <li>1. `compilerOptions` - 17 edges</li>
+      <li>2. `compilerOptions` - 16 edges</li>
+      <li>3. `PixelImp()` - 6 edges</li>
+    </ul>
+  </div>
+</div>
+<hr>
+<!-- ====== 2. Graph Build ====== -->
+<h2 id="build-graph">2. Graph Build</h2>
+<p>Graph Build groups implementation around packagejson, tsconfigappjson, tsconfignodejson, react, mostly in package.json, tsconfig.app.json, tsconfig.node.json. This section covers 67 nodes and 63 internal edges; the diagram shows only representative relationships to stay readable.</p>
+
+<div class="mermaid">
+%%{init: {"theme": "dark", "themeVariables": {"fontSize": "15.0px", "fontFamily": "Segoe UI, system-ui, sans-serif", "primaryColor": "#1e293b", "primaryTextColor": "#e2e8f0", "primaryBorderColor": "#38bdf8", "secondaryColor": "#0f172a", "tertiaryColor": "#334155", "lineColor": "#64748b", "textColor": "#e2e8f0"}, "flowchart": {"htmlLabels": true, "curve": "basis", "nodeSpacing": 48, "rankSpacing": 64, "padding": 14, "diagramPadding": 10, "useMaxWidth": true}}}%%
+flowchart LR
+    %% Section: Graph Build (67 nodes, 63 edges)
+    subgraph build_graph_package_json_4e40bfbd["package.json"]
+        package_devdependencies_ff8711cc("devDependencies<br/><small>package.json</small>")
+        package_582681c2("package.json")
+        package_scripts_25cfc1ca("scripts<br/><small>package.json</small>")
+        package_dependencies_c512ca5e("dependencies<br/><small>package.json</small>")
+        package_name_b23e1232("name<br/><small>package.json</small>")
+        package_private_9955bf19("private<br/><small>package.json</small>")
+        package_type_7bb9ccc5("type<br/><small>package.json</small>")
+        package_version_a7f3cb7e("version<br/><small>package.json</small>")
+        package_scripts_build_b63da213("build<br/><small>package.json</small>")
+        package_scripts_dev_8c0c97d3("dev<br/><small>package.json</small>")
+        package_scripts_lint_619c0521("lint<br/><small>package.json</small>")
+        package_scripts_preview_5c963dd0("preview<br/><small>package.json</small>")
+        package_dependencies_framer_motion_02587384("framer-motion<br/><small>package.json</small>")
+        package_dependencies_react_a04d7d7e("react<br/><small>package.json</small>")
+        package_dependencies_react_dom_87814871("react-dom<br/><small>package.json</small>")
+        package_devdependencies_eslint_1c2e9076("eslint<br/><small>package.json</small>")
+    end
+    tsconfig_app_compileroptions_a72b8c35("compilerOptions<br/><small>tsconfig.app.json</small>")
+    tsconfig_node_compileroptions_e93e9dc8("compilerOptions<br/><small>tsconfig.node.json</small>")
+    package_582681c2 -->|contains| package_dependencies_c512ca5e
+    package_582681c2 -->|contains| package_devdependencies_ff8711cc
+    package_582681c2 -->|contains| package_name_b23e1232
+    package_582681c2 -->|contains| package_private_9955bf19
+    package_582681c2 -->|contains| package_scripts_25cfc1ca
+    package_582681c2 -->|contains| package_type_7bb9ccc5
+    package_582681c2 -->|contains| package_version_a7f3cb7e
+    package_scripts_25cfc1ca -->|contains| package_scripts_build_b63da213
+    package_scripts_25cfc1ca -->|contains| package_scripts_dev_8c0c97d3
+    package_scripts_25cfc1ca -->|contains| package_scripts_lint_619c0521
+    package_scripts_25cfc1ca -->|contains| package_scripts_preview_5c963dd0
+    package_dependencies_c512ca5e -->|contains| package_dependencies_framer_motion_02587384
+    package_dependencies_c512ca5e -->|contains| package_dependencies_react_a04d7d7e
+    package_dependencies_c512ca5e -->|contains| package_dependencies_react_dom_87814871
+    package_devdependencies_ff8711cc -->|contains| package_devdependencies_eslint_1c2e9076
+    %% Omitted for readability: 49 nodes, 0 edges
+    class package_devdependencies_ff8711cc function;
+    class package_582681c2 function;
+    class package_scripts_25cfc1ca function;
+    class package_dependencies_c512ca5e function;
+    class package_name_b23e1232 function;
+    class package_private_9955bf19 function;
+    class package_type_7bb9ccc5 function;
+    class package_version_a7f3cb7e function;
+    class package_scripts_build_b63da213 function;
+    class package_scripts_dev_8c0c97d3 function;
+    class package_scripts_lint_619c0521 function;
+    class package_scripts_preview_5c963dd0 function;
+    class package_dependencies_framer_motion_02587384 function;
+    class package_dependencies_react_a04d7d7e function;
+    class package_dependencies_react_dom_87814871 function;
+    class package_devdependencies_eslint_1c2e9076 function;
+    class tsconfig_app_compileroptions_a72b8c35 function;
+    class tsconfig_node_compileroptions_e93e9dc8 function;
+    classDef entry fill:#422006,stroke:#fbbf24,color:#fde68a,stroke-width:1px;
+    classDef api fill:#450a0a,stroke:#f87171,color:#fee2e2,stroke-width:1px;
+    classDef async fill:#2e1065,stroke:#a78bfa,color:#ede9fe,stroke-width:1px;
+    classDef klass fill:#064e3b,stroke:#34d399,color:#d1fae5,stroke-width:1px;
+    classDef ui fill:#831843,stroke:#f472b6,color:#fce7f3,stroke-width:1px;
+    classDef module fill:#172554,stroke:#60a5fa,color:#dbeafe,stroke-width:1px;
+    classDef test fill:#3f3f46,stroke:#a1a1aa,color:#f4f4f5,stroke-width:1px;
+    classDef concept fill:#292524,stroke:#a8a29e,color:#fafaf9,stroke-dasharray:4 3;
+    classDef function fill:#0f172a,stroke:#38bdf8,color:#e0f2fe,stroke-width:1px;
+</div>
+
+<h3>Call Details</h3>
+<table class="call-table">
+<tr>
+  <th style="width:5%">#</th>
+  <th style="width:28%">Node</th>
+  <th style="width:10%">Type</th>
+  <th style="width:17%">Caller</th>
+  <th style="width:20%">Callees</th>
+  <th style="width:20%">Description</th>
+</tr>
+<tr>
+  <td>1</td>
+  <td><code>tsconfig.app.json</code><br><small style="color:var(--muted)">tsconfig.app.json</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Reads, resolves, or persists project configuration.</td>
+</tr>
+<tr>
+  <td>2</td>
+  <td><code>compilerOptions</code><br><small style="color:var(--muted)">tsconfig.app.json</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>compilerOptions node in tsconfig.app.json.</td>
+</tr>
+<tr>
+  <td>3</td>
+  <td><code>tsBuildInfoFile</code><br><small style="color:var(--muted)">tsconfig.app.json</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>tsBuildInfoFile node in tsconfig.app.json.</td>
+</tr>
+<tr>
+  <td>4</td>
+  <td><code>target</code><br><small style="color:var(--muted)">tsconfig.app.json</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>target node in tsconfig.app.json.</td>
+</tr>
+<tr>
+  <td>5</td>
+  <td><code>lib</code><br><small style="color:var(--muted)">tsconfig.app.json</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>lib node in tsconfig.app.json.</td>
+</tr>
+<tr>
+  <td>6</td>
+  <td><code>module</code><br><small style="color:var(--muted)">tsconfig.app.json</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>module node in tsconfig.app.json.</td>
+</tr>
+<tr>
+  <td>7</td>
+  <td><code>types</code><br><small style="color:var(--muted)">tsconfig.app.json</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>types node in tsconfig.app.json.</td>
+</tr>
+<tr>
+  <td>8</td>
+  <td><code>skipLibCheck</code><br><small style="color:var(--muted)">tsconfig.app.json</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>skipLibCheck node in tsconfig.app.json.</td>
+</tr>
+<tr>
+  <td>9</td>
+  <td><code>moduleResolution</code><br><small style="color:var(--muted)">tsconfig.app.json</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>moduleResolution node in tsconfig.app.json.</td>
+</tr>
+<tr>
+  <td>10</td>
+  <td><code>allowImportingTsExtensions</code><br><small style="color:var(--muted)">tsconfig.app.json</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>allowImportingTsExtensions node in tsconfig.app.json.</td>
+</tr>
+<tr>
+  <td>11</td>
+  <td><code>verbatimModuleSyntax</code><br><small style="color:var(--muted)">tsconfig.app.json</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>verbatimModuleSyntax node in tsconfig.app.json.</td>
+</tr>
+<tr>
+  <td>12</td>
+  <td><code>moduleDetection</code><br><small style="color:var(--muted)">tsconfig.app.json</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>moduleDetection node in tsconfig.app.json.</td>
+</tr>
+<tr>
+  <td>13</td>
+  <td><code>noEmit</code><br><small style="color:var(--muted)">tsconfig.app.json</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>noEmit node in tsconfig.app.json.</td>
+</tr>
+<tr>
+  <td>14</td>
+  <td><code>jsx</code><br><small style="color:var(--muted)">tsconfig.app.json</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>jsx node in tsconfig.app.json.</td>
+</tr>
+<tr>
+  <td>15</td>
+  <td><code>noUnusedLocals</code><br><small style="color:var(--muted)">tsconfig.app.json</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>noUnusedLocals node in tsconfig.app.json.</td>
+</tr>
+<tr>
+  <td>16</td>
+  <td><code>noUnusedParameters</code><br><small style="color:var(--muted)">tsconfig.app.json</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>noUnusedParameters node in tsconfig.app.json.</td>
+</tr>
+<tr>
+  <td>17</td>
+  <td><code>erasableSyntaxOnly</code><br><small style="color:var(--muted)">tsconfig.app.json</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>erasableSyntaxOnly node in tsconfig.app.json.</td>
+</tr>
+<tr>
+  <td>18</td>
+  <td><code>noFallthroughCasesInSwitch</code><br><small style="color:var(--muted)">tsconfig.app.json</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>noFallthroughCasesInSwitch node in tsconfig.app.json.</td>
+</tr>
+<tr>
+  <td>19</td>
+  <td><code>include</code><br><small style="color:var(--muted)">tsconfig.app.json</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>include node in tsconfig.app.json.</td>
+</tr>
+<tr>
+  <td>20</td>
+  <td><code>tsconfig.node.json</code><br><small style="color:var(--muted)">tsconfig.node.json</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Reads, resolves, or persists project configuration.</td>
+</tr>
+<tr>
+  <td>21</td>
+  <td><code>compilerOptions</code><br><small style="color:var(--muted)">tsconfig.node.json</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>compilerOptions node in tsconfig.node.json.</td>
+</tr>
+<tr>
+  <td>22</td>
+  <td><code>tsBuildInfoFile</code><br><small style="color:var(--muted)">tsconfig.node.json</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>tsBuildInfoFile node in tsconfig.node.json.</td>
+</tr>
+<tr>
+  <td>23</td>
+  <td><code>target</code><br><small style="color:var(--muted)">tsconfig.node.json</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>target node in tsconfig.node.json.</td>
+</tr>
+<tr>
+  <td>24</td>
+  <td><code>lib</code><br><small style="color:var(--muted)">tsconfig.node.json</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>lib node in tsconfig.node.json.</td>
+</tr>
+<tr>
+  <td>25</td>
+  <td><code>module</code><br><small style="color:var(--muted)">tsconfig.node.json</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>module node in tsconfig.node.json.</td>
+</tr>
+<tr>
+  <td>26</td>
+  <td><code>types</code><br><small style="color:var(--muted)">tsconfig.node.json</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>types node in tsconfig.node.json.</td>
+</tr>
+<tr>
+  <td>27</td>
+  <td><code>skipLibCheck</code><br><small style="color:var(--muted)">tsconfig.node.json</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>skipLibCheck node in tsconfig.node.json.</td>
+</tr>
+<tr>
+  <td>28</td>
+  <td><code>moduleResolution</code><br><small style="color:var(--muted)">tsconfig.node.json</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>moduleResolution node in tsconfig.node.json.</td>
+</tr>
+<tr>
+  <td>29</td>
+  <td><code>allowImportingTsExtensions</code><br><small style="color:var(--muted)">tsconfig.node.json</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>allowImportingTsExtensions node in tsconfig.node.json.</td>
+</tr>
+<tr>
+  <td>30</td>
+  <td><code>verbatimModuleSyntax</code><br><small style="color:var(--muted)">tsconfig.node.json</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>verbatimModuleSyntax node in tsconfig.node.json.</td>
+</tr>
+</table>
+
+<div class="grid">
+  <div class="card">
+    <h4>Key Files</h4>
+    <table style="width:100%;font-size:0.85rem;">
+      <tr><th>File</th><th>Coverage</th></tr>
+      <tr><td><code>package.json</code></td><td>27 nodes</td></tr>
+<tr><td><code>tsconfig.app.json</code></td><td>19 nodes</td></tr>
+<tr><td><code>tsconfig.node.json</code></td><td>18 nodes</td></tr>
+<tr><td><code>tsconfig.json</code></td><td>3 nodes</td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <h4>Design Notes</h4>
+    <p>This section comes from graphify community clustering. Relationship summary: contains x63. The diagram prioritizes high-confidence calls or usage relationships; the table keeps the broader node inventory.</p>
+  </div>
+</div>
+<hr>
+
+<!-- ====== 3. CLI & Skill Installers ====== -->
+<h2 id="cli-skills">3. CLI &amp; Skill Installers</h2>
+<p>CLI &amp; Skill Installers groups implementation around components, herov2tsx, lightningtsx, preloadertsx, mostly in components/v2/HeroV2.tsx, components/v2/Lightning.tsx, components/v2/Preloader.tsx. This section covers 19 nodes and 25 internal edges; the diagram shows only representative relationships to stay readable.</p>
+
+<div class="mermaid">
+%%{init: {"theme": "dark", "themeVariables": {"fontSize": "15.0px", "fontFamily": "Segoe UI, system-ui, sans-serif", "primaryColor": "#1e293b", "primaryTextColor": "#e2e8f0", "primaryBorderColor": "#38bdf8", "secondaryColor": "#0f172a", "tertiaryColor": "#334155", "lineColor": "#64748b", "textColor": "#e2e8f0"}, "flowchart": {"htmlLabels": true, "curve": "basis", "nodeSpacing": 48, "rankSpacing": 64, "padding": 14, "diagramPadding": 10, "useMaxWidth": true}}}%%
+flowchart LR
+    %% Section: CLI &amp; Skill Installers (19 nodes, 25 edges)
+    subgraph cli_skills_components_v2_HeroV2_tsx_0c37bae7["components/v2/HeroV2.tsx"]
+        v2_herov2_3dd5522e("HeroV2.tsx")
+        v2_herov2_herov2_5cc112a1("HeroV2()<br/><small>components/v2/HeroV2.tsx</small>")
+        v2_herov2_ease_26477f68("EASE<br/><small>components/v2/HeroV2.tsx</small>")
+    end
+    subgraph cli_skills_components_v2_Lightning_tsx_fad3d087["components/v2/Lightning.tsx"]
+        v2_lightning_075790b0("Lightning.tsx")
+        v2_lightning_lightning_3fbe1f94("Lightning()<br/><small>components/v2/Lightning.tsx</small>")
+        v2_lightning_lightningprops_c4d5d881("LightningProps<br/><small>components/v2/Lightning.tsx</small>")
+    end
+    subgraph cli_skills_components_v2_Preloader_tsx_8c5b0949["components/v2/Preloader.tsx"]
+        v2_preloader_b6879b2f("Preloader.tsx")
+        v2_preloader_preloader_77485d2e("Preloader()<br/><small>components/v2/Preloader.tsx</small>")
+        v2_preloader_ease_f105307a("EASE<br/><small>components/v2/Preloader.tsx</small>")
+    end
+    subgraph cli_skills_components_v2_DeckSection_tsx_29442899["components/v2/DeckSection.tsx"]
+        v2_decksection_c71a0ee5("DeckSection.tsx")
+        v2_decksection_decksection_6c770a19("DeckSection()<br/><small>components/v2/DeckSection.tsx</small>")
+    end
+    subgraph cli_skills_src_components_AmbientBackground_tsx_d6b38602["src/components/AmbientBackground.tsx"]
+        components_ambientbackground_a2379426("AmbientBackground.tsx")
+        components_ambientbackground_ambientbackground_ad073ffc("AmbientBackground()<br/><small>src/components/AmbientBackground.tsx</small>")
+    end
+    subgraph cli_skills_src_components_Footer_tsx_35561ad8["src/components/Footer.tsx"]
+        components_footer_17e210a3("Footer.tsx")
+        components_footer_footer_24618515("Footer()<br/><small>src/components/Footer.tsx</small>")
+    end
+    src_app_46efd68e("App.tsx")
+    src_config_profile_d07eb5f5("profile<br/><small>src/config.ts</small>")
+    src_main_3231ff52("main.tsx")
+    src_app_46efd68e -->|imports| components_ambientbackground_a2379426
+    src_app_46efd68e -->|imports| components_ambientbackground_ambientbackground_ad073ffc
+    src_app_46efd68e -->|imports| components_footer_17e210a3
+    src_app_46efd68e -->|imports| components_footer_footer_24618515
+    src_app_46efd68e -->|imports| v2_decksection_c71a0ee5
+    src_app_46efd68e -->|imports| v2_decksection_decksection_6c770a19
+    src_app_46efd68e -->|imports| v2_herov2_3dd5522e
+    src_app_46efd68e -->|imports| v2_herov2_herov2_5cc112a1
+    src_app_46efd68e -->|imports| v2_preloader_b6879b2f
+    src_app_46efd68e -->|imports| v2_preloader_preloader_77485d2e
+    src_app_46efd68e -->|imports| src_main_3231ff52
+    components_footer_17e210a3 -->|imports| src_config_profile_d07eb5f5
+    v2_herov2_3dd5522e -->|imports| src_config_profile_d07eb5f5
+    v2_herov2_3dd5522e -->|imports| v2_lightning_075790b0
+    v2_herov2_3dd5522e -->|imports| v2_lightning_lightning_3fbe1f94
+    %% Omitted for readability: 1 nodes, 0 edges
+    class v2_herov2_3dd5522e ui;
+    class v2_herov2_herov2_5cc112a1 ui;
+    class v2_herov2_ease_26477f68 ui;
+    class v2_lightning_075790b0 ui;
+    class v2_lightning_lightning_3fbe1f94 ui;
+    class v2_lightning_lightningprops_c4d5d881 ui;
+    class v2_preloader_b6879b2f ui;
+    class v2_preloader_preloader_77485d2e ui;
+    class v2_preloader_ease_f105307a ui;
+    class v2_decksection_c71a0ee5 ui;
+    class v2_decksection_decksection_6c770a19 ui;
+    class components_ambientbackground_a2379426 ui;
+    class components_ambientbackground_ambientbackground_ad073ffc ui;
+    class components_footer_17e210a3 ui;
+    class components_footer_footer_24618515 ui;
+    class src_app_46efd68e ui;
+    class src_config_profile_d07eb5f5 function;
+    class src_main_3231ff52 ui;
+    classDef entry fill:#422006,stroke:#fbbf24,color:#fde68a,stroke-width:1px;
+    classDef api fill:#450a0a,stroke:#f87171,color:#fee2e2,stroke-width:1px;
+    classDef async fill:#2e1065,stroke:#a78bfa,color:#ede9fe,stroke-width:1px;
+    classDef klass fill:#064e3b,stroke:#34d399,color:#d1fae5,stroke-width:1px;
+    classDef ui fill:#831843,stroke:#f472b6,color:#fce7f3,stroke-width:1px;
+    classDef module fill:#172554,stroke:#60a5fa,color:#dbeafe,stroke-width:1px;
+    classDef test fill:#3f3f46,stroke:#a1a1aa,color:#f4f4f5,stroke-width:1px;
+    classDef concept fill:#292524,stroke:#a8a29e,color:#fafaf9,stroke-dasharray:4 3;
+    classDef function fill:#0f172a,stroke:#38bdf8,color:#e0f2fe,stroke-width:1px;
+</div>
+
+<h3>Call Details</h3>
+<table class="call-table">
+<tr>
+  <th style="width:5%">#</th>
+  <th style="width:28%">Node</th>
+  <th style="width:10%">Type</th>
+  <th style="width:17%">Caller</th>
+  <th style="width:20%">Callees</th>
+  <th style="width:20%">Description</th>
+</tr>
+<tr>
+  <td>1</td>
+  <td><code>App.tsx</code><br><small style="color:var(--muted)">src/App.tsx</small></td>
+  <td><span class="tag tag-hook">UI</span></td>
+  <td>External entry / no inbound edge</td>
+  <td><code>AmbientBackground()</code><br><small style="color:var(--muted)">src/components/AmbientBackground.tsx</small><br><code>AmbientBackground.tsx</code><br><small style="color:var(--muted)">src/components/AmbientBackground.tsx</small><br><code>DeckSection()</code><br><small style="color:var(--muted)">components/v2/DeckSection.tsx</small><br>+8 more</td>
+  <td>Module file in src/App.tsx.</td>
+</tr>
+<tr>
+  <td>2</td>
+  <td><code>App()</code><br><small style="color:var(--muted)">src/App.tsx</small></td>
+  <td><span class="tag tag-hook">UI</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>App() node in src/App.tsx.</td>
+</tr>
+<tr>
+  <td>3</td>
+  <td><code>AmbientBackground.tsx</code><br><small style="color:var(--muted)">src/components/AmbientBackground.tsx</small></td>
+  <td><span class="tag tag-hook">UI</span></td>
+  <td><code>App.tsx</code><br><small style="color:var(--muted)">src/App.tsx</small></td>
+  <td>No direct outbound edge</td>
+  <td>Module file in src/components/AmbientBackground.tsx.</td>
+</tr>
+<tr>
+  <td>4</td>
+  <td><code>AmbientBackground()</code><br><small style="color:var(--muted)">src/components/AmbientBackground.tsx</small></td>
+  <td><span class="tag tag-hook">UI</span></td>
+  <td><code>App.tsx</code><br><small style="color:var(--muted)">src/App.tsx</small></td>
+  <td>No direct outbound edge</td>
+  <td>AmbientBackground() node in src/components/AmbientBackground.tsx.</td>
+</tr>
+<tr>
+  <td>5</td>
+  <td><code>Footer.tsx</code><br><small style="color:var(--muted)">src/components/Footer.tsx</small></td>
+  <td><span class="tag tag-hook">UI</span></td>
+  <td><code>App.tsx</code><br><small style="color:var(--muted)">src/App.tsx</small></td>
+  <td><code>profile</code><br><small style="color:var(--muted)">src/config.ts</small></td>
+  <td>Module file in src/components/Footer.tsx.</td>
+</tr>
+<tr>
+  <td>6</td>
+  <td><code>Footer()</code><br><small style="color:var(--muted)">src/components/Footer.tsx</small></td>
+  <td><span class="tag tag-hook">UI</span></td>
+  <td><code>App.tsx</code><br><small style="color:var(--muted)">src/App.tsx</small></td>
+  <td>No direct outbound edge</td>
+  <td>Footer() node in src/components/Footer.tsx.</td>
+</tr>
+<tr>
+  <td>7</td>
+  <td><code>DeckSection.tsx</code><br><small style="color:var(--muted)">components/v2/DeckSection.tsx</small></td>
+  <td><span class="tag tag-hook">UI</span></td>
+  <td><code>App.tsx</code><br><small style="color:var(--muted)">src/App.tsx</small></td>
+  <td>No direct outbound edge</td>
+  <td>Module file in components/v2/DeckSection.tsx.</td>
+</tr>
+<tr>
+  <td>8</td>
+  <td><code>DeckSection()</code><br><small style="color:var(--muted)">components/v2/DeckSection.tsx</small></td>
+  <td><span class="tag tag-hook">UI</span></td>
+  <td><code>App.tsx</code><br><small style="color:var(--muted)">src/App.tsx</small></td>
+  <td>No direct outbound edge</td>
+  <td>DeckSection() node in components/v2/DeckSection.tsx.</td>
+</tr>
+<tr>
+  <td>9</td>
+  <td><code>HeroV2.tsx</code><br><small style="color:var(--muted)">components/v2/HeroV2.tsx</small></td>
+  <td><span class="tag tag-hook">UI</span></td>
+  <td><code>App.tsx</code><br><small style="color:var(--muted)">src/App.tsx</small></td>
+  <td><code>Lightning()</code><br><small style="color:var(--muted)">components/v2/Lightning.tsx</small><br><code>Lightning.tsx</code><br><small style="color:var(--muted)">components/v2/Lightning.tsx</small><br><code>profile</code><br><small style="color:var(--muted)">src/config.ts</small></td>
+  <td>Module file in components/v2/HeroV2.tsx.</td>
+</tr>
+<tr>
+  <td>10</td>
+  <td><code>EASE</code><br><small style="color:var(--muted)">components/v2/HeroV2.tsx</small></td>
+  <td><span class="tag tag-hook">UI</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>EASE node in components/v2/HeroV2.tsx.</td>
+</tr>
+<tr>
+  <td>11</td>
+  <td><code>HeroV2()</code><br><small style="color:var(--muted)">components/v2/HeroV2.tsx</small></td>
+  <td><span class="tag tag-hook">UI</span></td>
+  <td><code>App.tsx</code><br><small style="color:var(--muted)">src/App.tsx</small></td>
+  <td>No direct outbound edge</td>
+  <td>HeroV2() node in components/v2/HeroV2.tsx.</td>
+</tr>
+<tr>
+  <td>12</td>
+  <td><code>Lightning.tsx</code><br><small style="color:var(--muted)">components/v2/Lightning.tsx</small></td>
+  <td><span class="tag tag-hook">UI</span></td>
+  <td><code>HeroV2.tsx</code><br><small style="color:var(--muted)">components/v2/HeroV2.tsx</small></td>
+  <td>No direct outbound edge</td>
+  <td>Module file in components/v2/Lightning.tsx.</td>
+</tr>
+<tr>
+  <td>13</td>
+  <td><code>LightningProps</code><br><small style="color:var(--muted)">components/v2/Lightning.tsx</small></td>
+  <td><span class="tag tag-hook">UI</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>LightningProps node in components/v2/Lightning.tsx.</td>
+</tr>
+<tr>
+  <td>14</td>
+  <td><code>Lightning()</code><br><small style="color:var(--muted)">components/v2/Lightning.tsx</small></td>
+  <td><span class="tag tag-hook">UI</span></td>
+  <td><code>HeroV2.tsx</code><br><small style="color:var(--muted)">components/v2/HeroV2.tsx</small></td>
+  <td>No direct outbound edge</td>
+  <td>Lightning() node in components/v2/Lightning.tsx.</td>
+</tr>
+<tr>
+  <td>15</td>
+  <td><code>Preloader.tsx</code><br><small style="color:var(--muted)">components/v2/Preloader.tsx</small></td>
+  <td><span class="tag tag-hook">UI</span></td>
+  <td><code>App.tsx</code><br><small style="color:var(--muted)">src/App.tsx</small></td>
+  <td>No direct outbound edge</td>
+  <td>Module file in components/v2/Preloader.tsx.</td>
+</tr>
+<tr>
+  <td>16</td>
+  <td><code>EASE</code><br><small style="color:var(--muted)">components/v2/Preloader.tsx</small></td>
+  <td><span class="tag tag-hook">UI</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>EASE node in components/v2/Preloader.tsx.</td>
+</tr>
+<tr>
+  <td>17</td>
+  <td><code>Preloader()</code><br><small style="color:var(--muted)">components/v2/Preloader.tsx</small></td>
+  <td><span class="tag tag-hook">UI</span></td>
+  <td><code>App.tsx</code><br><small style="color:var(--muted)">src/App.tsx</small></td>
+  <td>No direct outbound edge</td>
+  <td>Preloader() node in components/v2/Preloader.tsx.</td>
+</tr>
+<tr>
+  <td>18</td>
+  <td><code>profile</code><br><small style="color:var(--muted)">src/config.ts</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>Footer.tsx</code><br><small style="color:var(--muted)">src/components/Footer.tsx</small><br><code>HeroV2.tsx</code><br><small style="color:var(--muted)">components/v2/HeroV2.tsx</small></td>
+  <td>No direct outbound edge</td>
+  <td>profile node in src/config.ts.</td>
+</tr>
+<tr>
+  <td>19</td>
+  <td><code>main.tsx</code><br><small style="color:var(--muted)">src/main.tsx</small></td>
+  <td><span class="tag tag-hook">UI</span></td>
+  <td><code>App.tsx</code><br><small style="color:var(--muted)">src/App.tsx</small></td>
+  <td>No direct outbound edge</td>
+  <td>Module file in src/main.tsx.</td>
+</tr>
+</table>
+
+<div class="grid">
+  <div class="card">
+    <h4>Key Files</h4>
+    <table style="width:100%;font-size:0.85rem;">
+      <tr><th>File</th><th>Coverage</th></tr>
+      <tr><td><code>components/v2/HeroV2.tsx</code></td><td>3 nodes</td></tr>
+<tr><td><code>components/v2/Lightning.tsx</code></td><td>3 nodes</td></tr>
+<tr><td><code>components/v2/Preloader.tsx</code></td><td>3 nodes</td></tr>
+<tr><td><code>src/App.tsx</code></td><td>2 nodes</td></tr>
+<tr><td><code>src/components/AmbientBackground.tsx</code></td><td>2 nodes</td></tr>
+<tr><td><code>src/components/Footer.tsx</code></td><td>2 nodes</td></tr>
+<tr><td><code>components/v2/DeckSection.tsx</code></td><td>2 nodes</td></tr>
+<tr><td><code>src/config.ts</code></td><td>1 nodes</td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <h4>Design Notes</h4>
+    <p>This section comes from graphify community clustering. Relationship summary: contains x10, imports x8, imports x7. The diagram prioritizes high-confidence calls or usage relationships; the table keeps the broader node inventory.</p>
+  </div>
+</div>
+<hr>
+
+<!-- ====== 4. Community 3 ====== -->
+<h2 id="community-3">4. Community 3</h2>
+<p>Community 3 groups implementation around components, sectiontransitionstsx, sociallinksv2tsx, dossiertsx, mostly in components/v2/SectionTransitions.tsx, components/v2/SocialLinksV2.tsx, src/components/Dossier.tsx. This section covers 18 nodes and 24 internal edges; the diagram shows only representative relationships to stay readable.</p>
+
+<div class="mermaid">
+%%{init: {"theme": "dark", "themeVariables": {"fontSize": "15.0px", "fontFamily": "Segoe UI, system-ui, sans-serif", "primaryColor": "#1e293b", "primaryTextColor": "#e2e8f0", "primaryBorderColor": "#38bdf8", "secondaryColor": "#0f172a", "tertiaryColor": "#334155", "lineColor": "#64748b", "textColor": "#e2e8f0"}, "flowchart": {"htmlLabels": true, "curve": "basis", "nodeSpacing": 48, "rankSpacing": 64, "padding": 14, "diagramPadding": 10, "useMaxWidth": true}}}%%
+flowchart LR
+    %% Section: Community 3 (18 nodes, 24 edges)
+    subgraph community_3_components_v2_SectionTransitions_tsx_593c26ed["components/v2/SectionTransitions.tsx"]
+        v2_sectiontransitions_scansweep_41f063d2("ScanSweep()<br/><small>components/v2/SectionTransitions.tsx</small>")
+        v2_sectiontransitions_be5e7d35("SectionTransitions.tsx")
+        v2_sectiontransitions_redactedline_13f388a2("RedactedLine()<br/><small>components/v2/SectionTransitions.tsx</small>")
+        v2_sectiontransitions_redactedtext_f089c45e("RedactedText()<br/><small>components/v2/SectionTransitions.tsx</small>")
+        v2_sectiontransitions_crimetape_debfd7b8("CrimeTape()<br/><small>components/v2/SectionTransitions.tsx</small>")
+        v2_sectiontransitions_ease_1a017576("EASE<br/><small>components/v2/SectionTransitions.tsx</small>")
+    end
+    subgraph community_3_components_v2_SocialLinksV2_tsx_f06f0bf5["components/v2/SocialLinksV2.tsx"]
+        v2_sociallinksv2_509c38ec("SocialLinksV2.tsx")
+        v2_sociallinksv2_ease_9ba7c2fe("EASE<br/><small>components/v2/SocialLinksV2.tsx</small>")
+        v2_sociallinksv2_icon_src_057015a3("ICON_SRC<br/><small>components/v2/SocialLinksV2.tsx</small>")
+        v2_sociallinksv2_sociallinksv2_a5af138b("SocialLinksV2()<br/><small>components/v2/SocialLinksV2.tsx</small>")
+        v2_sociallinksv2_tiltcard_e57b0627("TiltCard()<br/><small>components/v2/SocialLinksV2.tsx</small>")
+    end
+    subgraph community_3_src_components_Dossier_tsx_cd9dfc74["src/components/Dossier.tsx"]
+        components_dossier_2192a658("Dossier.tsx")
+        components_dossier_fadeup_f514f101("fadeUp()<br/><small>src/components/Dossier.tsx</small>")
+        components_dossier_dossier_e415ee4d("Dossier()<br/><small>src/components/Dossier.tsx</small>")
+        components_dossier_ease_c0446931("EASE<br/><small>src/components/Dossier.tsx</small>")
+    end
+    subgraph community_3_components_v2_SectionSlash_tsx_231d889d["components/v2/SectionSlash.tsx"]
+        v2_sectionslash_65ea2f80("SectionSlash.tsx")
+        v2_sectionslash_sectionslash_26661205("SectionSlash()<br/><small>components/v2/SectionSlash.tsx</small>")
+    end
+    src_config_dossier_273233f8("dossier<br/><small>src/config.ts</small>")
+    components_dossier_fadeup_f514f101 -->|calls| components_dossier_dossier_e415ee4d
+    components_dossier_2192a658 -->|imports| src_config_dossier_273233f8
+    components_dossier_2192a658 -->|imports| v2_sectionslash_65ea2f80
+    components_dossier_2192a658 -->|imports| v2_sectionslash_sectionslash_26661205
+    components_dossier_2192a658 -->|imports| v2_sectiontransitions_be5e7d35
+    components_dossier_2192a658 -->|imports| v2_sectiontransitions_redactedline_13f388a2
+    components_dossier_2192a658 -->|imports| v2_sectiontransitions_redactedtext_f089c45e
+    v2_sectionslash_65ea2f80 -->|imports| v2_sociallinksv2_509c38ec
+    v2_sectionslash_sectionslash_26661205 -->|imports| v2_sociallinksv2_509c38ec
+    v2_sectiontransitions_be5e7d35 -->|imports| v2_sociallinksv2_509c38ec
+    v2_sectiontransitions_scansweep_41f063d2 -->|imports| v2_sociallinksv2_509c38ec
+    class v2_sectiontransitions_scansweep_41f063d2 ui;
+    class v2_sectiontransitions_be5e7d35 ui;
+    class v2_sectiontransitions_redactedline_13f388a2 ui;
+    class v2_sectiontransitions_redactedtext_f089c45e ui;
+    class v2_sectiontransitions_crimetape_debfd7b8 ui;
+    class v2_sectiontransitions_ease_1a017576 ui;
+    class v2_sociallinksv2_509c38ec ui;
+    class v2_sociallinksv2_ease_9ba7c2fe ui;
+    class v2_sociallinksv2_icon_src_057015a3 ui;
+    class v2_sociallinksv2_sociallinksv2_a5af138b ui;
+    class v2_sociallinksv2_tiltcard_e57b0627 ui;
+    class components_dossier_2192a658 ui;
+    class components_dossier_fadeup_f514f101 ui;
+    class components_dossier_dossier_e415ee4d ui;
+    class components_dossier_ease_c0446931 ui;
+    class v2_sectionslash_65ea2f80 ui;
+    class v2_sectionslash_sectionslash_26661205 ui;
+    class src_config_dossier_273233f8 function;
+    classDef entry fill:#422006,stroke:#fbbf24,color:#fde68a,stroke-width:1px;
+    classDef api fill:#450a0a,stroke:#f87171,color:#fee2e2,stroke-width:1px;
+    classDef async fill:#2e1065,stroke:#a78bfa,color:#ede9fe,stroke-width:1px;
+    classDef klass fill:#064e3b,stroke:#34d399,color:#d1fae5,stroke-width:1px;
+    classDef ui fill:#831843,stroke:#f472b6,color:#fce7f3,stroke-width:1px;
+    classDef module fill:#172554,stroke:#60a5fa,color:#dbeafe,stroke-width:1px;
+    classDef test fill:#3f3f46,stroke:#a1a1aa,color:#f4f4f5,stroke-width:1px;
+    classDef concept fill:#292524,stroke:#a8a29e,color:#fafaf9,stroke-dasharray:4 3;
+    classDef function fill:#0f172a,stroke:#38bdf8,color:#e0f2fe,stroke-width:1px;
+</div>
+
+<h3>Call Details</h3>
+<table class="call-table">
+<tr>
+  <th style="width:5%">#</th>
+  <th style="width:28%">Node</th>
+  <th style="width:10%">Type</th>
+  <th style="width:17%">Caller</th>
+  <th style="width:20%">Callees</th>
+  <th style="width:20%">Description</th>
+</tr>
+<tr>
+  <td>1</td>
+  <td><code>Dossier.tsx</code><br><small style="color:var(--muted)">src/components/Dossier.tsx</small></td>
+  <td><span class="tag tag-hook">UI</span></td>
+  <td>External entry / no inbound edge</td>
+  <td><code>dossier</code><br><small style="color:var(--muted)">src/config.ts</small><br><code>RedactedLine()</code><br><small style="color:var(--muted)">components/v2/SectionTransitions.tsx</small><br><code>RedactedText()</code><br><small style="color:var(--muted)">components/v2/SectionTransitions.tsx</small><br>+3 more</td>
+  <td>Module file in src/components/Dossier.tsx.</td>
+</tr>
+<tr>
+  <td>2</td>
+  <td><code>EASE</code><br><small style="color:var(--muted)">src/components/Dossier.tsx</small></td>
+  <td><span class="tag tag-hook">UI</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>EASE node in src/components/Dossier.tsx.</td>
+</tr>
+<tr>
+  <td>3</td>
+  <td><code>fadeUp()</code><br><small style="color:var(--muted)">src/components/Dossier.tsx</small></td>
+  <td><span class="tag tag-hook">UI</span></td>
+  <td>External entry / no inbound edge</td>
+  <td><code>Dossier()</code><br><small style="color:var(--muted)">src/components/Dossier.tsx</small></td>
+  <td>fadeUp() node in src/components/Dossier.tsx.</td>
+</tr>
+<tr>
+  <td>4</td>
+  <td><code>Dossier()</code><br><small style="color:var(--muted)">src/components/Dossier.tsx</small></td>
+  <td><span class="tag tag-hook">UI</span></td>
+  <td><code>fadeUp()</code><br><small style="color:var(--muted)">src/components/Dossier.tsx</small></td>
+  <td>No direct outbound edge</td>
+  <td>Dossier() node in src/components/Dossier.tsx.</td>
+</tr>
+<tr>
+  <td>5</td>
+  <td><code>SectionSlash.tsx</code><br><small style="color:var(--muted)">components/v2/SectionSlash.tsx</small></td>
+  <td><span class="tag tag-hook">UI</span></td>
+  <td><code>Dossier.tsx</code><br><small style="color:var(--muted)">src/components/Dossier.tsx</small></td>
+  <td><code>SocialLinksV2.tsx</code><br><small style="color:var(--muted)">components/v2/SocialLinksV2.tsx</small></td>
+  <td>Module file in components/v2/SectionSlash.tsx.</td>
+</tr>
+<tr>
+  <td>6</td>
+  <td><code>SectionSlash()</code><br><small style="color:var(--muted)">components/v2/SectionSlash.tsx</small></td>
+  <td><span class="tag tag-hook">UI</span></td>
+  <td><code>Dossier.tsx</code><br><small style="color:var(--muted)">src/components/Dossier.tsx</small></td>
+  <td><code>SocialLinksV2.tsx</code><br><small style="color:var(--muted)">components/v2/SocialLinksV2.tsx</small></td>
+  <td>SectionSlash() node in components/v2/SectionSlash.tsx.</td>
+</tr>
+<tr>
+  <td>7</td>
+  <td><code>SectionTransitions.tsx</code><br><small style="color:var(--muted)">components/v2/SectionTransitions.tsx</small></td>
+  <td><span class="tag tag-hook">UI</span></td>
+  <td><code>Dossier.tsx</code><br><small style="color:var(--muted)">src/components/Dossier.tsx</small></td>
+  <td><code>SocialLinksV2.tsx</code><br><small style="color:var(--muted)">components/v2/SocialLinksV2.tsx</small></td>
+  <td>Module file in components/v2/SectionTransitions.tsx.</td>
+</tr>
+<tr>
+  <td>8</td>
+  <td><code>EASE</code><br><small style="color:var(--muted)">components/v2/SectionTransitions.tsx</small></td>
+  <td><span class="tag tag-hook">UI</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>EASE node in components/v2/SectionTransitions.tsx.</td>
+</tr>
+<tr>
+  <td>9</td>
+  <td><code>RedactedText()</code><br><small style="color:var(--muted)">components/v2/SectionTransitions.tsx</small></td>
+  <td><span class="tag tag-hook">UI</span></td>
+  <td><code>Dossier.tsx</code><br><small style="color:var(--muted)">src/components/Dossier.tsx</small></td>
+  <td>No direct outbound edge</td>
+  <td>RedactedText() node in components/v2/SectionTransitions.tsx.</td>
+</tr>
+<tr>
+  <td>10</td>
+  <td><code>RedactedLine()</code><br><small style="color:var(--muted)">components/v2/SectionTransitions.tsx</small></td>
+  <td><span class="tag tag-hook">UI</span></td>
+  <td><code>Dossier.tsx</code><br><small style="color:var(--muted)">src/components/Dossier.tsx</small></td>
+  <td>No direct outbound edge</td>
+  <td>RedactedLine() node in components/v2/SectionTransitions.tsx.</td>
+</tr>
+<tr>
+  <td>11</td>
+  <td><code>ScanSweep()</code><br><small style="color:var(--muted)">components/v2/SectionTransitions.tsx</small></td>
+  <td><span class="tag tag-hook">UI</span></td>
+  <td>External entry / no inbound edge</td>
+  <td><code>SocialLinksV2.tsx</code><br><small style="color:var(--muted)">components/v2/SocialLinksV2.tsx</small></td>
+  <td>Starts scanning or handles scan status.</td>
+</tr>
+<tr>
+  <td>12</td>
+  <td><code>CrimeTape()</code><br><small style="color:var(--muted)">components/v2/SectionTransitions.tsx</small></td>
+  <td><span class="tag tag-hook">UI</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>CrimeTape() node in components/v2/SectionTransitions.tsx.</td>
+</tr>
+<tr>
+  <td>13</td>
+  <td><code>SocialLinksV2.tsx</code><br><small style="color:var(--muted)">components/v2/SocialLinksV2.tsx</small></td>
+  <td><span class="tag tag-hook">UI</span></td>
+  <td><code>ScanSweep()</code><br><small style="color:var(--muted)">components/v2/SectionTransitions.tsx</small><br><code>SectionSlash()</code><br><small style="color:var(--muted)">components/v2/SectionSlash.tsx</small><br><code>SectionSlash.tsx</code><br><small style="color:var(--muted)">components/v2/SectionSlash.tsx</small><br>+1 more</td>
+  <td>No direct outbound edge</td>
+  <td>Module file in components/v2/SocialLinksV2.tsx.</td>
+</tr>
+<tr>
+  <td>14</td>
+  <td><code>EASE</code><br><small style="color:var(--muted)">components/v2/SocialLinksV2.tsx</small></td>
+  <td><span class="tag tag-hook">UI</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>EASE node in components/v2/SocialLinksV2.tsx.</td>
+</tr>
+<tr>
+  <td>15</td>
+  <td><code>ICON_SRC</code><br><small style="color:var(--muted)">components/v2/SocialLinksV2.tsx</small></td>
+  <td><span class="tag tag-hook">UI</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>ICON_SRC node in components/v2/SocialLinksV2.tsx.</td>
+</tr>
+<tr>
+  <td>16</td>
+  <td><code>TiltCard()</code><br><small style="color:var(--muted)">components/v2/SocialLinksV2.tsx</small></td>
+  <td><span class="tag tag-hook">UI</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>TiltCard() node in components/v2/SocialLinksV2.tsx.</td>
+</tr>
+<tr>
+  <td>17</td>
+  <td><code>SocialLinksV2()</code><br><small style="color:var(--muted)">components/v2/SocialLinksV2.tsx</small></td>
+  <td><span class="tag tag-hook">UI</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>SocialLinksV2() node in components/v2/SocialLinksV2.tsx.</td>
+</tr>
+<tr>
+  <td>18</td>
+  <td><code>dossier</code><br><small style="color:var(--muted)">src/config.ts</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>Dossier.tsx</code><br><small style="color:var(--muted)">src/components/Dossier.tsx</small></td>
+  <td>No direct outbound edge</td>
+  <td>dossier node in src/config.ts.</td>
+</tr>
+</table>
+
+<div class="grid">
+  <div class="card">
+    <h4>Key Files</h4>
+    <table style="width:100%;font-size:0.85rem;">
+      <tr><th>File</th><th>Coverage</th></tr>
+      <tr><td><code>components/v2/SectionTransitions.tsx</code></td><td>6 nodes</td></tr>
+<tr><td><code>components/v2/SocialLinksV2.tsx</code></td><td>5 nodes</td></tr>
+<tr><td><code>src/components/Dossier.tsx</code></td><td>4 nodes</td></tr>
+<tr><td><code>components/v2/SectionSlash.tsx</code></td><td>2 nodes</td></tr>
+<tr><td><code>src/config.ts</code></td><td>1 nodes</td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <h4>Design Notes</h4>
+    <p>This section comes from graphify community clustering. Relationship summary: contains x13, imports x6, imports x4, calls x1. The diagram prioritizes high-confidence calls or usage relationships; the table keeps the broader node inventory.</p>
+  </div>
+</div>
+<hr>
+
+<!-- ====== 5. Community 4 ====== -->
+<h2 id="community-4">5. Community 4</h2>
+<p>Community 4 groups implementation around pixelimptsx, components, body, activity, mostly in components/v2/PixelImp.tsx. This section covers 17 nodes and 20 internal edges; the diagram shows only representative relationships to stay readable.</p>
+
+<div class="mermaid">
+%%{init: {"theme": "dark", "themeVariables": {"fontSize": "15.0px", "fontFamily": "Segoe UI, system-ui, sans-serif", "primaryColor": "#1e293b", "primaryTextColor": "#e2e8f0", "primaryBorderColor": "#38bdf8", "secondaryColor": "#0f172a", "tertiaryColor": "#334155", "lineColor": "#64748b", "textColor": "#e2e8f0"}, "flowchart": {"htmlLabels": true, "curve": "basis", "nodeSpacing": 48, "rankSpacing": 64, "padding": 14, "diagramPadding": 10, "useMaxWidth": true}}}%%
+flowchart LR
+    %% Section: Community 4 (17 nodes, 20 edges)
+    v2_pixelimp_laptopframe_ee938610("laptopFrame()<br/><small>components/v2/PixelImp.tsx</small>")
+    v2_pixelimp_phoneframe_04c0f717("phoneFrame()<br/><small>components/v2/PixelImp.tsx</small>")
+    v2_pixelimp_readframe_bcad42ad("readFrame()<br/><small>components/v2/PixelImp.tsx</small>")
+    v2_pixelimp_smokeframe_4013c59c("smokeFrame()<br/><small>components/v2/PixelImp.tsx</small>")
+    v2_pixelimp_pixelimp_09df4aec("PixelImp()<br/><small>components/v2/PixelImp.tsx</small>")
+    v2_pixelimp_activity_by_idx_46dd1436("ACTIVITY_BY_IDX<br/><small>components/v2/PixelImp.tsx</small>")
+    v2_pixelimp_activity_02b9fecb("Activity<br/><small>components/v2/PixelImp.tsx</small>")
+    v2_pixelimp_blink_11e63ce6("BLINK<br/><small>components/v2/PixelImp.tsx</small>")
+    v2_pixelimp_body_d52af09f("BODY<br/><small>components/v2/PixelImp.tsx</small>")
+    v2_pixelimp_body_pixels_3bd1745d("BODY_PIXELS<br/><small>components/v2/PixelImp.tsx</small>")
+    v2_pixelimp_c_455632a7("C<br/><small>components/v2/PixelImp.tsx</small>")
+    v2_pixelimp_poof_dense_b35215ef("POOF_DENSE<br/><small>components/v2/PixelImp.tsx</small>")
+    v2_pixelimp_poof_sparse_ca19d647("POOF_SPARSE<br/><small>components/v2/PixelImp.tsx</small>")
+    v2_pixelimp_8c6fdcbb("PixelImp.tsx")
+    v2_pixelimp_px_74f347f4("Px<br/><small>components/v2/PixelImp.tsx</small>")
+    v2_pixelimp_sections_a1a23984("SECTIONS<br/><small>components/v2/PixelImp.tsx</small>")
+    v2_pixelimp_sit_selectors_1096dd79("SIT_SELECTORS<br/><small>components/v2/PixelImp.tsx</small>")
+    v2_pixelimp_smokeframe_4013c59c -->|calls| v2_pixelimp_pixelimp_09df4aec
+    v2_pixelimp_laptopframe_ee938610 -->|calls| v2_pixelimp_pixelimp_09df4aec
+    v2_pixelimp_readframe_bcad42ad -->|calls| v2_pixelimp_pixelimp_09df4aec
+    v2_pixelimp_phoneframe_04c0f717 -->|calls| v2_pixelimp_pixelimp_09df4aec
+    class v2_pixelimp_laptopframe_ee938610 ui;
+    class v2_pixelimp_phoneframe_04c0f717 ui;
+    class v2_pixelimp_readframe_bcad42ad ui;
+    class v2_pixelimp_smokeframe_4013c59c ui;
+    class v2_pixelimp_pixelimp_09df4aec ui;
+    class v2_pixelimp_activity_by_idx_46dd1436 ui;
+    class v2_pixelimp_activity_02b9fecb ui;
+    class v2_pixelimp_blink_11e63ce6 ui;
+    class v2_pixelimp_body_d52af09f ui;
+    class v2_pixelimp_body_pixels_3bd1745d ui;
+    class v2_pixelimp_c_455632a7 ui;
+    class v2_pixelimp_poof_dense_b35215ef ui;
+    class v2_pixelimp_poof_sparse_ca19d647 ui;
+    class v2_pixelimp_8c6fdcbb ui;
+    class v2_pixelimp_px_74f347f4 ui;
+    class v2_pixelimp_sections_a1a23984 ui;
+    class v2_pixelimp_sit_selectors_1096dd79 ui;
+    classDef entry fill:#422006,stroke:#fbbf24,color:#fde68a,stroke-width:1px;
+    classDef api fill:#450a0a,stroke:#f87171,color:#fee2e2,stroke-width:1px;
+    classDef async fill:#2e1065,stroke:#a78bfa,color:#ede9fe,stroke-width:1px;
+    classDef klass fill:#064e3b,stroke:#34d399,color:#d1fae5,stroke-width:1px;
+    classDef ui fill:#831843,stroke:#f472b6,color:#fce7f3,stroke-width:1px;
+    classDef module fill:#172554,stroke:#60a5fa,color:#dbeafe,stroke-width:1px;
+    classDef test fill:#3f3f46,stroke:#a1a1aa,color:#f4f4f5,stroke-width:1px;
+    classDef concept fill:#292524,stroke:#a8a29e,color:#fafaf9,stroke-dasharray:4 3;
+    classDef function fill:#0f172a,stroke:#38bdf8,color:#e0f2fe,stroke-width:1px;
+</div>
+
+<h3>Call Details</h3>
+<table class="call-table">
+<tr>
+  <th style="width:5%">#</th>
+  <th style="width:28%">Node</th>
+  <th style="width:10%">Type</th>
+  <th style="width:17%">Caller</th>
+  <th style="width:20%">Callees</th>
+  <th style="width:20%">Description</th>
+</tr>
+<tr>
+  <td>1</td>
+  <td><code>PixelImp.tsx</code><br><small style="color:var(--muted)">components/v2/PixelImp.tsx</small></td>
+  <td><span class="tag tag-hook">UI</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Module file in components/v2/PixelImp.tsx.</td>
+</tr>
+<tr>
+  <td>2</td>
+  <td><code>C</code><br><small style="color:var(--muted)">components/v2/PixelImp.tsx</small></td>
+  <td><span class="tag tag-hook">UI</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>C node in components/v2/PixelImp.tsx.</td>
+</tr>
+<tr>
+  <td>3</td>
+  <td><code>BODY</code><br><small style="color:var(--muted)">components/v2/PixelImp.tsx</small></td>
+  <td><span class="tag tag-hook">UI</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>BODY node in components/v2/PixelImp.tsx.</td>
+</tr>
+<tr>
+  <td>4</td>
+  <td><code>BLINK</code><br><small style="color:var(--muted)">components/v2/PixelImp.tsx</small></td>
+  <td><span class="tag tag-hook">UI</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>BLINK node in components/v2/PixelImp.tsx.</td>
+</tr>
+<tr>
+  <td>5</td>
+  <td><code>Px</code><br><small style="color:var(--muted)">components/v2/PixelImp.tsx</small></td>
+  <td><span class="tag tag-hook">UI</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Px node in components/v2/PixelImp.tsx.</td>
+</tr>
+<tr>
+  <td>6</td>
+  <td><code>BODY_PIXELS</code><br><small style="color:var(--muted)">components/v2/PixelImp.tsx</small></td>
+  <td><span class="tag tag-hook">UI</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>BODY_PIXELS node in components/v2/PixelImp.tsx.</td>
+</tr>
+<tr>
+  <td>7</td>
+  <td><code>SECTIONS</code><br><small style="color:var(--muted)">components/v2/PixelImp.tsx</small></td>
+  <td><span class="tag tag-hook">UI</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>SECTIONS node in components/v2/PixelImp.tsx.</td>
+</tr>
+<tr>
+  <td>8</td>
+  <td><code>SIT_SELECTORS</code><br><small style="color:var(--muted)">components/v2/PixelImp.tsx</small></td>
+  <td><span class="tag tag-hook">UI</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>SIT_SELECTORS node in components/v2/PixelImp.tsx.</td>
+</tr>
+<tr>
+  <td>9</td>
+  <td><code>Activity</code><br><small style="color:var(--muted)">components/v2/PixelImp.tsx</small></td>
+  <td><span class="tag tag-hook">UI</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Activity node in components/v2/PixelImp.tsx.</td>
+</tr>
+<tr>
+  <td>10</td>
+  <td><code>ACTIVITY_BY_IDX</code><br><small style="color:var(--muted)">components/v2/PixelImp.tsx</small></td>
+  <td><span class="tag tag-hook">UI</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>ACTIVITY_BY_IDX node in components/v2/PixelImp.tsx.</td>
+</tr>
+<tr>
+  <td>11</td>
+  <td><code>POOF_DENSE</code><br><small style="color:var(--muted)">components/v2/PixelImp.tsx</small></td>
+  <td><span class="tag tag-hook">UI</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>POOF_DENSE node in components/v2/PixelImp.tsx.</td>
+</tr>
+<tr>
+  <td>12</td>
+  <td><code>POOF_SPARSE</code><br><small style="color:var(--muted)">components/v2/PixelImp.tsx</small></td>
+  <td><span class="tag tag-hook">UI</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>POOF_SPARSE node in components/v2/PixelImp.tsx.</td>
+</tr>
+<tr>
+  <td>13</td>
+  <td><code>smokeFrame()</code><br><small style="color:var(--muted)">components/v2/PixelImp.tsx</small></td>
+  <td><span class="tag tag-hook">UI</span></td>
+  <td>External entry / no inbound edge</td>
+  <td><code>PixelImp()</code><br><small style="color:var(--muted)">components/v2/PixelImp.tsx</small></td>
+  <td>smokeFrame() node in components/v2/PixelImp.tsx.</td>
+</tr>
+<tr>
+  <td>14</td>
+  <td><code>laptopFrame()</code><br><small style="color:var(--muted)">components/v2/PixelImp.tsx</small></td>
+  <td><span class="tag tag-hook">UI</span></td>
+  <td>External entry / no inbound edge</td>
+  <td><code>PixelImp()</code><br><small style="color:var(--muted)">components/v2/PixelImp.tsx</small></td>
+  <td>laptopFrame() node in components/v2/PixelImp.tsx.</td>
+</tr>
+<tr>
+  <td>15</td>
+  <td><code>readFrame()</code><br><small style="color:var(--muted)">components/v2/PixelImp.tsx</small></td>
+  <td><span class="tag tag-hook">UI</span></td>
+  <td>External entry / no inbound edge</td>
+  <td><code>PixelImp()</code><br><small style="color:var(--muted)">components/v2/PixelImp.tsx</small></td>
+  <td>readFrame() node in components/v2/PixelImp.tsx.</td>
+</tr>
+<tr>
+  <td>16</td>
+  <td><code>phoneFrame()</code><br><small style="color:var(--muted)">components/v2/PixelImp.tsx</small></td>
+  <td><span class="tag tag-hook">UI</span></td>
+  <td>External entry / no inbound edge</td>
+  <td><code>PixelImp()</code><br><small style="color:var(--muted)">components/v2/PixelImp.tsx</small></td>
+  <td>phoneFrame() node in components/v2/PixelImp.tsx.</td>
+</tr>
+<tr>
+  <td>17</td>
+  <td><code>PixelImp()</code><br><small style="color:var(--muted)">components/v2/PixelImp.tsx</small></td>
+  <td><span class="tag tag-hook">UI</span></td>
+  <td><code>laptopFrame()</code><br><small style="color:var(--muted)">components/v2/PixelImp.tsx</small><br><code>phoneFrame()</code><br><small style="color:var(--muted)">components/v2/PixelImp.tsx</small><br><code>readFrame()</code><br><small style="color:var(--muted)">components/v2/PixelImp.tsx</small><br>+1 more</td>
+  <td>No direct outbound edge</td>
+  <td>PixelImp() node in components/v2/PixelImp.tsx.</td>
+</tr>
+</table>
+
+<div class="grid">
+  <div class="card">
+    <h4>Key Files</h4>
+    <table style="width:100%;font-size:0.85rem;">
+      <tr><th>File</th><th>Coverage</th></tr>
+      <tr><td><code>components/v2/PixelImp.tsx</code></td><td>17 nodes</td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <h4>Design Notes</h4>
+    <p>This section comes from graphify community clustering. Relationship summary: contains x16, calls x4. The diagram prioritizes high-confidence calls or usage relationships; the table keeps the broader node inventory.</p>
+  </div>
+</div>
+<hr>
+
+<!-- ====== 6. Community 5 ====== -->
+<h2 id="community-5">6. Community 5</h2>
+<p>Community 5 groups implementation around components, configts, icontsx, sociallinkstsx, mostly in src/config.ts, src/components/Icon.tsx, src/components/SocialLinks.tsx. This section covers 17 nodes and 21 internal edges; the diagram shows only representative relationships to stay readable.</p>
+
+<div class="mermaid">
+%%{init: {"theme": "dark", "themeVariables": {"fontSize": "15.0px", "fontFamily": "Segoe UI, system-ui, sans-serif", "primaryColor": "#1e293b", "primaryTextColor": "#e2e8f0", "primaryBorderColor": "#38bdf8", "secondaryColor": "#0f172a", "tertiaryColor": "#334155", "lineColor": "#64748b", "textColor": "#e2e8f0"}, "flowchart": {"htmlLabels": true, "curve": "basis", "nodeSpacing": 48, "rankSpacing": 64, "padding": 14, "diagramPadding": 10, "useMaxWidth": true}}}%%
+flowchart LR
+    %% Section: Community 5 (17 nodes, 21 edges)
+    subgraph community_5_src_config_ts_118bf898["src/config.ts"]
+        src_config_f55793b8("config.ts")
+        src_config_iconname_96ee8db3("IconName<br/><small>src/config.ts</small>")
+        src_config_links_15310563("links<br/><small>src/config.ts</small>")
+        src_config_sociallink_ac1433d5("SocialLink<br/><small>src/config.ts</small>")
+        src_config_achievement_dcfdd23b("Achievement<br/><small>src/config.ts</small>")
+        src_config_dossierproject_e779c376("DossierProject<br/><small>src/config.ts</small>")
+    end
+    subgraph community_5_src_components_Icon_tsx_5340dfdb["src/components/Icon.tsx"]
+        components_icon_2be58598("Icon.tsx")
+        components_icon_icon_2bf90083("Icon()<br/><small>src/components/Icon.tsx</small>")
+        components_icon_iconprops_b77afa83("IconProps<br/><small>src/components/Icon.tsx</small>")
+        components_icon_paths_faef4a24("paths<br/><small>src/components/Icon.tsx</small>")
+    end
+    subgraph community_5_src_components_SocialLinks_tsx_6ab0a5e5["src/components/SocialLinks.tsx"]
+        components_sociallinks_879a8067("SocialLinks.tsx")
+        components_sociallinks_ease_7866b37e("EASE<br/><small>src/components/SocialLinks.tsx</small>")
+        components_sociallinks_linkcard_4e3aefbe("LinkCard()<br/><small>src/components/SocialLinks.tsx</small>")
+        components_sociallinks_sociallinks_9d5d1bf6("SocialLinks()<br/><small>src/components/SocialLinks.tsx</small>")
+    end
+    subgraph community_5_src_components_Hero_tsx_f525d912["src/components/Hero.tsx"]
+        components_hero_d261918c("Hero.tsx")
+        components_hero_ease_b98f12b0("EASE<br/><small>src/components/Hero.tsx</small>")
+        components_hero_hero_f1ff9ed3("Hero()<br/><small>src/components/Hero.tsx</small>")
+    end
+    components_hero_d261918c -->|imports| src_config_f55793b8
+    components_icon_2be58598 -->|imports| src_config_f55793b8
+    components_icon_2be58598 -->|imports| src_config_iconname_96ee8db3
+    components_icon_2be58598 -->|imports| components_sociallinks_879a8067
+    components_icon_icon_2bf90083 -->|imports| components_sociallinks_879a8067
+    components_sociallinks_879a8067 -->|imports| src_config_f55793b8
+    components_sociallinks_879a8067 -->|imports| src_config_links_15310563
+    components_sociallinks_879a8067 -->|imports| src_config_sociallink_ac1433d5
+    class src_config_f55793b8 module;
+    class src_config_iconname_96ee8db3 klass;
+    class src_config_links_15310563 function;
+    class src_config_sociallink_ac1433d5 klass;
+    class src_config_achievement_dcfdd23b klass;
+    class src_config_dossierproject_e779c376 klass;
+    class components_icon_2be58598 ui;
+    class components_icon_icon_2bf90083 ui;
+    class components_icon_iconprops_b77afa83 ui;
+    class components_icon_paths_faef4a24 ui;
+    class components_sociallinks_879a8067 ui;
+    class components_sociallinks_ease_7866b37e ui;
+    class components_sociallinks_linkcard_4e3aefbe ui;
+    class components_sociallinks_sociallinks_9d5d1bf6 ui;
+    class components_hero_d261918c ui;
+    class components_hero_ease_b98f12b0 ui;
+    class components_hero_hero_f1ff9ed3 ui;
+    classDef entry fill:#422006,stroke:#fbbf24,color:#fde68a,stroke-width:1px;
+    classDef api fill:#450a0a,stroke:#f87171,color:#fee2e2,stroke-width:1px;
+    classDef async fill:#2e1065,stroke:#a78bfa,color:#ede9fe,stroke-width:1px;
+    classDef klass fill:#064e3b,stroke:#34d399,color:#d1fae5,stroke-width:1px;
+    classDef ui fill:#831843,stroke:#f472b6,color:#fce7f3,stroke-width:1px;
+    classDef module fill:#172554,stroke:#60a5fa,color:#dbeafe,stroke-width:1px;
+    classDef test fill:#3f3f46,stroke:#a1a1aa,color:#f4f4f5,stroke-width:1px;
+    classDef concept fill:#292524,stroke:#a8a29e,color:#fafaf9,stroke-dasharray:4 3;
+    classDef function fill:#0f172a,stroke:#38bdf8,color:#e0f2fe,stroke-width:1px;
+</div>
+
+<h3>Call Details</h3>
+<table class="call-table">
+<tr>
+  <th style="width:5%">#</th>
+  <th style="width:28%">Node</th>
+  <th style="width:10%">Type</th>
+  <th style="width:17%">Caller</th>
+  <th style="width:20%">Callees</th>
+  <th style="width:20%">Description</th>
+</tr>
+<tr>
+  <td>1</td>
+  <td><code>Hero.tsx</code><br><small style="color:var(--muted)">src/components/Hero.tsx</small></td>
+  <td><span class="tag tag-hook">UI</span></td>
+  <td>External entry / no inbound edge</td>
+  <td><code>config.ts</code><br><small style="color:var(--muted)">src/config.ts</small></td>
+  <td>Module file in src/components/Hero.tsx.</td>
+</tr>
+<tr>
+  <td>2</td>
+  <td><code>EASE</code><br><small style="color:var(--muted)">src/components/Hero.tsx</small></td>
+  <td><span class="tag tag-hook">UI</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>EASE node in src/components/Hero.tsx.</td>
+</tr>
+<tr>
+  <td>3</td>
+  <td><code>Hero()</code><br><small style="color:var(--muted)">src/components/Hero.tsx</small></td>
+  <td><span class="tag tag-hook">UI</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Hero() node in src/components/Hero.tsx.</td>
+</tr>
+<tr>
+  <td>4</td>
+  <td><code>Icon.tsx</code><br><small style="color:var(--muted)">src/components/Icon.tsx</small></td>
+  <td><span class="tag tag-hook">UI</span></td>
+  <td>External entry / no inbound edge</td>
+  <td><code>config.ts</code><br><small style="color:var(--muted)">src/config.ts</small><br><code>IconName</code><br><small style="color:var(--muted)">src/config.ts</small><br><code>SocialLinks.tsx</code><br><small style="color:var(--muted)">src/components/SocialLinks.tsx</small></td>
+  <td>Module file in src/components/Icon.tsx.</td>
+</tr>
+<tr>
+  <td>5</td>
+  <td><code>paths</code><br><small style="color:var(--muted)">src/components/Icon.tsx</small></td>
+  <td><span class="tag tag-hook">UI</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>paths node in src/components/Icon.tsx.</td>
+</tr>
+<tr>
+  <td>6</td>
+  <td><code>IconProps</code><br><small style="color:var(--muted)">src/components/Icon.tsx</small></td>
+  <td><span class="tag tag-hook">UI</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>IconProps node in src/components/Icon.tsx.</td>
+</tr>
+<tr>
+  <td>7</td>
+  <td><code>Icon()</code><br><small style="color:var(--muted)">src/components/Icon.tsx</small></td>
+  <td><span class="tag tag-hook">UI</span></td>
+  <td>External entry / no inbound edge</td>
+  <td><code>SocialLinks.tsx</code><br><small style="color:var(--muted)">src/components/SocialLinks.tsx</small></td>
+  <td>Icon() node in src/components/Icon.tsx.</td>
+</tr>
+<tr>
+  <td>8</td>
+  <td><code>SocialLinks.tsx</code><br><small style="color:var(--muted)">src/components/SocialLinks.tsx</small></td>
+  <td><span class="tag tag-hook">UI</span></td>
+  <td><code>Icon()</code><br><small style="color:var(--muted)">src/components/Icon.tsx</small><br><code>Icon.tsx</code><br><small style="color:var(--muted)">src/components/Icon.tsx</small></td>
+  <td><code>config.ts</code><br><small style="color:var(--muted)">src/config.ts</small><br><code>links</code><br><small style="color:var(--muted)">src/config.ts</small><br><code>SocialLink</code><br><small style="color:var(--muted)">src/config.ts</small></td>
+  <td>Module file in src/components/SocialLinks.tsx.</td>
+</tr>
+<tr>
+  <td>9</td>
+  <td><code>EASE</code><br><small style="color:var(--muted)">src/components/SocialLinks.tsx</small></td>
+  <td><span class="tag tag-hook">UI</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>EASE node in src/components/SocialLinks.tsx.</td>
+</tr>
+<tr>
+  <td>10</td>
+  <td><code>LinkCard()</code><br><small style="color:var(--muted)">src/components/SocialLinks.tsx</small></td>
+  <td><span class="tag tag-hook">UI</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>LinkCard() node in src/components/SocialLinks.tsx.</td>
+</tr>
+<tr>
+  <td>11</td>
+  <td><code>SocialLinks()</code><br><small style="color:var(--muted)">src/components/SocialLinks.tsx</small></td>
+  <td><span class="tag tag-hook">UI</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>SocialLinks() node in src/components/SocialLinks.tsx.</td>
+</tr>
+<tr>
+  <td>12</td>
+  <td><code>config.ts</code><br><small style="color:var(--muted)">src/config.ts</small></td>
+  <td><span class="tag tag-class">Module</span></td>
+  <td><code>Hero.tsx</code><br><small style="color:var(--muted)">src/components/Hero.tsx</small><br><code>Icon.tsx</code><br><small style="color:var(--muted)">src/components/Icon.tsx</small><br><code>SocialLinks.tsx</code><br><small style="color:var(--muted)">src/components/SocialLinks.tsx</small></td>
+  <td>No direct outbound edge</td>
+  <td>Module file in src/config.ts.</td>
+</tr>
+<tr>
+  <td>13</td>
+  <td><code>IconName</code><br><small style="color:var(--muted)">src/config.ts</small></td>
+  <td><span class="tag tag-class">Class</span></td>
+  <td><code>Icon.tsx</code><br><small style="color:var(--muted)">src/components/Icon.tsx</small></td>
+  <td>No direct outbound edge</td>
+  <td>IconName node in src/config.ts.</td>
+</tr>
+<tr>
+  <td>14</td>
+  <td><code>SocialLink</code><br><small style="color:var(--muted)">src/config.ts</small></td>
+  <td><span class="tag tag-class">Class</span></td>
+  <td><code>SocialLinks.tsx</code><br><small style="color:var(--muted)">src/components/SocialLinks.tsx</small></td>
+  <td>No direct outbound edge</td>
+  <td>SocialLink node in src/config.ts.</td>
+</tr>
+<tr>
+  <td>15</td>
+  <td><code>links</code><br><small style="color:var(--muted)">src/config.ts</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>SocialLinks.tsx</code><br><small style="color:var(--muted)">src/components/SocialLinks.tsx</small></td>
+  <td>No direct outbound edge</td>
+  <td>links node in src/config.ts.</td>
+</tr>
+<tr>
+  <td>16</td>
+  <td><code>DossierProject</code><br><small style="color:var(--muted)">src/config.ts</small></td>
+  <td><span class="tag tag-class">Class</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>DossierProject node in src/config.ts.</td>
+</tr>
+<tr>
+  <td>17</td>
+  <td><code>Achievement</code><br><small style="color:var(--muted)">src/config.ts</small></td>
+  <td><span class="tag tag-class">Class</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Achievement node in src/config.ts.</td>
+</tr>
+</table>
+
+<div class="grid">
+  <div class="card">
+    <h4>Key Files</h4>
+    <table style="width:100%;font-size:0.85rem;">
+      <tr><th>File</th><th>Coverage</th></tr>
+      <tr><td><code>src/config.ts</code></td><td>6 nodes</td></tr>
+<tr><td><code>src/components/Icon.tsx</code></td><td>4 nodes</td></tr>
+<tr><td><code>src/components/SocialLinks.tsx</code></td><td>4 nodes</td></tr>
+<tr><td><code>src/components/Hero.tsx</code></td><td>3 nodes</td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <h4>Design Notes</h4>
+    <p>This section comes from graphify community clustering. Relationship summary: contains x13, imports x4, imports x4. The diagram prioritizes high-confidence calls or usage relationships; the table keeps the broader node inventory.</p>
+  </div>
+</div>
+<hr>
+
+<!-- ====== 7. Community 11 ====== -->
+<h2 id="community-11">7. Community 11</h2>
+<p>Community 11 groups implementation around components, schemestsx, sectionfxtsx, schemes, mostly in src/components/Schemes.tsx, components/v2/SectionFX.tsx, src/config.ts. This section covers 8 nodes and 8 internal edges; the diagram shows only representative relationships to stay readable.</p>
+
+<div class="mermaid">
+%%{init: {"theme": "dark", "themeVariables": {"fontSize": "15.0px", "fontFamily": "Segoe UI, system-ui, sans-serif", "primaryColor": "#1e293b", "primaryTextColor": "#e2e8f0", "primaryBorderColor": "#38bdf8", "secondaryColor": "#0f172a", "tertiaryColor": "#334155", "lineColor": "#64748b", "textColor": "#e2e8f0"}, "flowchart": {"htmlLabels": true, "curve": "basis", "nodeSpacing": 48, "rankSpacing": 64, "padding": 14, "diagramPadding": 10, "useMaxWidth": true}}}%%
+flowchart LR
+    %% Section: Community 11 (8 nodes, 8 edges)
+    subgraph community_11_src_components_Schemes_tsx_e360443e["src/components/Schemes.tsx"]
+        components_schemes_624d8b02("Schemes.tsx")
+        components_schemes_ease_3ca2cfad("EASE<br/><small>src/components/Schemes.tsx</small>")
+        components_schemes_schemecard_e4e1dc5d("SchemeCard()<br/><small>src/components/Schemes.tsx</small>")
+        components_schemes_schemes_f4a02f4e("Schemes()<br/><small>src/components/Schemes.tsx</small>")
+    end
+    subgraph community_11_components_v2_SectionFX_tsx_29674c58["components/v2/SectionFX.tsx"]
+        v2_sectionfx_7a772ab1("SectionFX.tsx")
+        v2_sectionfx_sectionfx_4d98311e("SectionFX()<br/><small>components/v2/SectionFX.tsx</small>")
+    end
+    subgraph community_11_src_config_ts_58cc38e1["src/config.ts"]
+        src_config_scheme_816a0e75("Scheme<br/><small>src/config.ts</small>")
+        src_config_schemes_613de6a4("schemes<br/><small>src/config.ts</small>")
+    end
+    components_schemes_624d8b02 -->|imports| src_config_scheme_816a0e75
+    components_schemes_624d8b02 -->|imports| src_config_schemes_613de6a4
+    components_schemes_624d8b02 -->|imports| v2_sectionfx_7a772ab1
+    components_schemes_624d8b02 -->|imports| v2_sectionfx_sectionfx_4d98311e
+    class components_schemes_624d8b02 ui;
+    class components_schemes_ease_3ca2cfad ui;
+    class components_schemes_schemecard_e4e1dc5d ui;
+    class components_schemes_schemes_f4a02f4e ui;
+    class v2_sectionfx_7a772ab1 ui;
+    class v2_sectionfx_sectionfx_4d98311e ui;
+    class src_config_scheme_816a0e75 klass;
+    class src_config_schemes_613de6a4 function;
+    classDef entry fill:#422006,stroke:#fbbf24,color:#fde68a,stroke-width:1px;
+    classDef api fill:#450a0a,stroke:#f87171,color:#fee2e2,stroke-width:1px;
+    classDef async fill:#2e1065,stroke:#a78bfa,color:#ede9fe,stroke-width:1px;
+    classDef klass fill:#064e3b,stroke:#34d399,color:#d1fae5,stroke-width:1px;
+    classDef ui fill:#831843,stroke:#f472b6,color:#fce7f3,stroke-width:1px;
+    classDef module fill:#172554,stroke:#60a5fa,color:#dbeafe,stroke-width:1px;
+    classDef test fill:#3f3f46,stroke:#a1a1aa,color:#f4f4f5,stroke-width:1px;
+    classDef concept fill:#292524,stroke:#a8a29e,color:#fafaf9,stroke-dasharray:4 3;
+    classDef function fill:#0f172a,stroke:#38bdf8,color:#e0f2fe,stroke-width:1px;
+</div>
+
+<h3>Call Details</h3>
+<table class="call-table">
+<tr>
+  <th style="width:5%">#</th>
+  <th style="width:28%">Node</th>
+  <th style="width:10%">Type</th>
+  <th style="width:17%">Caller</th>
+  <th style="width:20%">Callees</th>
+  <th style="width:20%">Description</th>
+</tr>
+<tr>
+  <td>1</td>
+  <td><code>Schemes.tsx</code><br><small style="color:var(--muted)">src/components/Schemes.tsx</small></td>
+  <td><span class="tag tag-hook">UI</span></td>
+  <td>External entry / no inbound edge</td>
+  <td><code>Scheme</code><br><small style="color:var(--muted)">src/config.ts</small><br><code>schemes</code><br><small style="color:var(--muted)">src/config.ts</small><br><code>SectionFX()</code><br><small style="color:var(--muted)">components/v2/SectionFX.tsx</small><br>+1 more</td>
+  <td>Module file in src/components/Schemes.tsx.</td>
+</tr>
+<tr>
+  <td>2</td>
+  <td><code>EASE</code><br><small style="color:var(--muted)">src/components/Schemes.tsx</small></td>
+  <td><span class="tag tag-hook">UI</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>EASE node in src/components/Schemes.tsx.</td>
+</tr>
+<tr>
+  <td>3</td>
+  <td><code>SchemeCard()</code><br><small style="color:var(--muted)">src/components/Schemes.tsx</small></td>
+  <td><span class="tag tag-hook">UI</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>SchemeCard() node in src/components/Schemes.tsx.</td>
+</tr>
+<tr>
+  <td>4</td>
+  <td><code>Schemes()</code><br><small style="color:var(--muted)">src/components/Schemes.tsx</small></td>
+  <td><span class="tag tag-hook">UI</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Schemes() node in src/components/Schemes.tsx.</td>
+</tr>
+<tr>
+  <td>5</td>
+  <td><code>SectionFX.tsx</code><br><small style="color:var(--muted)">components/v2/SectionFX.tsx</small></td>
+  <td><span class="tag tag-hook">UI</span></td>
+  <td><code>Schemes.tsx</code><br><small style="color:var(--muted)">src/components/Schemes.tsx</small></td>
+  <td>No direct outbound edge</td>
+  <td>Module file in components/v2/SectionFX.tsx.</td>
+</tr>
+<tr>
+  <td>6</td>
+  <td><code>SectionFX()</code><br><small style="color:var(--muted)">components/v2/SectionFX.tsx</small></td>
+  <td><span class="tag tag-hook">UI</span></td>
+  <td><code>Schemes.tsx</code><br><small style="color:var(--muted)">src/components/Schemes.tsx</small></td>
+  <td>No direct outbound edge</td>
+  <td>SectionFX() node in components/v2/SectionFX.tsx.</td>
+</tr>
+<tr>
+  <td>7</td>
+  <td><code>Scheme</code><br><small style="color:var(--muted)">src/config.ts</small></td>
+  <td><span class="tag tag-class">Class</span></td>
+  <td><code>Schemes.tsx</code><br><small style="color:var(--muted)">src/components/Schemes.tsx</small></td>
+  <td>No direct outbound edge</td>
+  <td>Scheme node in src/config.ts.</td>
+</tr>
+<tr>
+  <td>8</td>
+  <td><code>schemes</code><br><small style="color:var(--muted)">src/config.ts</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>Schemes.tsx</code><br><small style="color:var(--muted)">src/components/Schemes.tsx</small></td>
+  <td>No direct outbound edge</td>
+  <td>schemes node in src/config.ts.</td>
+</tr>
+</table>
+
+<div class="grid">
+  <div class="card">
+    <h4>Key Files</h4>
+    <table style="width:100%;font-size:0.85rem;">
+      <tr><th>File</th><th>Coverage</th></tr>
+      <tr><td><code>src/components/Schemes.tsx</code></td><td>4 nodes</td></tr>
+<tr><td><code>components/v2/SectionFX.tsx</code></td><td>2 nodes</td></tr>
+<tr><td><code>src/config.ts</code></td><td>2 nodes</td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <h4>Design Notes</h4>
+    <p>This section comes from graphify community clustering. Relationship summary: contains x4, imports x3, imports x1. The diagram prioritizes high-confidence calls or usage relationships; the table keeps the broader node inventory.</p>
+  </div>
+</div>
+<hr>
+
+<!-- ====== 8. Community 10 ====== -->
+<h2 id="community-10">8. Community 10</h2>
+<p>Community 10 groups implementation around viteconfigts, mostly in vite.config.ts. This section covers 1 nodes and 0 internal edges; the diagram shows only representative relationships to stay readable.</p>
+
+<div class="mermaid">
+%%{init: {"theme": "dark", "themeVariables": {"fontSize": "15.0px", "fontFamily": "Segoe UI, system-ui, sans-serif", "primaryColor": "#1e293b", "primaryTextColor": "#e2e8f0", "primaryBorderColor": "#38bdf8", "secondaryColor": "#0f172a", "tertiaryColor": "#334155", "lineColor": "#64748b", "textColor": "#e2e8f0"}, "flowchart": {"htmlLabels": true, "curve": "basis", "nodeSpacing": 48, "rankSpacing": 64, "padding": 14, "diagramPadding": 10, "useMaxWidth": true}}}%%
+flowchart LR
+    %% Section: Community 10 (1 nodes, 0 edges)
+    vite_config_433f92aa("vite.config.ts")
+    class vite_config_433f92aa module;
+    classDef entry fill:#422006,stroke:#fbbf24,color:#fde68a,stroke-width:1px;
+    classDef api fill:#450a0a,stroke:#f87171,color:#fee2e2,stroke-width:1px;
+    classDef async fill:#2e1065,stroke:#a78bfa,color:#ede9fe,stroke-width:1px;
+    classDef klass fill:#064e3b,stroke:#34d399,color:#d1fae5,stroke-width:1px;
+    classDef ui fill:#831843,stroke:#f472b6,color:#fce7f3,stroke-width:1px;
+    classDef module fill:#172554,stroke:#60a5fa,color:#dbeafe,stroke-width:1px;
+    classDef test fill:#3f3f46,stroke:#a1a1aa,color:#f4f4f5,stroke-width:1px;
+    classDef concept fill:#292524,stroke:#a8a29e,color:#fafaf9,stroke-dasharray:4 3;
+    classDef function fill:#0f172a,stroke:#38bdf8,color:#e0f2fe,stroke-width:1px;
+</div>
+
+<h3>Call Details</h3>
+<table class="call-table">
+<tr>
+  <th style="width:5%">#</th>
+  <th style="width:28%">Node</th>
+  <th style="width:10%">Type</th>
+  <th style="width:17%">Caller</th>
+  <th style="width:20%">Callees</th>
+  <th style="width:20%">Description</th>
+</tr>
+<tr>
+  <td>1</td>
+  <td><code>vite.config.ts</code><br><small style="color:var(--muted)">vite.config.ts</small></td>
+  <td><span class="tag tag-class">Module</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Module file in vite.config.ts.</td>
+</tr>
+</table>
+
+<div class="grid">
+  <div class="card">
+    <h4>Key Files</h4>
+    <table style="width:100%;font-size:0.85rem;">
+      <tr><th>File</th><th>Coverage</th></tr>
+      <tr><td><code>vite.config.ts</code></td><td>1 nodes</td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <h4>Design Notes</h4>
+    <p>This section comes from graphify community clustering. Relationship summary: No high-confidence call edges detected. The diagram prioritizes high-confidence calls or usage relationships; the table keeps the broader node inventory.</p>
+  </div>
+</div>
+<hr>
+
+<!-- ====== 9. Community 9 ====== -->
+<h2 id="community-9">9. Community 9</h2>
+<p>Community 9 groups implementation around eslintconfigjs, mostly in eslint.config.js. This section covers 1 nodes and 0 internal edges; the diagram shows only representative relationships to stay readable.</p>
+
+<div class="mermaid">
+%%{init: {"theme": "dark", "themeVariables": {"fontSize": "15.0px", "fontFamily": "Segoe UI, system-ui, sans-serif", "primaryColor": "#1e293b", "primaryTextColor": "#e2e8f0", "primaryBorderColor": "#38bdf8", "secondaryColor": "#0f172a", "tertiaryColor": "#334155", "lineColor": "#64748b", "textColor": "#e2e8f0"}, "flowchart": {"htmlLabels": true, "curve": "basis", "nodeSpacing": 48, "rankSpacing": 64, "padding": 14, "diagramPadding": 10, "useMaxWidth": true}}}%%
+flowchart LR
+    %% Section: Community 9 (1 nodes, 0 edges)
+    eslint_config_80901414("eslint.config.js")
+    class eslint_config_80901414 module;
+    classDef entry fill:#422006,stroke:#fbbf24,color:#fde68a,stroke-width:1px;
+    classDef api fill:#450a0a,stroke:#f87171,color:#fee2e2,stroke-width:1px;
+    classDef async fill:#2e1065,stroke:#a78bfa,color:#ede9fe,stroke-width:1px;
+    classDef klass fill:#064e3b,stroke:#34d399,color:#d1fae5,stroke-width:1px;
+    classDef ui fill:#831843,stroke:#f472b6,color:#fce7f3,stroke-width:1px;
+    classDef module fill:#172554,stroke:#60a5fa,color:#dbeafe,stroke-width:1px;
+    classDef test fill:#3f3f46,stroke:#a1a1aa,color:#f4f4f5,stroke-width:1px;
+    classDef concept fill:#292524,stroke:#a8a29e,color:#fafaf9,stroke-dasharray:4 3;
+    classDef function fill:#0f172a,stroke:#38bdf8,color:#e0f2fe,stroke-width:1px;
+</div>
+
+<h3>Call Details</h3>
+<table class="call-table">
+<tr>
+  <th style="width:5%">#</th>
+  <th style="width:28%">Node</th>
+  <th style="width:10%">Type</th>
+  <th style="width:17%">Caller</th>
+  <th style="width:20%">Callees</th>
+  <th style="width:20%">Description</th>
+</tr>
+<tr>
+  <td>1</td>
+  <td><code>eslint.config.js</code><br><small style="color:var(--muted)">eslint.config.js</small></td>
+  <td><span class="tag tag-class">Module</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Reads, resolves, or persists project configuration.</td>
+</tr>
+</table>
+
+<div class="grid">
+  <div class="card">
+    <h4>Key Files</h4>
+    <table style="width:100%;font-size:0.85rem;">
+      <tr><th>File</th><th>Coverage</th></tr>
+      <tr><td><code>eslint.config.js</code></td><td>1 nodes</td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <h4>Design Notes</h4>
+    <p>This section comes from graphify community clustering. Relationship summary: No high-confidence call edges detected. The diagram prioritizes high-confidence calls or usage relationships; the table keeps the broader node inventory.</p>
+  </div>
+</div>
+<hr>
+
+<h2 id="stats">Project Statistics</h2>
+
+<div class="grid">
+  <div class="card">
+    <h4>Graph</h4>
+    <table style="width:100%;font-size:0.85rem;">
+      <tr><td>Nodes</td><td>148</td></tr>
+      <tr><td>Edges</td><td>185</td></tr>
+      <tr><td>Hyperedges</td><td>0</td></tr>
+      <tr><td>Communities</td><td>12</td></tr>
+      <tr><td>Documented Sections</td><td>8</td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <h4>Edge Confidence</h4>
+    <table style="width:100%;font-size:0.85rem;">
+      <tr><td>EXTRACTED</td><td>185</td></tr>
+      <tr><td>INFERRED</td><td>0</td></tr>
+      <tr><td>AMBIGUOUS</td><td>0</td></tr>
+    </table>
+  </div>
+</div>
+
+<div style="text-align:center; padding:40px 0; color: var(--muted); font-size:0.9rem;">
+  <p>villain-card — Architecture Documentation</p>
+  <p>Generated: 2026-06-12 09:37 UTC · graphify callflow-html</p>
+</div>
+
+</div><!-- .container -->
+
+<script>
+(function () {
+  const mermaidConfig = {
+    startOnLoad: false,
+    theme: 'dark',
+    securityLevel: 'loose',
+    flowchart: { htmlLabels: true, useMaxWidth: true },
+    themeVariables: {
+      primaryColor: '#1e293b',
+      primaryTextColor: '#e2e8f0',
+      primaryBorderColor: '#38bdf8',
+      secondaryColor: '#0f172a',
+      tertiaryColor: '#334155',
+      lineColor: '#64748b',
+      textColor: '#e2e8f0',
+    }
+  };
+
+  mermaid.initialize(mermaidConfig);
+
+  function clamp(value, min, max) {
+    return Math.min(max, Math.max(min, value));
+  }
+
+  function enhanceMermaidDiagrams() {
+    document.querySelectorAll('.mermaid').forEach((container) => {
+      if (container.dataset.zoomReady === 'true') return;
+      const svg = container.querySelector('svg');
+      if (!svg) return;
+
+      container.dataset.zoomReady = 'true';
+      container.classList.add('is-enhanced');
+
+      const viewport = document.createElement('div');
+      viewport.className = 'mermaid-viewport';
+      svg.parentNode.insertBefore(viewport, svg);
+      viewport.appendChild(svg);
+
+      const toolbar = document.createElement('div');
+      toolbar.className = 'mermaid-toolbar';
+      toolbar.innerHTML = [
+        '<button type="button" data-action="zoom-out" title="Zoom out">-</button>',
+        '<span class="zoom-level" data-role="level">100%</span>',
+        '<button type="button" data-action="zoom-in" title="Zoom in">+</button>',
+        '<button type="button" data-action="fit" title="Fit width">Fit</button>',
+        '<button type="button" data-action="reset" title="Reset view">Reset</button>'
+      ].join('');
+      container.insertBefore(toolbar, viewport);
+
+      const state = { scale: 1, x: 0, y: 0, dragging: false, startX: 0, startY: 0, originX: 0, originY: 0 };
+      const level = toolbar.querySelector('[data-role="level"]');
+
+      function applyTransform() {
+        svg.style.transform = `translate(${state.x}px, ${state.y}px) scale(${state.scale})`;
+        level.textContent = `${Math.round(state.scale * 100)}%`;
+      }
+
+      function zoomBy(delta) {
+        state.scale = clamp(state.scale + delta, 0.25, 3);
+        applyTransform();
+      }
+
+      function reset() {
+        state.scale = 1;
+        state.x = 0;
+        state.y = 0;
+        applyTransform();
+      }
+
+      function fitWidth() {
+        const rawWidth = svg.viewBox && svg.viewBox.baseVal && svg.viewBox.baseVal.width
+          ? svg.viewBox.baseVal.width
+          : svg.getBoundingClientRect().width / state.scale;
+        if (!rawWidth) {
+          reset();
+          return;
+        }
+        state.scale = clamp((viewport.clientWidth - 48) / rawWidth, 0.25, 1.4);
+        state.x = 0;
+        state.y = 0;
+        applyTransform();
+      }
+
+      toolbar.addEventListener('click', (event) => {
+        const button = event.target.closest('button[data-action]');
+        if (!button) return;
+        const action = button.dataset.action;
+        if (action === 'zoom-in') zoomBy(0.15);
+        if (action === 'zoom-out') zoomBy(-0.15);
+        if (action === 'fit') fitWidth();
+        if (action === 'reset') reset();
+      });
+
+      viewport.addEventListener('wheel', (event) => {
+        if (!event.ctrlKey && !event.metaKey) return;
+        event.preventDefault();
+        zoomBy(event.deltaY < 0 ? 0.1 : -0.1);
+      }, { passive: false });
+
+      viewport.addEventListener('pointerdown', (event) => {
+        if (event.button !== 0) return;
+        state.dragging = true;
+        state.startX = event.clientX;
+        state.startY = event.clientY;
+        state.originX = state.x;
+        state.originY = state.y;
+        viewport.classList.add('is-dragging');
+        viewport.setPointerCapture(event.pointerId);
+      });
+
+      viewport.addEventListener('pointermove', (event) => {
+        if (!state.dragging) return;
+        state.x = state.originX + event.clientX - state.startX;
+        state.y = state.originY + event.clientY - state.startY;
+        applyTransform();
+      });
+
+      function endDrag(event) {
+        if (!state.dragging) return;
+        state.dragging = false;
+        viewport.classList.remove('is-dragging');
+        if (viewport.hasPointerCapture(event.pointerId)) {
+          viewport.releasePointerCapture(event.pointerId);
+        }
+      }
+
+      viewport.addEventListener('pointerup', endDrag);
+      viewport.addEventListener('pointercancel', endDrag);
+      applyTransform();
+    });
+  }
+
+  function renderMermaid() {
+    const result = mermaid.run
+      ? mermaid.run({ querySelector: '.mermaid' })
+      : Promise.resolve();
+    Promise.resolve(result)
+      .then(enhanceMermaidDiagrams)
+      .catch((error) => {
+        console.error('Mermaid render failed:', error);
+        enhanceMermaidDiagrams();
+      });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', renderMermaid);
+  } else {
+    renderMermaid();
+  }
+})();
+</script>
+
+</body>
+</html>

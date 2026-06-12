@@ -215,40 +215,43 @@ function readFrame(c: number): Px[] {
   return px
 }
 
-// Залипает в телефон: крупный экран светится и «листается», подсветка лица
+// Залипает в телефон — вполоборота: телефон вытянут перед мордой,
+// взгляд вбок-вниз на экран, свет экрана бьёт в лицо
 function phoneFrame(c: number): Px[] {
   const px: Px[] = []
-  // ореол свечения вокруг телефона
-  const halo: Array<[number, number]> = [
-    [6, 8], [10, 8], [6, 12], [10, 12], [5, 10], [11, 10],
-  ]
-  for (const [hx, hy] of halo) px.push({ x: hx, y: hy, c: C.GLOW, o: 0.22 })
-  // корпус 3×5
-  for (let y = 8; y <= 12; y++)
-    for (let x = 7; x <= 9; x++) px.push({ x, y, c: C.K })
-  // яркий белый экран: «лента» скроллится — полосы съезжают вверх каждый кадр
-  const shift = c % 3
-  for (let row = 0; row < 4; row++) {
-    const y = 8 + row
-    const bright = (row + shift) % 3 === 0
-    for (let x = 7; x <= 9; x++)
-      px.push({ x, y, c: bright ? C.GLOW : '#ffe9ee', o: bright ? 1 : 0.9 })
-  }
-  // нижняя кромка корпуса
-  for (let x = 7; x <= 9; x++) px.push({ x, y: 12, c: C.K })
-  // руки
-  px.push({ x: 6, y: 11, c: C.P })
-  const thumb = c % 2
-  px.push({ x: 10, y: thumb ? 11 : 10, c: C.P })
-  // лицо подсвечено экраном
-  px.push({ x: 7, y: 7, c: C.FACE_LIT, o: 0.9 })
-  px.push({ x: 8, y: 7, c: C.FACE_LIT, o: 0.7 })
-  px.push({ x: 6, y: 7, c: C.FACE_LIT, o: 0.4 })
-  // взгляд вниз
-  px.push({ x: 6, y: 6, c: C.W })
+  // вполоборота: прячем дальний (левый) глаз и фронтальный рот
+  px.push({ x: 5, y: 5, c: C.R }, { x: 6, y: 5, c: C.R })
+  px.push({ x: 5, y: 6, c: C.R }, { x: 6, y: 6, c: C.R })
+  for (let x = 6; x <= 10; x++) px.push({ x, y: 8, c: C.R })
+  // приоткрытый рот сбоку (залип)
+  px.push({ x: 11, y: 8, c: C.P })
+  px.push({ x: 12, y: 8, c: C.P, o: 0.85 })
+  // ближний глаз смотрит вперёд-вниз
   px.push({ x: 11, y: 6, c: C.W })
-  px.push({ x: 6, y: 7, c: C.P })
   px.push({ x: 11, y: 7, c: C.P })
+  // рука вытянута вперёд к телефону
+  px.push({ x: 13, y: 9, c: C.P })
+  px.push({ x: 14, y: 10, c: C.P })
+  // телефон перед лицом
+  for (let y = 6; y <= 10; y++) {
+    px.push({ x: 14, y, c: C.K })
+    px.push({ x: 15, y, c: C.K })
+  }
+  // яркий экран, «лента» скроллится
+  const shift = c % 3
+  for (let row = 0; row < 3; row++) {
+    const y = 7 + row
+    const bright = (row + shift) % 3 === 0
+    px.push({ x: 14, y, c: bright ? C.GLOW : '#ffe9ee', o: bright ? 1 : 0.92 })
+    px.push({ x: 15, y, c: bright ? C.GLOW : '#ffe9ee', o: bright ? 1 : 0.92 })
+  }
+  // свет экрана на морде
+  px.push({ x: 12, y: 6, c: C.FACE_LIT, o: 0.85 })
+  px.push({ x: 12, y: 7, c: C.FACE_LIT, o: 0.5 })
+  // ореол свечения
+  px.push({ x: 16, y: 7, c: C.GLOW, o: 0.25 })
+  px.push({ x: 13, y: 6, c: C.GLOW, o: 0.2 })
+  px.push({ x: 16, y: 10, c: C.GLOW, o: 0.2 })
   return px
 }
 
@@ -259,6 +262,13 @@ export function PixelImp() {
   const [idx, setIdx] = useState(-1)
   // 'idle' → 'out' (густой пуф на старом месте) → прыжок координат → 'in' (рассеивающийся пуф)
   const [tp, setTp] = useState<'idle' | 'out' | 'in'>('idle')
+  // В hero чертёнка нет — живёт только в секциях
+  const [hidden, setHiddenState] = useState(true)
+  const hiddenRef = useRef(true)
+  const setHidden = (v: boolean) => {
+    hiddenRef.current = v
+    setHiddenState(v)
+  }
   const idxRef = useRef(-1)
   const tpBusy = useRef(false)
 
@@ -275,15 +285,7 @@ export function PixelImp() {
   }, [reduce])
 
   const computePos = (i: number) => {
-    if (i < 0) {
-      const hero = document.getElementById('hero')
-      if (!hero) return null
-      const r = hero.getBoundingClientRect()
-      return {
-        x: r.left + window.scrollX + r.width * 0.72,
-        y: r.bottom + window.scrollY - SIT_ROW * PX,
-      }
-    }
+    if (i < 0) return null
     const el = document.querySelector(SIT_SELECTORS[SECTIONS[i]])
     if (!el) return null
     const r = el.getBoundingClientRect()
@@ -295,23 +297,54 @@ export function PixelImp() {
 
   // Мгновенная коррекция позиции (resize, первичная посадка) — без пуфа
   const reposition = (i: number) => {
+    if (i < 0) {
+      setHidden(true)
+      return
+    }
     const pos = computePos(i)
     if (!pos) return
     x.jump(pos.x)
     y.jump(pos.y)
     setFlip(pos.x > window.innerWidth / 2 + window.scrollX - 200)
+    setHidden(false)
   }
 
-  // Телепорт с пуфом: исчез здесь — появился там
+  // Телепорт с пуфом: исчез здесь — появился там.
+  // В hero (i < 0) чертёнок не живёт: пуф — и пропал до следующей секции.
   const teleportTo = (i: number) => {
-    const pos = computePos(i)
-    if (!pos) return
     if (reduce || tpBusy.current) {
-      x.jump(pos.x)
-      y.jump(pos.y)
+      reposition(i)
       return
     }
+    if (i < 0) {
+      if (hiddenRef.current) return
+      tpBusy.current = true
+      setTp('out')
+      window.setTimeout(() => {
+        setHidden(true)
+        setTp('idle')
+        tpBusy.current = false
+        if (idxRef.current !== i) teleportTo(idxRef.current)
+      }, 300)
+      return
+    }
+    const pos = computePos(i)
+    if (!pos) return
     tpBusy.current = true
+    if (hiddenRef.current) {
+      // появляется из ниоткуда: сразу на месте, только «in»-пуф
+      x.jump(pos.x)
+      y.jump(pos.y)
+      setFlip(true)
+      setHidden(false)
+      setTp('in')
+      window.setTimeout(() => {
+        setTp('idle')
+        tpBusy.current = false
+        if (idxRef.current !== i) teleportTo(idxRef.current)
+      }, 320)
+      return
+    }
     setTp('out')
     window.setTimeout(() => {
       x.jump(pos.x)
@@ -331,20 +364,33 @@ export function PixelImp() {
     const initial = setTimeout(() => reposition(idxRef.current), 600)
     const settle = setTimeout(() => reposition(idxRef.current), 2800)
 
+    // Доля ВЬЮПОРТА (не секции!), занятая каждой секцией — высокие секции
+    // иначе почти никогда не добирают порог и чертёнок опаздывает.
+    const visible: Record<string, number> = {}
     const observer = new IntersectionObserver(
       (entries) => {
         for (const entry of entries) {
-          if (!entry.isIntersecting) continue
-          const id = entry.target.id
-          const next = id === 'hero' ? -1 : SECTIONS.indexOf(id)
-          if (next !== idxRef.current) {
-            idxRef.current = next
-            setIdx(next)
-            teleportTo(next)
+          visible[entry.target.id] = entry.isIntersecting
+            ? entry.intersectionRect.height / window.innerHeight
+            : 0
+        }
+        let best = ''
+        let bestShare = 0.12 // минимум, чтобы не дёргался на краях
+        for (const [id, share] of Object.entries(visible)) {
+          if (share > bestShare) {
+            best = id
+            bestShare = share
           }
         }
+        if (!best) return
+        const next = best === 'hero' ? -1 : SECTIONS.indexOf(best)
+        if (next !== idxRef.current) {
+          idxRef.current = next
+          setIdx(next)
+          teleportTo(next)
+        }
       },
-      { threshold: 0.35 }
+      { threshold: [0, 0.1, 0.25, 0.5, 0.75, 1] }
     )
     const heroEl = document.getElementById('hero')
     if (heroEl) observer.observe(heroEl)
@@ -386,6 +432,9 @@ export function PixelImp() {
           : activity === 'read'
             ? readFrame(c)
             : phoneFrame(c)
+
+  // в hero не показываемся вовсе (кроме момента «out»-пуфа при уходе)
+  if (hidden && tp === 'idle') return null
 
   return (
     <motion.div className="pixel-imp" style={{ left: sx, top: sy }} aria-hidden="true">
