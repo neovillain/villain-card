@@ -262,6 +262,13 @@ export function PixelImp() {
   const [idx, setIdx] = useState(-1)
   // 'idle' → 'out' (густой пуф на старом месте) → прыжок координат → 'in' (рассеивающийся пуф)
   const [tp, setTp] = useState<'idle' | 'out' | 'in'>('idle')
+  // В hero чертёнка нет — живёт только в секциях
+  const [hidden, setHiddenState] = useState(true)
+  const hiddenRef = useRef(true)
+  const setHidden = (v: boolean) => {
+    hiddenRef.current = v
+    setHiddenState(v)
+  }
   const idxRef = useRef(-1)
   const tpBusy = useRef(false)
 
@@ -278,15 +285,7 @@ export function PixelImp() {
   }, [reduce])
 
   const computePos = (i: number) => {
-    if (i < 0) {
-      const hero = document.getElementById('hero')
-      if (!hero) return null
-      const r = hero.getBoundingClientRect()
-      return {
-        x: r.left + window.scrollX + r.width * 0.72,
-        y: r.bottom + window.scrollY - SIT_ROW * PX,
-      }
-    }
+    if (i < 0) return null
     const el = document.querySelector(SIT_SELECTORS[SECTIONS[i]])
     if (!el) return null
     const r = el.getBoundingClientRect()
@@ -298,23 +297,54 @@ export function PixelImp() {
 
   // Мгновенная коррекция позиции (resize, первичная посадка) — без пуфа
   const reposition = (i: number) => {
+    if (i < 0) {
+      setHidden(true)
+      return
+    }
     const pos = computePos(i)
     if (!pos) return
     x.jump(pos.x)
     y.jump(pos.y)
     setFlip(pos.x > window.innerWidth / 2 + window.scrollX - 200)
+    setHidden(false)
   }
 
-  // Телепорт с пуфом: исчез здесь — появился там
+  // Телепорт с пуфом: исчез здесь — появился там.
+  // В hero (i < 0) чертёнок не живёт: пуф — и пропал до следующей секции.
   const teleportTo = (i: number) => {
-    const pos = computePos(i)
-    if (!pos) return
     if (reduce || tpBusy.current) {
-      x.jump(pos.x)
-      y.jump(pos.y)
+      reposition(i)
       return
     }
+    if (i < 0) {
+      if (hiddenRef.current) return
+      tpBusy.current = true
+      setTp('out')
+      window.setTimeout(() => {
+        setHidden(true)
+        setTp('idle')
+        tpBusy.current = false
+        if (idxRef.current !== i) teleportTo(idxRef.current)
+      }, 300)
+      return
+    }
+    const pos = computePos(i)
+    if (!pos) return
     tpBusy.current = true
+    if (hiddenRef.current) {
+      // появляется из ниоткуда: сразу на месте, только «in»-пуф
+      x.jump(pos.x)
+      y.jump(pos.y)
+      setFlip(true)
+      setHidden(false)
+      setTp('in')
+      window.setTimeout(() => {
+        setTp('idle')
+        tpBusy.current = false
+        if (idxRef.current !== i) teleportTo(idxRef.current)
+      }, 320)
+      return
+    }
     setTp('out')
     window.setTimeout(() => {
       x.jump(pos.x)
@@ -389,6 +419,9 @@ export function PixelImp() {
           : activity === 'read'
             ? readFrame(c)
             : phoneFrame(c)
+
+  // в hero не показываемся вовсе (кроме момента «out»-пуфа при уходе)
+  if (hidden && tp === 'idle') return null
 
   return (
     <motion.div className="pixel-imp" style={{ left: sx, top: sy }} aria-hidden="true">
