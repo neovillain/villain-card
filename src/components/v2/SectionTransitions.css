@@ -1,0 +1,55 @@
+/* ─── рассекречивание досье ─── */
+.redacted {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  pointer-events: none;
+}
+
+.redacted__bar {
+  position: absolute;
+  height: 16px;
+  background: #0a0407;
+  border: 1px solid rgba(225, 29, 72, 0.28);
+  box-shadow: 0 0 16px rgba(0, 0, 0, 0.6);
+  will-change: transform;
+}
+
+/* ─── сканирующий луч в контактах ─── */
+.scan {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.scan__beam {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 64px;
+}
+
+.scan__trail {
+  position: absolute;
+  inset: 0 0 2px;
+  background: linear-gradient(
+    180deg,
+    transparent,
+    rgba(225, 29, 72, 0.06) 55%,
+    rgba(225, 29, 72, 0.18)
+  );
+}
+
+.scan__line {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 2px;
+  background: #ff3d63;
+  box-shadow:
+    0 0 12px rgba(225, 29, 72, 0.9),
+    0 0 44px rgba(225, 29, 72, 0.5);
+}

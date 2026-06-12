@@ -60,7 +60,7 @@ hr { border: none; border-top: 1px solid var(--border); margin: 40px 0; }
 <div class="container">
 
 <h1>villain-card — Complete Call Flow &amp; Architecture Documentation</h1>
-<p class="subtitle">Generated from graphify knowledge graph: 140 nodes, 170 edges, 11 communities. Commit: 7899135</p>
+<p class="subtitle">Generated from graphify knowledge graph: 147 nodes, 181 edges, 12 communities. Commit: 4df931e</p>
 
 <div class="nav">
     <a href="#overview">Architecture Overview</a>
@@ -69,6 +69,7 @@ hr { border: none; border-top: 1px solid var(--border); margin: 40px 0; }
     <a href="#community-3">Community 3</a>
     <a href="#community-4">Community 4</a>
     <a href="#community-5">Community 5</a>
+    <a href="#community-11">Community 11</a>
     <a href="#community-10">Community 10</a>
     <a href="#community-9">Community 9</a>
 </div>
@@ -82,24 +83,30 @@ hr { border: none; border-top: 1px solid var(--border); margin: 40px 0; }
 flowchart LR
     BUILD_GRAPH_321CBB04("Graph Build<br/><small>67 nodes</small>")
     class BUILD_GRAPH_321CBB04 module;
-    CLI_SKILLS_9964CBB8("CLI &amp; Skill Installers<br/><small>21 nodes</small>")
+    CLI_SKILLS_9964CBB8("CLI &amp; Skill Installers<br/><small>19 nodes</small>")
     class CLI_SKILLS_9964CBB8 module;
     COMMUNITY_3_D8DFCEA7("Community 3<br/><small>17 nodes</small>")
     class COMMUNITY_3_D8DFCEA7 module;
     COMMUNITY_4_AC2DC2A9("Community 4<br/><small>17 nodes</small>")
     class COMMUNITY_4_AC2DC2A9 module;
-    COMMUNITY_5_2966028D("Community 5<br/><small>16 nodes</small>")
+    COMMUNITY_5_2966028D("Community 5<br/><small>17 nodes</small>")
     class COMMUNITY_5_2966028D module;
+    COMMUNITY_11_DE018FC2("Community 11<br/><small>8 nodes</small>")
+    class COMMUNITY_11_DE018FC2 module;
     COMMUNITY_10_48432F59("Community 10<br/><small>1 nodes</small>")
     class COMMUNITY_10_48432F59 module;
     COMMUNITY_9_1D55D1EE("Community 9<br/><small>1 nodes</small>")
     class COMMUNITY_9_1D55D1EE module;
-    CLI_SKILLS_9964CBB8 -->|imports x6| COMMUNITY_3_D8DFCEA7
-    COMMUNITY_3_D8DFCEA7 -->|contains x5| COMMUNITY_5_2966028D
-    COMMUNITY_5_2966028D -->|imports x3| COMMUNITY_3_D8DFCEA7
+    CLI_SKILLS_9964CBB8 -->|imports x4| COMMUNITY_3_D8DFCEA7
+    COMMUNITY_3_D8DFCEA7 -->|imports x4| COMMUNITY_5_2966028D
+    CLI_SKILLS_9964CBB8 -->|imports x2| COMMUNITY_11_DE018FC2
     CLI_SKILLS_9964CBB8 -->|imports x2| COMMUNITY_4_AC2DC2A9
     CLI_SKILLS_9964CBB8 -->|imports x2| COMMUNITY_5_2966028D
-    COMMUNITY_3_D8DFCEA7 -->|contains x2| CLI_SKILLS_9964CBB8
+    COMMUNITY_5_2966028D -->|imports x2| CLI_SKILLS_9964CBB8
+    COMMUNITY_11_DE018FC2 -->|imports x2| COMMUNITY_3_D8DFCEA7
+    COMMUNITY_5_2966028D -->|contains x2| COMMUNITY_11_DE018FC2
+    COMMUNITY_11_DE018FC2 -->|imports| COMMUNITY_5_2966028D
+    COMMUNITY_5_2966028D -->|contains| COMMUNITY_3_D8DFCEA7
     classDef entry fill:#422006,stroke:#fbbf24,color:#fde68a,stroke-width:1px;
     classDef api fill:#450a0a,stroke:#f87171,color:#fee2e2,stroke-width:1px;
     classDef async fill:#2e1065,stroke:#a78bfa,color:#ede9fe,stroke-width:1px;
@@ -116,19 +123,19 @@ flowchart LR
     <h4>Architecture Layers</h4>
     <table style="width:100%;font-size:0.85rem;">
       <tr><th>Layer</th><th>Nodes</th><th>Communities</th></tr>
-      <tr><td>Graph Build</td><td>67</td><td><code>1, 2, 6, 7, 8</code></td></tr><tr><td>CLI &amp; Skill Installers</td><td>21</td><td><code>0</code></td></tr><tr><td>Community 3</td><td>17</td><td><code>3</code></td></tr><tr><td>Community 4</td><td>17</td><td><code>4</code></td></tr><tr><td>Community 5</td><td>16</td><td><code>5</code></td></tr><tr><td>Community 10</td><td>1</td><td><code>10</code></td></tr><tr><td>Community 9</td><td>1</td><td><code>9</code></td></tr>
+      <tr><td>Graph Build</td><td>67</td><td><code>1, 2, 6, 7, 8</code></td></tr><tr><td>CLI &amp; Skill Installers</td><td>19</td><td><code>0</code></td></tr><tr><td>Community 3</td><td>17</td><td><code>3</code></td></tr><tr><td>Community 4</td><td>17</td><td><code>4</code></td></tr><tr><td>Community 5</td><td>17</td><td><code>5</code></td></tr><tr><td>Community 11</td><td>8</td><td><code>11</code></td></tr><tr><td>Community 10</td><td>1</td><td><code>10</code></td></tr><tr><td>Community 9</td><td>1</td><td><code>9</code></td></tr>
     </table>
   </div>
   <div class="card">
     <h4>Core Flow</h4>
-    <div class="arrow-chain">Graph Build -&gt; CLI &amp; Skill Installers -&gt; Community 3 -&gt; Community 5 -&gt; Community 4 -&gt; Community 10 -&gt; Community 9</div>
+    <div class="arrow-chain">Graph Build -&gt; CLI &amp; Skill Installers -&gt; Community 3 -&gt; Community 5 -&gt; Community 11 -&gt; Community 4 -&gt; Community 10</div>
   </div>
 </div>
 <div class="grid">
   <div class="card">
     <h4>Graph Report Highlights</h4>
     <ul>
-      <li>140 nodes · 170 edges · 11 communities (10 shown, 1 thin omitted)</li>
+      <li>147 nodes · 181 edges · 12 communities (11 shown, 1 thin omitted)</li>
       <li>Extraction: 100% EXTRACTED · 0% INFERRED · 0% AMBIGUOUS</li>
       <li>Token cost: 0 input · 0 output</li>
       <li>1. `compilerOptions` - 17 edges</li>
@@ -483,12 +490,12 @@ flowchart LR
 
 <!-- ====== 3. CLI & Skill Installers ====== -->
 <h2 id="cli-skills">3. CLI &amp; Skill Installers</h2>
-<p>CLI &amp; Skill Installers groups implementation around components, herotsx, herov2tsx, lightningtsx, mostly in src/components/Hero.tsx, components/v2/HeroV2.tsx, components/v2/Lightning.tsx. This section covers 21 nodes and 26 internal edges; the diagram shows only representative relationships to stay readable.</p>
+<p>CLI &amp; Skill Installers groups implementation around components, herov2tsx, lightningtsx, preloadertsx, mostly in components/v2/HeroV2.tsx, components/v2/Lightning.tsx, components/v2/Preloader.tsx. This section covers 19 nodes and 25 internal edges; the diagram shows only representative relationships to stay readable.</p>
 
 <div class="mermaid">
 %%{init: {"theme": "dark", "themeVariables": {"fontSize": "15.0px", "fontFamily": "Segoe UI, system-ui, sans-serif", "primaryColor": "#1e293b", "primaryTextColor": "#e2e8f0", "primaryBorderColor": "#38bdf8", "secondaryColor": "#0f172a", "tertiaryColor": "#334155", "lineColor": "#64748b", "textColor": "#e2e8f0"}, "flowchart": {"htmlLabels": true, "curve": "basis", "nodeSpacing": 48, "rankSpacing": 64, "padding": 14, "diagramPadding": 10, "useMaxWidth": true}}}%%
 flowchart LR
-    %% Section: CLI &amp; Skill Installers (21 nodes, 26 edges)
+    %% Section: CLI &amp; Skill Installers (19 nodes, 25 edges)
     subgraph cli_skills_components_v2_HeroV2_tsx_0c37bae7["components/v2/HeroV2.tsx"]
         v2_herov2_3dd5522e("HeroV2.tsx")
         v2_herov2_herov2_5cc112a1("HeroV2()<br/><small>components/v2/HeroV2.tsx</small>")
@@ -504,6 +511,10 @@ flowchart LR
         v2_preloader_preloader_77485d2e("Preloader()<br/><small>components/v2/Preloader.tsx</small>")
         v2_preloader_ease_f105307a("EASE<br/><small>components/v2/Preloader.tsx</small>")
     end
+    subgraph cli_skills_components_v2_DeckSection_tsx_29442899["components/v2/DeckSection.tsx"]
+        v2_decksection_c71a0ee5("DeckSection.tsx")
+        v2_decksection_decksection_6c770a19("DeckSection()<br/><small>components/v2/DeckSection.tsx</small>")
+    end
     subgraph cli_skills_src_components_AmbientBackground_tsx_d6b38602["src/components/AmbientBackground.tsx"]
         components_ambientbackground_a2379426("AmbientBackground.tsx")
         components_ambientbackground_ambientbackground_ad073ffc("AmbientBackground()<br/><small>src/components/AmbientBackground.tsx</small>")
@@ -513,26 +524,24 @@ flowchart LR
         components_footer_footer_24618515("Footer()<br/><small>src/components/Footer.tsx</small>")
     end
     src_app_46efd68e("App.tsx")
-    components_hero_d261918c("Hero.tsx")
-    components_schemes_schemes_f4a02f4e("Schemes()<br/><small>src/components/Schemes.tsx</small>")
     src_config_profile_d07eb5f5("profile<br/><small>src/config.ts</small>")
     src_main_3231ff52("main.tsx")
     src_app_46efd68e -->|imports| components_ambientbackground_a2379426
     src_app_46efd68e -->|imports| components_ambientbackground_ambientbackground_ad073ffc
     src_app_46efd68e -->|imports| components_footer_17e210a3
     src_app_46efd68e -->|imports| components_footer_footer_24618515
-    src_app_46efd68e -->|imports| components_schemes_schemes_f4a02f4e
+    src_app_46efd68e -->|imports| v2_decksection_c71a0ee5
+    src_app_46efd68e -->|imports| v2_decksection_decksection_6c770a19
     src_app_46efd68e -->|imports| v2_herov2_3dd5522e
     src_app_46efd68e -->|imports| v2_herov2_herov2_5cc112a1
     src_app_46efd68e -->|imports| v2_preloader_b6879b2f
     src_app_46efd68e -->|imports| v2_preloader_preloader_77485d2e
     src_app_46efd68e -->|imports| src_main_3231ff52
     components_footer_17e210a3 -->|imports| src_config_profile_d07eb5f5
-    components_hero_d261918c -->|imports| src_config_profile_d07eb5f5
     v2_herov2_3dd5522e -->|imports| src_config_profile_d07eb5f5
     v2_herov2_3dd5522e -->|imports| v2_lightning_075790b0
     v2_herov2_3dd5522e -->|imports| v2_lightning_lightning_3fbe1f94
-    %% Omitted for readability: 3 nodes, 0 edges
+    %% Omitted for readability: 1 nodes, 0 edges
     class v2_herov2_3dd5522e ui;
     class v2_herov2_herov2_5cc112a1 ui;
     class v2_herov2_ease_26477f68 ui;
@@ -542,13 +551,13 @@ flowchart LR
     class v2_preloader_b6879b2f ui;
     class v2_preloader_preloader_77485d2e ui;
     class v2_preloader_ease_f105307a ui;
+    class v2_decksection_c71a0ee5 ui;
+    class v2_decksection_decksection_6c770a19 ui;
     class components_ambientbackground_a2379426 ui;
     class components_ambientbackground_ambientbackground_ad073ffc ui;
     class components_footer_17e210a3 ui;
     class components_footer_footer_24618515 ui;
     class src_app_46efd68e ui;
-    class components_hero_d261918c ui;
-    class components_schemes_schemes_f4a02f4e ui;
     class src_config_profile_d07eb5f5 function;
     class src_main_3231ff52 ui;
     classDef entry fill:#422006,stroke:#fbbf24,color:#fde68a,stroke-width:1px;
@@ -577,7 +586,7 @@ flowchart LR
   <td><code>App.tsx</code><br><small style="color:var(--muted)">src/App.tsx</small></td>
   <td><span class="tag tag-hook">UI</span></td>
   <td>External entry / no inbound edge</td>
-  <td><code>AmbientBackground()</code><br><small style="color:var(--muted)">src/components/AmbientBackground.tsx</small><br><code>AmbientBackground.tsx</code><br><small style="color:var(--muted)">src/components/AmbientBackground.tsx</small><br><code>Footer()</code><br><small style="color:var(--muted)">src/components/Footer.tsx</small><br>+7 more</td>
+  <td><code>AmbientBackground()</code><br><small style="color:var(--muted)">src/components/AmbientBackground.tsx</small><br><code>AmbientBackground.tsx</code><br><small style="color:var(--muted)">src/components/AmbientBackground.tsx</small><br><code>DeckSection()</code><br><small style="color:var(--muted)">components/v2/DeckSection.tsx</small><br>+8 more</td>
   <td>Module file in src/App.tsx.</td>
 </tr>
 <tr>
@@ -622,38 +631,22 @@ flowchart LR
 </tr>
 <tr>
   <td>7</td>
-  <td><code>Hero.tsx</code><br><small style="color:var(--muted)">src/components/Hero.tsx</small></td>
-  <td><span class="tag tag-hook">UI</span></td>
-  <td>External entry / no inbound edge</td>
-  <td><code>profile</code><br><small style="color:var(--muted)">src/config.ts</small></td>
-  <td>Module file in src/components/Hero.tsx.</td>
-</tr>
-<tr>
-  <td>8</td>
-  <td><code>EASE</code><br><small style="color:var(--muted)">src/components/Hero.tsx</small></td>
-  <td><span class="tag tag-hook">UI</span></td>
-  <td>External entry / no inbound edge</td>
-  <td>No direct outbound edge</td>
-  <td>EASE node in src/components/Hero.tsx.</td>
-</tr>
-<tr>
-  <td>9</td>
-  <td><code>Hero()</code><br><small style="color:var(--muted)">src/components/Hero.tsx</small></td>
-  <td><span class="tag tag-hook">UI</span></td>
-  <td>External entry / no inbound edge</td>
-  <td>No direct outbound edge</td>
-  <td>Hero() node in src/components/Hero.tsx.</td>
-</tr>
-<tr>
-  <td>10</td>
-  <td><code>Schemes()</code><br><small style="color:var(--muted)">src/components/Schemes.tsx</small></td>
+  <td><code>DeckSection.tsx</code><br><small style="color:var(--muted)">components/v2/DeckSection.tsx</small></td>
   <td><span class="tag tag-hook">UI</span></td>
   <td><code>App.tsx</code><br><small style="color:var(--muted)">src/App.tsx</small></td>
   <td>No direct outbound edge</td>
-  <td>Schemes() node in src/components/Schemes.tsx.</td>
+  <td>Module file in components/v2/DeckSection.tsx.</td>
 </tr>
 <tr>
-  <td>11</td>
+  <td>8</td>
+  <td><code>DeckSection()</code><br><small style="color:var(--muted)">components/v2/DeckSection.tsx</small></td>
+  <td><span class="tag tag-hook">UI</span></td>
+  <td><code>App.tsx</code><br><small style="color:var(--muted)">src/App.tsx</small></td>
+  <td>No direct outbound edge</td>
+  <td>DeckSection() node in components/v2/DeckSection.tsx.</td>
+</tr>
+<tr>
+  <td>9</td>
   <td><code>HeroV2.tsx</code><br><small style="color:var(--muted)">components/v2/HeroV2.tsx</small></td>
   <td><span class="tag tag-hook">UI</span></td>
   <td><code>App.tsx</code><br><small style="color:var(--muted)">src/App.tsx</small></td>
@@ -661,7 +654,7 @@ flowchart LR
   <td>Module file in components/v2/HeroV2.tsx.</td>
 </tr>
 <tr>
-  <td>12</td>
+  <td>10</td>
   <td><code>EASE</code><br><small style="color:var(--muted)">components/v2/HeroV2.tsx</small></td>
   <td><span class="tag tag-hook">UI</span></td>
   <td>External entry / no inbound edge</td>
@@ -669,7 +662,7 @@ flowchart LR
   <td>EASE node in components/v2/HeroV2.tsx.</td>
 </tr>
 <tr>
-  <td>13</td>
+  <td>11</td>
   <td><code>HeroV2()</code><br><small style="color:var(--muted)">components/v2/HeroV2.tsx</small></td>
   <td><span class="tag tag-hook">UI</span></td>
   <td><code>App.tsx</code><br><small style="color:var(--muted)">src/App.tsx</small></td>
@@ -677,7 +670,7 @@ flowchart LR
   <td>HeroV2() node in components/v2/HeroV2.tsx.</td>
 </tr>
 <tr>
-  <td>14</td>
+  <td>12</td>
   <td><code>Lightning.tsx</code><br><small style="color:var(--muted)">components/v2/Lightning.tsx</small></td>
   <td><span class="tag tag-hook">UI</span></td>
   <td><code>HeroV2.tsx</code><br><small style="color:var(--muted)">components/v2/HeroV2.tsx</small></td>
@@ -685,7 +678,7 @@ flowchart LR
   <td>Module file in components/v2/Lightning.tsx.</td>
 </tr>
 <tr>
-  <td>15</td>
+  <td>13</td>
   <td><code>LightningProps</code><br><small style="color:var(--muted)">components/v2/Lightning.tsx</small></td>
   <td><span class="tag tag-hook">UI</span></td>
   <td>External entry / no inbound edge</td>
@@ -693,7 +686,7 @@ flowchart LR
   <td>LightningProps node in components/v2/Lightning.tsx.</td>
 </tr>
 <tr>
-  <td>16</td>
+  <td>14</td>
   <td><code>Lightning()</code><br><small style="color:var(--muted)">components/v2/Lightning.tsx</small></td>
   <td><span class="tag tag-hook">UI</span></td>
   <td><code>HeroV2.tsx</code><br><small style="color:var(--muted)">components/v2/HeroV2.tsx</small></td>
@@ -701,7 +694,7 @@ flowchart LR
   <td>Lightning() node in components/v2/Lightning.tsx.</td>
 </tr>
 <tr>
-  <td>17</td>
+  <td>15</td>
   <td><code>Preloader.tsx</code><br><small style="color:var(--muted)">components/v2/Preloader.tsx</small></td>
   <td><span class="tag tag-hook">UI</span></td>
   <td><code>App.tsx</code><br><small style="color:var(--muted)">src/App.tsx</small></td>
@@ -709,7 +702,7 @@ flowchart LR
   <td>Module file in components/v2/Preloader.tsx.</td>
 </tr>
 <tr>
-  <td>18</td>
+  <td>16</td>
   <td><code>EASE</code><br><small style="color:var(--muted)">components/v2/Preloader.tsx</small></td>
   <td><span class="tag tag-hook">UI</span></td>
   <td>External entry / no inbound edge</td>
@@ -717,7 +710,7 @@ flowchart LR
   <td>EASE node in components/v2/Preloader.tsx.</td>
 </tr>
 <tr>
-  <td>19</td>
+  <td>17</td>
   <td><code>Preloader()</code><br><small style="color:var(--muted)">components/v2/Preloader.tsx</small></td>
   <td><span class="tag tag-hook">UI</span></td>
   <td><code>App.tsx</code><br><small style="color:var(--muted)">src/App.tsx</small></td>
@@ -725,15 +718,15 @@ flowchart LR
   <td>Preloader() node in components/v2/Preloader.tsx.</td>
 </tr>
 <tr>
-  <td>20</td>
+  <td>18</td>
   <td><code>profile</code><br><small style="color:var(--muted)">src/config.ts</small></td>
   <td><span class="tag tag-func">Function</span></td>
-  <td><code>Footer.tsx</code><br><small style="color:var(--muted)">src/components/Footer.tsx</small><br><code>Hero.tsx</code><br><small style="color:var(--muted)">src/components/Hero.tsx</small><br><code>HeroV2.tsx</code><br><small style="color:var(--muted)">components/v2/HeroV2.tsx</small></td>
+  <td><code>Footer.tsx</code><br><small style="color:var(--muted)">src/components/Footer.tsx</small><br><code>HeroV2.tsx</code><br><small style="color:var(--muted)">components/v2/HeroV2.tsx</small></td>
   <td>No direct outbound edge</td>
   <td>profile node in src/config.ts.</td>
 </tr>
 <tr>
-  <td>21</td>
+  <td>19</td>
   <td><code>main.tsx</code><br><small style="color:var(--muted)">src/main.tsx</small></td>
   <td><span class="tag tag-hook">UI</span></td>
   <td><code>App.tsx</code><br><small style="color:var(--muted)">src/App.tsx</small></td>
@@ -747,38 +740,44 @@ flowchart LR
     <h4>Key Files</h4>
     <table style="width:100%;font-size:0.85rem;">
       <tr><th>File</th><th>Coverage</th></tr>
-      <tr><td><code>src/components/Hero.tsx</code></td><td>3 nodes</td></tr>
-<tr><td><code>components/v2/HeroV2.tsx</code></td><td>3 nodes</td></tr>
+      <tr><td><code>components/v2/HeroV2.tsx</code></td><td>3 nodes</td></tr>
 <tr><td><code>components/v2/Lightning.tsx</code></td><td>3 nodes</td></tr>
 <tr><td><code>components/v2/Preloader.tsx</code></td><td>3 nodes</td></tr>
 <tr><td><code>src/App.tsx</code></td><td>2 nodes</td></tr>
 <tr><td><code>src/components/AmbientBackground.tsx</code></td><td>2 nodes</td></tr>
 <tr><td><code>src/components/Footer.tsx</code></td><td>2 nodes</td></tr>
-<tr><td><code>src/components/Schemes.tsx</code></td><td>1 nodes</td></tr>
+<tr><td><code>components/v2/DeckSection.tsx</code></td><td>2 nodes</td></tr>
+<tr><td><code>src/config.ts</code></td><td>1 nodes</td></tr>
     </table>
   </div>
   <div class="card">
     <h4>Design Notes</h4>
-    <p>This section comes from graphify community clustering. Relationship summary: contains x11, imports x9, imports x6. The diagram prioritizes high-confidence calls or usage relationships; the table keeps the broader node inventory.</p>
+    <p>This section comes from graphify community clustering. Relationship summary: contains x10, imports x8, imports x7. The diagram prioritizes high-confidence calls or usage relationships; the table keeps the broader node inventory.</p>
   </div>
 </div>
 <hr>
 
 <!-- ====== 4. Community 3 ====== -->
 <h2 id="community-3">4. Community 3</h2>
-<p>Community 3 groups implementation around components, configts, dossiertsx, schemestsx, mostly in src/config.ts, src/components/Dossier.tsx, src/components/Schemes.tsx. This section covers 17 nodes and 24 internal edges; the diagram shows only representative relationships to stay readable.</p>
+<p>Community 3 groups implementation around components, sectiontransitionstsx, sociallinksv2tsx, dossiertsx, mostly in components/v2/SectionTransitions.tsx, components/v2/SocialLinksV2.tsx, src/components/Dossier.tsx. This section covers 17 nodes and 22 internal edges; the diagram shows only representative relationships to stay readable.</p>
 
 <div class="mermaid">
 %%{init: {"theme": "dark", "themeVariables": {"fontSize": "15.0px", "fontFamily": "Segoe UI, system-ui, sans-serif", "primaryColor": "#1e293b", "primaryTextColor": "#e2e8f0", "primaryBorderColor": "#38bdf8", "secondaryColor": "#0f172a", "tertiaryColor": "#334155", "lineColor": "#64748b", "textColor": "#e2e8f0"}, "flowchart": {"htmlLabels": true, "curve": "basis", "nodeSpacing": 48, "rankSpacing": 64, "padding": 14, "diagramPadding": 10, "useMaxWidth": true}}}%%
 flowchart LR
-    %% Section: Community 3 (17 nodes, 24 edges)
-    subgraph community_3_src_config_ts_5a1d0a16["src/config.ts"]
-        src_config_f55793b8("config.ts")
-        src_config_dossier_273233f8("dossier<br/><small>src/config.ts</small>")
-        src_config_scheme_816a0e75("Scheme<br/><small>src/config.ts</small>")
-        src_config_schemes_613de6a4("schemes<br/><small>src/config.ts</small>")
-        src_config_achievement_dcfdd23b("Achievement<br/><small>src/config.ts</small>")
-        src_config_dossierproject_e779c376("DossierProject<br/><small>src/config.ts</small>")
+    %% Section: Community 3 (17 nodes, 22 edges)
+    subgraph community_3_components_v2_SectionTransitions_tsx_593c26ed["components/v2/SectionTransitions.tsx"]
+        v2_sectiontransitions_scansweep_41f063d2("ScanSweep()<br/><small>components/v2/SectionTransitions.tsx</small>")
+        v2_sectiontransitions_be5e7d35("SectionTransitions.tsx")
+        v2_sectiontransitions_redactedbars_179040c6("RedactedBars()<br/><small>components/v2/SectionTransitions.tsx</small>")
+        v2_sectiontransitions_bars_acb0f766("BARS<br/><small>components/v2/SectionTransitions.tsx</small>")
+        v2_sectiontransitions_ease_1a017576("EASE<br/><small>components/v2/SectionTransitions.tsx</small>")
+    end
+    subgraph community_3_components_v2_SocialLinksV2_tsx_f06f0bf5["components/v2/SocialLinksV2.tsx"]
+        v2_sociallinksv2_509c38ec("SocialLinksV2.tsx")
+        v2_sociallinksv2_ease_9ba7c2fe("EASE<br/><small>components/v2/SocialLinksV2.tsx</small>")
+        v2_sociallinksv2_icon_src_057015a3("ICON_SRC<br/><small>components/v2/SocialLinksV2.tsx</small>")
+        v2_sociallinksv2_sociallinksv2_a5af138b("SocialLinksV2()<br/><small>components/v2/SocialLinksV2.tsx</small>")
+        v2_sociallinksv2_tiltcard_e57b0627("TiltCard()<br/><small>components/v2/SocialLinksV2.tsx</small>")
     end
     subgraph community_3_src_components_Dossier_tsx_cd9dfc74["src/components/Dossier.tsx"]
         components_dossier_2192a658("Dossier.tsx")
@@ -786,48 +785,38 @@ flowchart LR
         components_dossier_dossier_e415ee4d("Dossier()<br/><small>src/components/Dossier.tsx</small>")
         components_dossier_ease_c0446931("EASE<br/><small>src/components/Dossier.tsx</small>")
     end
-    subgraph community_3_src_components_Schemes_tsx_8262bab7["src/components/Schemes.tsx"]
-        components_schemes_624d8b02("Schemes.tsx")
-        components_schemes_ease_3ca2cfad("EASE<br/><small>src/components/Schemes.tsx</small>")
-        components_schemes_schemecard_e4e1dc5d("SchemeCard()<br/><small>src/components/Schemes.tsx</small>")
-    end
-    subgraph community_3_components_v2_SectionFX_tsx_7e623cbb["components/v2/SectionFX.tsx"]
-        v2_sectionfx_7a772ab1("SectionFX.tsx")
-        v2_sectionfx_sectionfx_4d98311e("SectionFX()<br/><small>components/v2/SectionFX.tsx</small>")
-    end
     subgraph community_3_components_v2_SectionSlash_tsx_231d889d["components/v2/SectionSlash.tsx"]
         v2_sectionslash_65ea2f80("SectionSlash.tsx")
         v2_sectionslash_sectionslash_26661205("SectionSlash()<br/><small>components/v2/SectionSlash.tsx</small>")
     end
+    src_config_dossier_273233f8("dossier<br/><small>src/config.ts</small>")
     components_dossier_fadeup_f514f101 -->|calls| components_dossier_dossier_e415ee4d
-    components_dossier_2192a658 -->|imports| src_config_f55793b8
     components_dossier_2192a658 -->|imports| src_config_dossier_273233f8
     components_dossier_2192a658 -->|imports| v2_sectionslash_65ea2f80
     components_dossier_2192a658 -->|imports| v2_sectionslash_sectionslash_26661205
-    components_schemes_624d8b02 -->|imports| src_config_f55793b8
-    components_schemes_624d8b02 -->|imports| src_config_scheme_816a0e75
-    components_schemes_624d8b02 -->|imports| src_config_schemes_613de6a4
-    components_schemes_624d8b02 -->|imports| v2_sectionfx_7a772ab1
-    components_schemes_624d8b02 -->|imports| v2_sectionfx_sectionfx_4d98311e
-    components_schemes_624d8b02 -->|imports| v2_sectionslash_65ea2f80
-    components_schemes_624d8b02 -->|imports| v2_sectionslash_sectionslash_26661205
-    class src_config_f55793b8 module;
-    class src_config_dossier_273233f8 function;
-    class src_config_scheme_816a0e75 klass;
-    class src_config_schemes_613de6a4 function;
-    class src_config_achievement_dcfdd23b klass;
-    class src_config_dossierproject_e779c376 klass;
+    components_dossier_2192a658 -->|imports| v2_sectiontransitions_be5e7d35
+    components_dossier_2192a658 -->|imports| v2_sectiontransitions_redactedbars_179040c6
+    v2_sectionslash_65ea2f80 -->|imports| v2_sociallinksv2_509c38ec
+    v2_sectionslash_sectionslash_26661205 -->|imports| v2_sociallinksv2_509c38ec
+    v2_sectiontransitions_be5e7d35 -->|imports| v2_sociallinksv2_509c38ec
+    v2_sectiontransitions_scansweep_41f063d2 -->|imports| v2_sociallinksv2_509c38ec
+    class v2_sectiontransitions_scansweep_41f063d2 ui;
+    class v2_sectiontransitions_be5e7d35 ui;
+    class v2_sectiontransitions_redactedbars_179040c6 ui;
+    class v2_sectiontransitions_bars_acb0f766 ui;
+    class v2_sectiontransitions_ease_1a017576 ui;
+    class v2_sociallinksv2_509c38ec ui;
+    class v2_sociallinksv2_ease_9ba7c2fe ui;
+    class v2_sociallinksv2_icon_src_057015a3 ui;
+    class v2_sociallinksv2_sociallinksv2_a5af138b ui;
+    class v2_sociallinksv2_tiltcard_e57b0627 ui;
     class components_dossier_2192a658 ui;
     class components_dossier_fadeup_f514f101 ui;
     class components_dossier_dossier_e415ee4d ui;
     class components_dossier_ease_c0446931 ui;
-    class components_schemes_624d8b02 ui;
-    class components_schemes_ease_3ca2cfad ui;
-    class components_schemes_schemecard_e4e1dc5d ui;
-    class v2_sectionfx_7a772ab1 ui;
-    class v2_sectionfx_sectionfx_4d98311e ui;
     class v2_sectionslash_65ea2f80 ui;
     class v2_sectionslash_sectionslash_26661205 ui;
+    class src_config_dossier_273233f8 function;
     classDef entry fill:#422006,stroke:#fbbf24,color:#fde68a,stroke-width:1px;
     classDef api fill:#450a0a,stroke:#f87171,color:#fee2e2,stroke-width:1px;
     classDef async fill:#2e1065,stroke:#a78bfa,color:#ede9fe,stroke-width:1px;
@@ -854,7 +843,7 @@ flowchart LR
   <td><code>Dossier.tsx</code><br><small style="color:var(--muted)">src/components/Dossier.tsx</small></td>
   <td><span class="tag tag-hook">UI</span></td>
   <td>External entry / no inbound edge</td>
-  <td><code>config.ts</code><br><small style="color:var(--muted)">src/config.ts</small><br><code>dossier</code><br><small style="color:var(--muted)">src/config.ts</small><br><code>SectionSlash()</code><br><small style="color:var(--muted)">components/v2/SectionSlash.tsx</small><br>+1 more</td>
+  <td><code>dossier</code><br><small style="color:var(--muted)">src/config.ts</small><br><code>RedactedBars()</code><br><small style="color:var(--muted)">components/v2/SectionTransitions.tsx</small><br><code>SectionSlash()</code><br><small style="color:var(--muted)">components/v2/SectionSlash.tsx</small><br>+2 more</td>
   <td>Module file in src/components/Dossier.tsx.</td>
 </tr>
 <tr>
@@ -883,99 +872,99 @@ flowchart LR
 </tr>
 <tr>
   <td>5</td>
-  <td><code>Schemes.tsx</code><br><small style="color:var(--muted)">src/components/Schemes.tsx</small></td>
-  <td><span class="tag tag-hook">UI</span></td>
-  <td>External entry / no inbound edge</td>
-  <td><code>config.ts</code><br><small style="color:var(--muted)">src/config.ts</small><br><code>Scheme</code><br><small style="color:var(--muted)">src/config.ts</small><br><code>schemes</code><br><small style="color:var(--muted)">src/config.ts</small><br>+4 more</td>
-  <td>Module file in src/components/Schemes.tsx.</td>
-</tr>
-<tr>
-  <td>6</td>
-  <td><code>EASE</code><br><small style="color:var(--muted)">src/components/Schemes.tsx</small></td>
-  <td><span class="tag tag-hook">UI</span></td>
-  <td>External entry / no inbound edge</td>
-  <td>No direct outbound edge</td>
-  <td>EASE node in src/components/Schemes.tsx.</td>
-</tr>
-<tr>
-  <td>7</td>
-  <td><code>SchemeCard()</code><br><small style="color:var(--muted)">src/components/Schemes.tsx</small></td>
-  <td><span class="tag tag-hook">UI</span></td>
-  <td>External entry / no inbound edge</td>
-  <td>No direct outbound edge</td>
-  <td>SchemeCard() node in src/components/Schemes.tsx.</td>
-</tr>
-<tr>
-  <td>8</td>
-  <td><code>SectionFX.tsx</code><br><small style="color:var(--muted)">components/v2/SectionFX.tsx</small></td>
-  <td><span class="tag tag-hook">UI</span></td>
-  <td><code>Schemes.tsx</code><br><small style="color:var(--muted)">src/components/Schemes.tsx</small></td>
-  <td>No direct outbound edge</td>
-  <td>Module file in components/v2/SectionFX.tsx.</td>
-</tr>
-<tr>
-  <td>9</td>
-  <td><code>SectionFX()</code><br><small style="color:var(--muted)">components/v2/SectionFX.tsx</small></td>
-  <td><span class="tag tag-hook">UI</span></td>
-  <td><code>Schemes.tsx</code><br><small style="color:var(--muted)">src/components/Schemes.tsx</small></td>
-  <td>No direct outbound edge</td>
-  <td>SectionFX() node in components/v2/SectionFX.tsx.</td>
-</tr>
-<tr>
-  <td>10</td>
   <td><code>SectionSlash.tsx</code><br><small style="color:var(--muted)">components/v2/SectionSlash.tsx</small></td>
   <td><span class="tag tag-hook">UI</span></td>
-  <td><code>Dossier.tsx</code><br><small style="color:var(--muted)">src/components/Dossier.tsx</small><br><code>Schemes.tsx</code><br><small style="color:var(--muted)">src/components/Schemes.tsx</small></td>
-  <td>No direct outbound edge</td>
+  <td><code>Dossier.tsx</code><br><small style="color:var(--muted)">src/components/Dossier.tsx</small></td>
+  <td><code>SocialLinksV2.tsx</code><br><small style="color:var(--muted)">components/v2/SocialLinksV2.tsx</small></td>
   <td>Module file in components/v2/SectionSlash.tsx.</td>
 </tr>
 <tr>
-  <td>11</td>
+  <td>6</td>
   <td><code>SectionSlash()</code><br><small style="color:var(--muted)">components/v2/SectionSlash.tsx</small></td>
   <td><span class="tag tag-hook">UI</span></td>
-  <td><code>Dossier.tsx</code><br><small style="color:var(--muted)">src/components/Dossier.tsx</small><br><code>Schemes.tsx</code><br><small style="color:var(--muted)">src/components/Schemes.tsx</small></td>
-  <td>No direct outbound edge</td>
+  <td><code>Dossier.tsx</code><br><small style="color:var(--muted)">src/components/Dossier.tsx</small></td>
+  <td><code>SocialLinksV2.tsx</code><br><small style="color:var(--muted)">components/v2/SocialLinksV2.tsx</small></td>
   <td>SectionSlash() node in components/v2/SectionSlash.tsx.</td>
 </tr>
 <tr>
-  <td>12</td>
-  <td><code>config.ts</code><br><small style="color:var(--muted)">src/config.ts</small></td>
-  <td><span class="tag tag-class">Module</span></td>
-  <td><code>Dossier.tsx</code><br><small style="color:var(--muted)">src/components/Dossier.tsx</small><br><code>Schemes.tsx</code><br><small style="color:var(--muted)">src/components/Schemes.tsx</small></td>
+  <td>7</td>
+  <td><code>SectionTransitions.tsx</code><br><small style="color:var(--muted)">components/v2/SectionTransitions.tsx</small></td>
+  <td><span class="tag tag-hook">UI</span></td>
+  <td><code>Dossier.tsx</code><br><small style="color:var(--muted)">src/components/Dossier.tsx</small></td>
+  <td><code>SocialLinksV2.tsx</code><br><small style="color:var(--muted)">components/v2/SocialLinksV2.tsx</small></td>
+  <td>Module file in components/v2/SectionTransitions.tsx.</td>
+</tr>
+<tr>
+  <td>8</td>
+  <td><code>EASE</code><br><small style="color:var(--muted)">components/v2/SectionTransitions.tsx</small></td>
+  <td><span class="tag tag-hook">UI</span></td>
+  <td>External entry / no inbound edge</td>
   <td>No direct outbound edge</td>
-  <td>Module file in src/config.ts.</td>
+  <td>EASE node in components/v2/SectionTransitions.tsx.</td>
+</tr>
+<tr>
+  <td>9</td>
+  <td><code>BARS</code><br><small style="color:var(--muted)">components/v2/SectionTransitions.tsx</small></td>
+  <td><span class="tag tag-hook">UI</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>BARS node in components/v2/SectionTransitions.tsx.</td>
+</tr>
+<tr>
+  <td>10</td>
+  <td><code>RedactedBars()</code><br><small style="color:var(--muted)">components/v2/SectionTransitions.tsx</small></td>
+  <td><span class="tag tag-hook">UI</span></td>
+  <td><code>Dossier.tsx</code><br><small style="color:var(--muted)">src/components/Dossier.tsx</small></td>
+  <td>No direct outbound edge</td>
+  <td>RedactedBars() node in components/v2/SectionTransitions.tsx.</td>
+</tr>
+<tr>
+  <td>11</td>
+  <td><code>ScanSweep()</code><br><small style="color:var(--muted)">components/v2/SectionTransitions.tsx</small></td>
+  <td><span class="tag tag-hook">UI</span></td>
+  <td>External entry / no inbound edge</td>
+  <td><code>SocialLinksV2.tsx</code><br><small style="color:var(--muted)">components/v2/SocialLinksV2.tsx</small></td>
+  <td>Starts scanning or handles scan status.</td>
+</tr>
+<tr>
+  <td>12</td>
+  <td><code>SocialLinksV2.tsx</code><br><small style="color:var(--muted)">components/v2/SocialLinksV2.tsx</small></td>
+  <td><span class="tag tag-hook">UI</span></td>
+  <td><code>ScanSweep()</code><br><small style="color:var(--muted)">components/v2/SectionTransitions.tsx</small><br><code>SectionSlash()</code><br><small style="color:var(--muted)">components/v2/SectionSlash.tsx</small><br><code>SectionSlash.tsx</code><br><small style="color:var(--muted)">components/v2/SectionSlash.tsx</small><br>+1 more</td>
+  <td>No direct outbound edge</td>
+  <td>Module file in components/v2/SocialLinksV2.tsx.</td>
 </tr>
 <tr>
   <td>13</td>
-  <td><code>Scheme</code><br><small style="color:var(--muted)">src/config.ts</small></td>
-  <td><span class="tag tag-class">Class</span></td>
-  <td><code>Schemes.tsx</code><br><small style="color:var(--muted)">src/components/Schemes.tsx</small></td>
+  <td><code>EASE</code><br><small style="color:var(--muted)">components/v2/SocialLinksV2.tsx</small></td>
+  <td><span class="tag tag-hook">UI</span></td>
+  <td>External entry / no inbound edge</td>
   <td>No direct outbound edge</td>
-  <td>Scheme node in src/config.ts.</td>
+  <td>EASE node in components/v2/SocialLinksV2.tsx.</td>
 </tr>
 <tr>
   <td>14</td>
-  <td><code>schemes</code><br><small style="color:var(--muted)">src/config.ts</small></td>
-  <td><span class="tag tag-func">Function</span></td>
-  <td><code>Schemes.tsx</code><br><small style="color:var(--muted)">src/components/Schemes.tsx</small></td>
+  <td><code>ICON_SRC</code><br><small style="color:var(--muted)">components/v2/SocialLinksV2.tsx</small></td>
+  <td><span class="tag tag-hook">UI</span></td>
+  <td>External entry / no inbound edge</td>
   <td>No direct outbound edge</td>
-  <td>schemes node in src/config.ts.</td>
+  <td>ICON_SRC node in components/v2/SocialLinksV2.tsx.</td>
 </tr>
 <tr>
   <td>15</td>
-  <td><code>DossierProject</code><br><small style="color:var(--muted)">src/config.ts</small></td>
-  <td><span class="tag tag-class">Class</span></td>
+  <td><code>TiltCard()</code><br><small style="color:var(--muted)">components/v2/SocialLinksV2.tsx</small></td>
+  <td><span class="tag tag-hook">UI</span></td>
   <td>External entry / no inbound edge</td>
   <td>No direct outbound edge</td>
-  <td>DossierProject node in src/config.ts.</td>
+  <td>TiltCard() node in components/v2/SocialLinksV2.tsx.</td>
 </tr>
 <tr>
   <td>16</td>
-  <td><code>Achievement</code><br><small style="color:var(--muted)">src/config.ts</small></td>
-  <td><span class="tag tag-class">Class</span></td>
+  <td><code>SocialLinksV2()</code><br><small style="color:var(--muted)">components/v2/SocialLinksV2.tsx</small></td>
+  <td><span class="tag tag-hook">UI</span></td>
   <td>External entry / no inbound edge</td>
   <td>No direct outbound edge</td>
-  <td>Achievement node in src/config.ts.</td>
+  <td>SocialLinksV2() node in components/v2/SocialLinksV2.tsx.</td>
 </tr>
 <tr>
   <td>17</td>
@@ -992,16 +981,16 @@ flowchart LR
     <h4>Key Files</h4>
     <table style="width:100%;font-size:0.85rem;">
       <tr><th>File</th><th>Coverage</th></tr>
-      <tr><td><code>src/config.ts</code></td><td>6 nodes</td></tr>
+      <tr><td><code>components/v2/SectionTransitions.tsx</code></td><td>5 nodes</td></tr>
+<tr><td><code>components/v2/SocialLinksV2.tsx</code></td><td>5 nodes</td></tr>
 <tr><td><code>src/components/Dossier.tsx</code></td><td>4 nodes</td></tr>
-<tr><td><code>src/components/Schemes.tsx</code></td><td>3 nodes</td></tr>
-<tr><td><code>components/v2/SectionFX.tsx</code></td><td>2 nodes</td></tr>
 <tr><td><code>components/v2/SectionSlash.tsx</code></td><td>2 nodes</td></tr>
+<tr><td><code>src/config.ts</code></td><td>1 nodes</td></tr>
     </table>
   </div>
   <div class="card">
     <h4>Design Notes</h4>
-    <p>This section comes from graphify community clustering. Relationship summary: contains x12, imports x6, imports x5, calls x1. The diagram prioritizes high-confidence calls or usage relationships; the table keeps the broader node inventory.</p>
+    <p>This section comes from graphify community clustering. Relationship summary: contains x12, imports x5, imports x4, calls x1. The diagram prioritizes high-confidence calls or usage relationships; the table keeps the broader node inventory.</p>
   </div>
 </div>
 <hr>
@@ -1228,18 +1217,19 @@ flowchart LR
 
 <!-- ====== 6. Community 5 ====== -->
 <h2 id="community-5">6. Community 5</h2>
-<p>Community 5 groups implementation around components, sociallinksv2tsx, icontsx, sociallinkstsx, mostly in components/v2/SocialLinksV2.tsx, src/components/Icon.tsx, src/components/SocialLinks.tsx. This section covers 16 nodes and 17 internal edges; the diagram shows only representative relationships to stay readable.</p>
+<p>Community 5 groups implementation around components, configts, icontsx, sociallinkstsx, mostly in src/config.ts, src/components/Icon.tsx, src/components/SocialLinks.tsx. This section covers 17 nodes and 21 internal edges; the diagram shows only representative relationships to stay readable.</p>
 
 <div class="mermaid">
 %%{init: {"theme": "dark", "themeVariables": {"fontSize": "15.0px", "fontFamily": "Segoe UI, system-ui, sans-serif", "primaryColor": "#1e293b", "primaryTextColor": "#e2e8f0", "primaryBorderColor": "#38bdf8", "secondaryColor": "#0f172a", "tertiaryColor": "#334155", "lineColor": "#64748b", "textColor": "#e2e8f0"}, "flowchart": {"htmlLabels": true, "curve": "basis", "nodeSpacing": 48, "rankSpacing": 64, "padding": 14, "diagramPadding": 10, "useMaxWidth": true}}}%%
 flowchart LR
-    %% Section: Community 5 (16 nodes, 17 edges)
-    subgraph community_5_components_v2_SocialLinksV2_tsx_51bbc535["components/v2/SocialLinksV2.tsx"]
-        v2_sociallinksv2_509c38ec("SocialLinksV2.tsx")
-        v2_sociallinksv2_ease_9ba7c2fe("EASE<br/><small>components/v2/SocialLinksV2.tsx</small>")
-        v2_sociallinksv2_icon_src_057015a3("ICON_SRC<br/><small>components/v2/SocialLinksV2.tsx</small>")
-        v2_sociallinksv2_sociallinksv2_a5af138b("SocialLinksV2()<br/><small>components/v2/SocialLinksV2.tsx</small>")
-        v2_sociallinksv2_tiltcard_e57b0627("TiltCard()<br/><small>components/v2/SocialLinksV2.tsx</small>")
+    %% Section: Community 5 (17 nodes, 21 edges)
+    subgraph community_5_src_config_ts_118bf898["src/config.ts"]
+        src_config_f55793b8("config.ts")
+        src_config_iconname_96ee8db3("IconName<br/><small>src/config.ts</small>")
+        src_config_links_15310563("links<br/><small>src/config.ts</small>")
+        src_config_sociallink_ac1433d5("SocialLink<br/><small>src/config.ts</small>")
+        src_config_achievement_dcfdd23b("Achievement<br/><small>src/config.ts</small>")
+        src_config_dossierproject_e779c376("DossierProject<br/><small>src/config.ts</small>")
     end
     subgraph community_5_src_components_Icon_tsx_5340dfdb["src/components/Icon.tsx"]
         components_icon_2be58598("Icon.tsx")
@@ -1253,23 +1243,25 @@ flowchart LR
         components_sociallinks_linkcard_4e3aefbe("LinkCard()<br/><small>src/components/SocialLinks.tsx</small>")
         components_sociallinks_sociallinks_9d5d1bf6("SocialLinks()<br/><small>src/components/SocialLinks.tsx</small>")
     end
-    subgraph community_5_src_config_ts_118bf898["src/config.ts"]
-        src_config_iconname_96ee8db3("IconName<br/><small>src/config.ts</small>")
-        src_config_links_15310563("links<br/><small>src/config.ts</small>")
-        src_config_sociallink_ac1433d5("SocialLink<br/><small>src/config.ts</small>")
+    subgraph community_5_src_components_Hero_tsx_f525d912["src/components/Hero.tsx"]
+        components_hero_d261918c("Hero.tsx")
+        components_hero_ease_b98f12b0("EASE<br/><small>src/components/Hero.tsx</small>")
+        components_hero_hero_f1ff9ed3("Hero()<br/><small>src/components/Hero.tsx</small>")
     end
+    components_hero_d261918c -->|imports| src_config_f55793b8
+    components_icon_2be58598 -->|imports| src_config_f55793b8
     components_icon_2be58598 -->|imports| src_config_iconname_96ee8db3
     components_icon_2be58598 -->|imports| components_sociallinks_879a8067
     components_icon_icon_2bf90083 -->|imports| components_sociallinks_879a8067
+    components_sociallinks_879a8067 -->|imports| src_config_f55793b8
     components_sociallinks_879a8067 -->|imports| src_config_links_15310563
     components_sociallinks_879a8067 -->|imports| src_config_sociallink_ac1433d5
-    v2_sociallinksv2_509c38ec -->|imports| src_config_links_15310563
-    v2_sociallinksv2_509c38ec -->|imports| src_config_sociallink_ac1433d5
-    class v2_sociallinksv2_509c38ec ui;
-    class v2_sociallinksv2_ease_9ba7c2fe ui;
-    class v2_sociallinksv2_icon_src_057015a3 ui;
-    class v2_sociallinksv2_sociallinksv2_a5af138b ui;
-    class v2_sociallinksv2_tiltcard_e57b0627 ui;
+    class src_config_f55793b8 module;
+    class src_config_iconname_96ee8db3 klass;
+    class src_config_links_15310563 function;
+    class src_config_sociallink_ac1433d5 klass;
+    class src_config_achievement_dcfdd23b klass;
+    class src_config_dossierproject_e779c376 klass;
     class components_icon_2be58598 ui;
     class components_icon_icon_2bf90083 ui;
     class components_icon_iconprops_b77afa83 ui;
@@ -1278,9 +1270,9 @@ flowchart LR
     class components_sociallinks_ease_7866b37e ui;
     class components_sociallinks_linkcard_4e3aefbe ui;
     class components_sociallinks_sociallinks_9d5d1bf6 ui;
-    class src_config_iconname_96ee8db3 klass;
-    class src_config_links_15310563 function;
-    class src_config_sociallink_ac1433d5 klass;
+    class components_hero_d261918c ui;
+    class components_hero_ease_b98f12b0 ui;
+    class components_hero_hero_f1ff9ed3 ui;
     classDef entry fill:#422006,stroke:#fbbf24,color:#fde68a,stroke-width:1px;
     classDef api fill:#450a0a,stroke:#f87171,color:#fee2e2,stroke-width:1px;
     classDef async fill:#2e1065,stroke:#a78bfa,color:#ede9fe,stroke-width:1px;
@@ -1304,14 +1296,38 @@ flowchart LR
 </tr>
 <tr>
   <td>1</td>
-  <td><code>Icon.tsx</code><br><small style="color:var(--muted)">src/components/Icon.tsx</small></td>
+  <td><code>Hero.tsx</code><br><small style="color:var(--muted)">src/components/Hero.tsx</small></td>
   <td><span class="tag tag-hook">UI</span></td>
   <td>External entry / no inbound edge</td>
-  <td><code>IconName</code><br><small style="color:var(--muted)">src/config.ts</small><br><code>SocialLinks.tsx</code><br><small style="color:var(--muted)">src/components/SocialLinks.tsx</small></td>
-  <td>Module file in src/components/Icon.tsx.</td>
+  <td><code>config.ts</code><br><small style="color:var(--muted)">src/config.ts</small></td>
+  <td>Module file in src/components/Hero.tsx.</td>
 </tr>
 <tr>
   <td>2</td>
+  <td><code>EASE</code><br><small style="color:var(--muted)">src/components/Hero.tsx</small></td>
+  <td><span class="tag tag-hook">UI</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>EASE node in src/components/Hero.tsx.</td>
+</tr>
+<tr>
+  <td>3</td>
+  <td><code>Hero()</code><br><small style="color:var(--muted)">src/components/Hero.tsx</small></td>
+  <td><span class="tag tag-hook">UI</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Hero() node in src/components/Hero.tsx.</td>
+</tr>
+<tr>
+  <td>4</td>
+  <td><code>Icon.tsx</code><br><small style="color:var(--muted)">src/components/Icon.tsx</small></td>
+  <td><span class="tag tag-hook">UI</span></td>
+  <td>External entry / no inbound edge</td>
+  <td><code>config.ts</code><br><small style="color:var(--muted)">src/config.ts</small><br><code>IconName</code><br><small style="color:var(--muted)">src/config.ts</small><br><code>SocialLinks.tsx</code><br><small style="color:var(--muted)">src/components/SocialLinks.tsx</small></td>
+  <td>Module file in src/components/Icon.tsx.</td>
+</tr>
+<tr>
+  <td>5</td>
   <td><code>paths</code><br><small style="color:var(--muted)">src/components/Icon.tsx</small></td>
   <td><span class="tag tag-hook">UI</span></td>
   <td>External entry / no inbound edge</td>
@@ -1319,7 +1335,7 @@ flowchart LR
   <td>paths node in src/components/Icon.tsx.</td>
 </tr>
 <tr>
-  <td>3</td>
+  <td>6</td>
   <td><code>IconProps</code><br><small style="color:var(--muted)">src/components/Icon.tsx</small></td>
   <td><span class="tag tag-hook">UI</span></td>
   <td>External entry / no inbound edge</td>
@@ -1327,7 +1343,7 @@ flowchart LR
   <td>IconProps node in src/components/Icon.tsx.</td>
 </tr>
 <tr>
-  <td>4</td>
+  <td>7</td>
   <td><code>Icon()</code><br><small style="color:var(--muted)">src/components/Icon.tsx</small></td>
   <td><span class="tag tag-hook">UI</span></td>
   <td>External entry / no inbound edge</td>
@@ -1335,15 +1351,15 @@ flowchart LR
   <td>Icon() node in src/components/Icon.tsx.</td>
 </tr>
 <tr>
-  <td>5</td>
+  <td>8</td>
   <td><code>SocialLinks.tsx</code><br><small style="color:var(--muted)">src/components/SocialLinks.tsx</small></td>
   <td><span class="tag tag-hook">UI</span></td>
   <td><code>Icon()</code><br><small style="color:var(--muted)">src/components/Icon.tsx</small><br><code>Icon.tsx</code><br><small style="color:var(--muted)">src/components/Icon.tsx</small></td>
-  <td><code>links</code><br><small style="color:var(--muted)">src/config.ts</small><br><code>SocialLink</code><br><small style="color:var(--muted)">src/config.ts</small></td>
+  <td><code>config.ts</code><br><small style="color:var(--muted)">src/config.ts</small><br><code>links</code><br><small style="color:var(--muted)">src/config.ts</small><br><code>SocialLink</code><br><small style="color:var(--muted)">src/config.ts</small></td>
   <td>Module file in src/components/SocialLinks.tsx.</td>
 </tr>
 <tr>
-  <td>6</td>
+  <td>9</td>
   <td><code>EASE</code><br><small style="color:var(--muted)">src/components/SocialLinks.tsx</small></td>
   <td><span class="tag tag-hook">UI</span></td>
   <td>External entry / no inbound edge</td>
@@ -1351,7 +1367,7 @@ flowchart LR
   <td>EASE node in src/components/SocialLinks.tsx.</td>
 </tr>
 <tr>
-  <td>7</td>
+  <td>10</td>
   <td><code>LinkCard()</code><br><small style="color:var(--muted)">src/components/SocialLinks.tsx</small></td>
   <td><span class="tag tag-hook">UI</span></td>
   <td>External entry / no inbound edge</td>
@@ -1359,7 +1375,7 @@ flowchart LR
   <td>LinkCard() node in src/components/SocialLinks.tsx.</td>
 </tr>
 <tr>
-  <td>8</td>
+  <td>11</td>
   <td><code>SocialLinks()</code><br><small style="color:var(--muted)">src/components/SocialLinks.tsx</small></td>
   <td><span class="tag tag-hook">UI</span></td>
   <td>External entry / no inbound edge</td>
@@ -1367,47 +1383,15 @@ flowchart LR
   <td>SocialLinks() node in src/components/SocialLinks.tsx.</td>
 </tr>
 <tr>
-  <td>9</td>
-  <td><code>SocialLinksV2.tsx</code><br><small style="color:var(--muted)">components/v2/SocialLinksV2.tsx</small></td>
-  <td><span class="tag tag-hook">UI</span></td>
-  <td>External entry / no inbound edge</td>
-  <td><code>links</code><br><small style="color:var(--muted)">src/config.ts</small><br><code>SocialLink</code><br><small style="color:var(--muted)">src/config.ts</small></td>
-  <td>Module file in components/v2/SocialLinksV2.tsx.</td>
-</tr>
-<tr>
-  <td>10</td>
-  <td><code>EASE</code><br><small style="color:var(--muted)">components/v2/SocialLinksV2.tsx</small></td>
-  <td><span class="tag tag-hook">UI</span></td>
-  <td>External entry / no inbound edge</td>
-  <td>No direct outbound edge</td>
-  <td>EASE node in components/v2/SocialLinksV2.tsx.</td>
-</tr>
-<tr>
-  <td>11</td>
-  <td><code>ICON_SRC</code><br><small style="color:var(--muted)">components/v2/SocialLinksV2.tsx</small></td>
-  <td><span class="tag tag-hook">UI</span></td>
-  <td>External entry / no inbound edge</td>
-  <td>No direct outbound edge</td>
-  <td>ICON_SRC node in components/v2/SocialLinksV2.tsx.</td>
-</tr>
-<tr>
   <td>12</td>
-  <td><code>TiltCard()</code><br><small style="color:var(--muted)">components/v2/SocialLinksV2.tsx</small></td>
-  <td><span class="tag tag-hook">UI</span></td>
-  <td>External entry / no inbound edge</td>
+  <td><code>config.ts</code><br><small style="color:var(--muted)">src/config.ts</small></td>
+  <td><span class="tag tag-class">Module</span></td>
+  <td><code>Hero.tsx</code><br><small style="color:var(--muted)">src/components/Hero.tsx</small><br><code>Icon.tsx</code><br><small style="color:var(--muted)">src/components/Icon.tsx</small><br><code>SocialLinks.tsx</code><br><small style="color:var(--muted)">src/components/SocialLinks.tsx</small></td>
   <td>No direct outbound edge</td>
-  <td>TiltCard() node in components/v2/SocialLinksV2.tsx.</td>
+  <td>Module file in src/config.ts.</td>
 </tr>
 <tr>
   <td>13</td>
-  <td><code>SocialLinksV2()</code><br><small style="color:var(--muted)">components/v2/SocialLinksV2.tsx</small></td>
-  <td><span class="tag tag-hook">UI</span></td>
-  <td>External entry / no inbound edge</td>
-  <td>No direct outbound edge</td>
-  <td>SocialLinksV2() node in components/v2/SocialLinksV2.tsx.</td>
-</tr>
-<tr>
-  <td>14</td>
   <td><code>IconName</code><br><small style="color:var(--muted)">src/config.ts</small></td>
   <td><span class="tag tag-class">Class</span></td>
   <td><code>Icon.tsx</code><br><small style="color:var(--muted)">src/components/Icon.tsx</small></td>
@@ -1415,20 +1399,36 @@ flowchart LR
   <td>IconName node in src/config.ts.</td>
 </tr>
 <tr>
-  <td>15</td>
+  <td>14</td>
   <td><code>SocialLink</code><br><small style="color:var(--muted)">src/config.ts</small></td>
   <td><span class="tag tag-class">Class</span></td>
-  <td><code>SocialLinks.tsx</code><br><small style="color:var(--muted)">src/components/SocialLinks.tsx</small><br><code>SocialLinksV2.tsx</code><br><small style="color:var(--muted)">components/v2/SocialLinksV2.tsx</small></td>
+  <td><code>SocialLinks.tsx</code><br><small style="color:var(--muted)">src/components/SocialLinks.tsx</small></td>
   <td>No direct outbound edge</td>
   <td>SocialLink node in src/config.ts.</td>
 </tr>
 <tr>
-  <td>16</td>
+  <td>15</td>
   <td><code>links</code><br><small style="color:var(--muted)">src/config.ts</small></td>
   <td><span class="tag tag-func">Function</span></td>
-  <td><code>SocialLinks.tsx</code><br><small style="color:var(--muted)">src/components/SocialLinks.tsx</small><br><code>SocialLinksV2.tsx</code><br><small style="color:var(--muted)">components/v2/SocialLinksV2.tsx</small></td>
+  <td><code>SocialLinks.tsx</code><br><small style="color:var(--muted)">src/components/SocialLinks.tsx</small></td>
   <td>No direct outbound edge</td>
   <td>links node in src/config.ts.</td>
+</tr>
+<tr>
+  <td>16</td>
+  <td><code>DossierProject</code><br><small style="color:var(--muted)">src/config.ts</small></td>
+  <td><span class="tag tag-class">Class</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>DossierProject node in src/config.ts.</td>
+</tr>
+<tr>
+  <td>17</td>
+  <td><code>Achievement</code><br><small style="color:var(--muted)">src/config.ts</small></td>
+  <td><span class="tag tag-class">Class</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Achievement node in src/config.ts.</td>
 </tr>
 </table>
 
@@ -1437,21 +1437,159 @@ flowchart LR
     <h4>Key Files</h4>
     <table style="width:100%;font-size:0.85rem;">
       <tr><th>File</th><th>Coverage</th></tr>
-      <tr><td><code>components/v2/SocialLinksV2.tsx</code></td><td>5 nodes</td></tr>
+      <tr><td><code>src/config.ts</code></td><td>6 nodes</td></tr>
 <tr><td><code>src/components/Icon.tsx</code></td><td>4 nodes</td></tr>
 <tr><td><code>src/components/SocialLinks.tsx</code></td><td>4 nodes</td></tr>
-<tr><td><code>src/config.ts</code></td><td>3 nodes</td></tr>
+<tr><td><code>src/components/Hero.tsx</code></td><td>3 nodes</td></tr>
     </table>
   </div>
   <div class="card">
     <h4>Design Notes</h4>
-    <p>This section comes from graphify community clustering. Relationship summary: contains x10, imports x6, imports x1. The diagram prioritizes high-confidence calls or usage relationships; the table keeps the broader node inventory.</p>
+    <p>This section comes from graphify community clustering. Relationship summary: contains x13, imports x4, imports x4. The diagram prioritizes high-confidence calls or usage relationships; the table keeps the broader node inventory.</p>
   </div>
 </div>
 <hr>
 
-<!-- ====== 7. Community 10 ====== -->
-<h2 id="community-10">7. Community 10</h2>
+<!-- ====== 7. Community 11 ====== -->
+<h2 id="community-11">7. Community 11</h2>
+<p>Community 11 groups implementation around components, schemestsx, sectionfxtsx, schemes, mostly in src/components/Schemes.tsx, components/v2/SectionFX.tsx, src/config.ts. This section covers 8 nodes and 8 internal edges; the diagram shows only representative relationships to stay readable.</p>
+
+<div class="mermaid">
+%%{init: {"theme": "dark", "themeVariables": {"fontSize": "15.0px", "fontFamily": "Segoe UI, system-ui, sans-serif", "primaryColor": "#1e293b", "primaryTextColor": "#e2e8f0", "primaryBorderColor": "#38bdf8", "secondaryColor": "#0f172a", "tertiaryColor": "#334155", "lineColor": "#64748b", "textColor": "#e2e8f0"}, "flowchart": {"htmlLabels": true, "curve": "basis", "nodeSpacing": 48, "rankSpacing": 64, "padding": 14, "diagramPadding": 10, "useMaxWidth": true}}}%%
+flowchart LR
+    %% Section: Community 11 (8 nodes, 8 edges)
+    subgraph community_11_src_components_Schemes_tsx_e360443e["src/components/Schemes.tsx"]
+        components_schemes_624d8b02("Schemes.tsx")
+        components_schemes_ease_3ca2cfad("EASE<br/><small>src/components/Schemes.tsx</small>")
+        components_schemes_schemecard_e4e1dc5d("SchemeCard()<br/><small>src/components/Schemes.tsx</small>")
+        components_schemes_schemes_f4a02f4e("Schemes()<br/><small>src/components/Schemes.tsx</small>")
+    end
+    subgraph community_11_components_v2_SectionFX_tsx_29674c58["components/v2/SectionFX.tsx"]
+        v2_sectionfx_7a772ab1("SectionFX.tsx")
+        v2_sectionfx_sectionfx_4d98311e("SectionFX()<br/><small>components/v2/SectionFX.tsx</small>")
+    end
+    subgraph community_11_src_config_ts_58cc38e1["src/config.ts"]
+        src_config_scheme_816a0e75("Scheme<br/><small>src/config.ts</small>")
+        src_config_schemes_613de6a4("schemes<br/><small>src/config.ts</small>")
+    end
+    components_schemes_624d8b02 -->|imports| src_config_scheme_816a0e75
+    components_schemes_624d8b02 -->|imports| src_config_schemes_613de6a4
+    components_schemes_624d8b02 -->|imports| v2_sectionfx_7a772ab1
+    components_schemes_624d8b02 -->|imports| v2_sectionfx_sectionfx_4d98311e
+    class components_schemes_624d8b02 ui;
+    class components_schemes_ease_3ca2cfad ui;
+    class components_schemes_schemecard_e4e1dc5d ui;
+    class components_schemes_schemes_f4a02f4e ui;
+    class v2_sectionfx_7a772ab1 ui;
+    class v2_sectionfx_sectionfx_4d98311e ui;
+    class src_config_scheme_816a0e75 klass;
+    class src_config_schemes_613de6a4 function;
+    classDef entry fill:#422006,stroke:#fbbf24,color:#fde68a,stroke-width:1px;
+    classDef api fill:#450a0a,stroke:#f87171,color:#fee2e2,stroke-width:1px;
+    classDef async fill:#2e1065,stroke:#a78bfa,color:#ede9fe,stroke-width:1px;
+    classDef klass fill:#064e3b,stroke:#34d399,color:#d1fae5,stroke-width:1px;
+    classDef ui fill:#831843,stroke:#f472b6,color:#fce7f3,stroke-width:1px;
+    classDef module fill:#172554,stroke:#60a5fa,color:#dbeafe,stroke-width:1px;
+    classDef test fill:#3f3f46,stroke:#a1a1aa,color:#f4f4f5,stroke-width:1px;
+    classDef concept fill:#292524,stroke:#a8a29e,color:#fafaf9,stroke-dasharray:4 3;
+    classDef function fill:#0f172a,stroke:#38bdf8,color:#e0f2fe,stroke-width:1px;
+</div>
+
+<h3>Call Details</h3>
+<table class="call-table">
+<tr>
+  <th style="width:5%">#</th>
+  <th style="width:28%">Node</th>
+  <th style="width:10%">Type</th>
+  <th style="width:17%">Caller</th>
+  <th style="width:20%">Callees</th>
+  <th style="width:20%">Description</th>
+</tr>
+<tr>
+  <td>1</td>
+  <td><code>Schemes.tsx</code><br><small style="color:var(--muted)">src/components/Schemes.tsx</small></td>
+  <td><span class="tag tag-hook">UI</span></td>
+  <td>External entry / no inbound edge</td>
+  <td><code>Scheme</code><br><small style="color:var(--muted)">src/config.ts</small><br><code>schemes</code><br><small style="color:var(--muted)">src/config.ts</small><br><code>SectionFX()</code><br><small style="color:var(--muted)">components/v2/SectionFX.tsx</small><br>+1 more</td>
+  <td>Module file in src/components/Schemes.tsx.</td>
+</tr>
+<tr>
+  <td>2</td>
+  <td><code>EASE</code><br><small style="color:var(--muted)">src/components/Schemes.tsx</small></td>
+  <td><span class="tag tag-hook">UI</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>EASE node in src/components/Schemes.tsx.</td>
+</tr>
+<tr>
+  <td>3</td>
+  <td><code>SchemeCard()</code><br><small style="color:var(--muted)">src/components/Schemes.tsx</small></td>
+  <td><span class="tag tag-hook">UI</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>SchemeCard() node in src/components/Schemes.tsx.</td>
+</tr>
+<tr>
+  <td>4</td>
+  <td><code>Schemes()</code><br><small style="color:var(--muted)">src/components/Schemes.tsx</small></td>
+  <td><span class="tag tag-hook">UI</span></td>
+  <td>External entry / no inbound edge</td>
+  <td>No direct outbound edge</td>
+  <td>Schemes() node in src/components/Schemes.tsx.</td>
+</tr>
+<tr>
+  <td>5</td>
+  <td><code>SectionFX.tsx</code><br><small style="color:var(--muted)">components/v2/SectionFX.tsx</small></td>
+  <td><span class="tag tag-hook">UI</span></td>
+  <td><code>Schemes.tsx</code><br><small style="color:var(--muted)">src/components/Schemes.tsx</small></td>
+  <td>No direct outbound edge</td>
+  <td>Module file in components/v2/SectionFX.tsx.</td>
+</tr>
+<tr>
+  <td>6</td>
+  <td><code>SectionFX()</code><br><small style="color:var(--muted)">components/v2/SectionFX.tsx</small></td>
+  <td><span class="tag tag-hook">UI</span></td>
+  <td><code>Schemes.tsx</code><br><small style="color:var(--muted)">src/components/Schemes.tsx</small></td>
+  <td>No direct outbound edge</td>
+  <td>SectionFX() node in components/v2/SectionFX.tsx.</td>
+</tr>
+<tr>
+  <td>7</td>
+  <td><code>Scheme</code><br><small style="color:var(--muted)">src/config.ts</small></td>
+  <td><span class="tag tag-class">Class</span></td>
+  <td><code>Schemes.tsx</code><br><small style="color:var(--muted)">src/components/Schemes.tsx</small></td>
+  <td>No direct outbound edge</td>
+  <td>Scheme node in src/config.ts.</td>
+</tr>
+<tr>
+  <td>8</td>
+  <td><code>schemes</code><br><small style="color:var(--muted)">src/config.ts</small></td>
+  <td><span class="tag tag-func">Function</span></td>
+  <td><code>Schemes.tsx</code><br><small style="color:var(--muted)">src/components/Schemes.tsx</small></td>
+  <td>No direct outbound edge</td>
+  <td>schemes node in src/config.ts.</td>
+</tr>
+</table>
+
+<div class="grid">
+  <div class="card">
+    <h4>Key Files</h4>
+    <table style="width:100%;font-size:0.85rem;">
+      <tr><th>File</th><th>Coverage</th></tr>
+      <tr><td><code>src/components/Schemes.tsx</code></td><td>4 nodes</td></tr>
+<tr><td><code>components/v2/SectionFX.tsx</code></td><td>2 nodes</td></tr>
+<tr><td><code>src/config.ts</code></td><td>2 nodes</td></tr>
+    </table>
+  </div>
+  <div class="card">
+    <h4>Design Notes</h4>
+    <p>This section comes from graphify community clustering. Relationship summary: contains x4, imports x3, imports x1. The diagram prioritizes high-confidence calls or usage relationships; the table keeps the broader node inventory.</p>
+  </div>
+</div>
+<hr>
+
+<!-- ====== 8. Community 10 ====== -->
+<h2 id="community-10">8. Community 10</h2>
 <p>Community 10 groups implementation around viteconfigts, mostly in vite.config.ts. This section covers 1 nodes and 0 internal edges; the diagram shows only representative relationships to stay readable.</p>
 
 <div class="mermaid">
@@ -1506,8 +1644,8 @@ flowchart LR
 </div>
 <hr>
 
-<!-- ====== 8. Community 9 ====== -->
-<h2 id="community-9">8. Community 9</h2>
+<!-- ====== 9. Community 9 ====== -->
+<h2 id="community-9">9. Community 9</h2>
 <p>Community 9 groups implementation around eslintconfigjs, mostly in eslint.config.js. This section covers 1 nodes and 0 internal edges; the diagram shows only representative relationships to stay readable.</p>
 
 <div class="mermaid">
@@ -1568,17 +1706,17 @@ flowchart LR
   <div class="card">
     <h4>Graph</h4>
     <table style="width:100%;font-size:0.85rem;">
-      <tr><td>Nodes</td><td>140</td></tr>
-      <tr><td>Edges</td><td>170</td></tr>
+      <tr><td>Nodes</td><td>147</td></tr>
+      <tr><td>Edges</td><td>181</td></tr>
       <tr><td>Hyperedges</td><td>0</td></tr>
-      <tr><td>Communities</td><td>11</td></tr>
-      <tr><td>Documented Sections</td><td>7</td></tr>
+      <tr><td>Communities</td><td>12</td></tr>
+      <tr><td>Documented Sections</td><td>8</td></tr>
     </table>
   </div>
   <div class="card">
     <h4>Edge Confidence</h4>
     <table style="width:100%;font-size:0.85rem;">
-      <tr><td>EXTRACTED</td><td>170</td></tr>
+      <tr><td>EXTRACTED</td><td>181</td></tr>
       <tr><td>INFERRED</td><td>0</td></tr>
       <tr><td>AMBIGUOUS</td><td>0</td></tr>
     </table>
@@ -1587,7 +1725,7 @@ flowchart LR
 
 <div style="text-align:center; padding:40px 0; color: var(--muted); font-size:0.9rem;">
   <p>villain-card — Architecture Documentation</p>
-  <p>Generated: 2026-06-12 09:03 UTC · graphify callflow-html</p>
+  <p>Generated: 2026-06-12 09:24 UTC · graphify callflow-html</p>
 </div>
 
 </div><!-- .container -->
